@@ -13,6 +13,8 @@ object BuildInfo {
 
     /** Репозиторий GitHub для автообновлений ("владелец/репозиторий"); null: обновления в этой сборке не настроены. */
     val updateRepo: String? get() = props.getProperty("updateRepo")?.takeIf { it.isNotBlank() }
+    /** ID приложения Azure для входа через Microsoft (общедоступный клиент, не секрет); null — вход выключен. */
+    val microsoftClientId: String? get() = props.getProperty("msClientId")?.takeIf { it.isNotBlank() }
 
     fun property(name: String): String? = props.getProperty(name)
 }

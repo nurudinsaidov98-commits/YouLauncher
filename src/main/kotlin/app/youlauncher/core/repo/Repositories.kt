@@ -74,23 +74,40 @@ interface LoaderVersionRepository {
 }
 
 /** Результат входа в Ely.by. */
+/** Понятные причины отказа при входе через Microsoft (для текста в интерфейсе). */
+enum class AuthFailure { Declined, Expired, NoXboxAccount, ChildAccount, Region, NoGame, AppNotApproved }
+
 sealed interface AuthResult {
     data class Success(val account: Account) : AuthResult
     data object TwoFactorRequired : AuthResult
     data class InvalidCredentials(val message: String) : AuthResult
-    data class Failure(val message: String) : AuthResult
+    data class Failure(val message: String, val reason: AuthFailure? = null) : AuthResult
 }
 
 /** Данные для запуска игры. Токен живёт только в памяти на время запуска. */
 data class AccountSession(val username: String, val uuid: String, val accessToken: String, val type: AccountType)
 
-class ReauthRequiredException(val username: String) : Exception("Сессия Ely.by для $username истекла: войдите заново")
+class ReauthRequiredException(val username: String) : Exception("Сессия $username истекла: войдите заново")
+
+/** Код для входа через Microsoft: пользователь вводит [userCode] на странице [verificationUri]. */
+data class MicrosoftDeviceCode(
+    val userCode: String,
+    val verificationUri: String,
+    val deviceCode: String,
+    val intervalSec: Long,
+    val expiresAt: Long,
+)
 
 interface AccountRepository {
     val accounts: StateFlow<List<Account>>
     val activeId: StateFlow<String?>
     suspend fun addOffline(nick: String): Account
     suspend fun loginElyBy(login: String, password: String, totp: String? = null): AuthResult
+    /** Вход через Microsoft доступен, если в сборке задан ID приложения Azure. */
+    val microsoftAvailable: Boolean get() = false
+    suspend fun microsoftDeviceCode(): MicrosoftDeviceCode = throw UnsupportedOperationException("Вход через Microsoft не настроен в этой сборке")
+    /** Ждёт подтверждения на сайте Microsoft и добавляет аккаунт. */
+    suspend fun loginMicrosoft(code: MicrosoftDeviceCode): AuthResult = AuthResult.Failure("Вход через Microsoft не настроен в этой сборке")
     suspend fun refresh(id: String): Boolean
     suspend fun remove(id: String)
     fun setActive(id: String)

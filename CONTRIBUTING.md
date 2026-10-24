@@ -9,7 +9,7 @@ Thanks for your interest in YouLauncher! · Спасибо за интерес �
 - **Icons · Иконки.** Material Symbols Rounded only: add the name to `tools/symbols.txt` and run `gradlew.bat :tools:generateSymbols`.
 - **Strings · Строки.** Resources only, in both English (`values`) and Russian (`values-ru`). `ResourcesTest` checks that the keys match.
 - **Legal · Юридическое.** No Minecraft or Mojang logos, art, sounds or textures; game files only from Mojang servers with hash checks; no Google Pixel wallpapers.
-- **Accounts · Аккаунты.** Offline and Ely.by only. Microsoft sign-in is not accepted.
+- **Accounts · Аккаунты.** Offline, Ely.by and Microsoft (device code flow, the password never reaches the launcher).
 - **Security · Безопасность.** Tokens live only in Windows Credential Manager and are masked in logs. No keys or passwords in the repository.
 - **Layers · Слои.** `core` has no UI or network, `data` implements interfaces from `core`, `ui` gets state through ViewModels and StateFlow.
 - **Tests · Тесты.** Everything that is not UI is covered by unit tests. `gradlew.bat test` and `gradlew.bat exportApp` must pass.

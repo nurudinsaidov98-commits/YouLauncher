@@ -84,7 +84,7 @@ The key feature of each Minecraft update is drawn as a composition of M3 shapes 
 - **Mod loaders** — Fabric, Quilt, Forge and NeoForge, with version choice and one-click loader updates.
 - **Mods, resource packs, shaders and modpacks** from **Modrinth** and **CurseForge**: a dependency window before installing, multi-select with one *Install all* dialog, update checks, mod sets.
 - **Modpacks** — import `.mrpack`, CurseForge and MultiMC/Prism; export to `.mrpack` and Prism.
-- **Accounts** — offline and **Ely.by** with skins and two-factor sign-in. Tokens are stored in Windows Credential Manager, the password is never saved.
+- **Accounts** — offline, **Ely.by** (skins, two-factor sign-in) and **Microsoft** (official servers and Realms; the password is entered only on the Microsoft website). Tokens are stored in Windows Credential Manager, the password is never saved.
 - **Instances** — change the game version with a mod compatibility check, repair files, scheduled backups, servers from `servers.dat` with ping, screenshots and worlds.
 - **Java** — picked automatically for every version, downloaded from Mojang or Eclipse Temurin.
 - **Comfort** — command palette (`Ctrl+K`), hotkeys, compact and mini window modes, Windows notifications, auto-update with hash check, English and Russian.
@@ -123,6 +123,7 @@ gradlew.bat packageMsi   :: MSI installer
 |---|---|---|
 | CurseForge API key | env `YOULAUNCHER_CURSEFORGE_KEY` | Embeds the key so the CurseForge catalog works for everyone. Without it users can enter their own key in Settings. |
 | Update repository | `-PupdateRepo=owner/repo` or env `YOULAUNCHER_UPDATE_REPO` | The launcher checks this repository's releases for updates. |
+| Microsoft sign-in | `-PmsClientId=<id>` or env `YOULAUNCHER_MS_CLIENT_ID` | Application (client) ID of your Azure app (personal accounts, public client flows on). Mojang must approve the app for the Minecraft API: [request form](https://aka.ms/mce-reviewappid). Without the ID the Microsoft button is hidden. |
 | Version | `-PappVersion=v1.2.0` | Overrides the version from `build.gradle.kts`. |
 
 Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance right away (used by desktop shortcuts), `--open <screen>` opens a screen (`home`, `library`, `mods`, `accounts`, `console`, `settings`, `settings:<section>`, `instance:<id>`, `profile`).
@@ -181,7 +182,7 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 - **Загрузчики модов** — Fabric, Quilt, Forge и NeoForge, выбор версии и обновление загрузчика в один клик.
 - **Моды, ресурспаки, шейдеры и сборки** из **Modrinth** и **CurseForge**: окно зависимостей перед установкой, выбор нескольких модов галочками и одно окно «Установить всё», проверка обновлений, наборы модов.
 - **Сборки** — импорт `.mrpack`, CurseForge и MultiMC/Prism; экспорт в `.mrpack` и Prism.
-- **Аккаунты** — офлайн и **Ely.by** со скинами и двухфакторной защитой. Токены хранятся в диспетчере учётных данных Windows, пароль не сохраняется.
+- **Аккаунты** — офлайн, **Ely.by** (скины, двухфакторная защита) и **Microsoft** (официальные серверы и Realms; пароль вводится только на сайте Microsoft). Токены хранятся в диспетчере учётных данных Windows, пароль не сохраняется.
 - **Экземпляры** — смена версии игры с проверкой модов, починка файлов, резервные копии по расписанию, серверы из `servers.dat` с пингом, скриншоты и миры.
 - **Java** — подбирается под каждую версию автоматически, скачивается с серверов Mojang или Eclipse Temurin.
 - **Удобство** — палитра команд (`Ctrl+K`), горячие клавиши, компактный и мини-режим окна, уведомления Windows, автообновление с проверкой хеша, русский и английский языки.
@@ -220,6 +221,7 @@ gradlew.bat packageMsi   :: установщик MSI
 |---|---|---|
 | Ключ CurseForge API | переменная `YOULAUNCHER_CURSEFORGE_KEY` | Ключ встраивается в сборку, и каталог CurseForge работает у всех. Без него пользователь может ввести свой ключ в настройках. |
 | Репозиторий обновлений | `-PupdateRepo=владелец/репозиторий` или `YOULAUNCHER_UPDATE_REPO` | Лаунчер проверяет релизы этого репозитория. |
+| Вход через Microsoft | `-PmsClientId=<id>` или `YOULAUNCHER_MS_CLIENT_ID` | ID приложения Azure (личные аккаунты, включены public client flows). Mojang должна одобрить приложение для Minecraft API: [форма заявки](https://aka.ms/mce-reviewappid). Без ID кнопки входа через Microsoft нет. |
 | Версия | `-PappVersion=v1.2.0` | Вместо версии из `build.gradle.kts`. |
 
 Аргументы запуска: `YouLauncher.exe --launch <id>` сразу запускает экземпляр (так работают ярлыки на рабочем столе), `--open <экран>` открывает экран (`home`, `library`, `mods`, `accounts`, `console`, `settings`, `settings:<раздел>`, `instance:<id>`, `profile`).

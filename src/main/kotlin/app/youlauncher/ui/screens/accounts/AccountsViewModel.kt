@@ -4,6 +4,9 @@ import app.youlauncher.AppGraph
 import app.youlauncher.core.isValidNick
 import app.youlauncher.core.model.Account
 import app.youlauncher.core.repo.AuthResult
+import app.youlauncher.core.repo.AuthFailure
+import app.youlauncher.core.repo.MicrosoftDeviceCode
+import kotlinx.coroutines.Job
 import app.youlauncher.resources.Res
 import app.youlauncher.resources.account_removed
 import app.youlauncher.resources.accounts_session_expired
@@ -29,6 +32,14 @@ data class ElyForm(
     val error: ElyError? = null,
 )
 
+/** Вход через Microsoft: код на экране, пока пользователь подтверждает вход в браузере. */
+sealed interface MsLogin {
+    data object Idle : MsLogin
+    data object Starting : MsLogin
+    data class Code(val code: MicrosoftDeviceCode) : MsLogin
+    data class Failed(val reason: AuthFailure?, val message: String) : MsLogin
+}
+
 sealed interface ElyError {
     data object Credentials : ElyError
     data class Network(val message: String) : ElyError
@@ -40,6 +51,11 @@ class AccountsViewModel(
 ) : ViewModel(dispatcher) {
     val accounts: StateFlow<List<Account>> = graph.accounts.accounts
     val activeId: StateFlow<String?> = graph.accounts.activeId
+
+    private val _ms = MutableStateFlow<MsLogin>(MsLogin.Idle)
+    val ms: StateFlow<MsLogin> = _ms.asStateFlow()
+    private var msJob: Job? = null
+    val microsoftAvailable: Boolean get() = graph.accounts.microsoftAvailable
 
     private val _ely = MutableStateFlow(ElyForm())
     val ely: StateFlow<ElyForm> = _ely.asStateFlow()
@@ -96,6 +112,38 @@ class AccountsViewModel(
                 is AuthResult.Failure -> _ely.update { it.copy(busy = false, error = ElyError.Network(result.message)) }
             }
         }
+    }
+
+    /** Код с сайта Microsoft и ожидание подтверждения; диалог закрывается сам после входа. */
+    fun startMicrosoft(onDone: () -> Unit) {
+        msJob?.cancel()
+        _ms.value = MsLogin.Starting
+        msJob = scope.launch {
+            val code = try {
+                graph.accounts.microsoftDeviceCode()
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _ms.value = MsLogin.Failed(null, e.message ?: e::class.simpleName.orEmpty())
+                return@launch
+            }
+            _ms.value = MsLogin.Code(code)
+            when (val result = graph.accounts.loginMicrosoft(code)) {
+                is AuthResult.Success -> {
+                    graph.accounts.setActive(result.account.id)
+                    graph.messenger.show(Res.string.ely_signed_in, result.account.username)
+                    _ms.value = MsLogin.Idle
+                    onDone()
+                }
+                is AuthResult.Failure -> _ms.value = MsLogin.Failed(result.reason, result.message)
+                else -> _ms.value = MsLogin.Failed(null, result.toString())
+            }
+        }
+    }
+
+    fun cancelMicrosoft() {
+        msJob?.cancel()
+        _ms.value = MsLogin.Idle
     }
 }
 

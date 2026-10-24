@@ -171,7 +171,7 @@ private fun AccountSwitcher(onManage: () -> Unit, modifier: Modifier) {
                 ListItem(
                     headlineContent = { Text(acc.username, style = MaterialTheme.typography.titleSmallEmphasized) },
                     supportingContent = {
-                        Text(stringResource(if (acc.type == AccountType.ElyBy) Res.string.account_type_ely else Res.string.account_type_offline))
+                        Text(stringResource(app.youlauncher.ui.screens.accounts.accountTypeLabel(acc.type)))
                     },
                     leadingContent = { AccountHead(acc, size = 36.dp) },
                     trailingContent = { RadioButton(selected = active, onClick = { graph.accounts.setActive(acc.id) }) },

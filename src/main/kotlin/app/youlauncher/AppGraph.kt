@@ -115,7 +115,11 @@ class AppGraph(
     // Секреты (токены Ely.by, ключ CurseForge) только в диспетчере учётных данных Windows.
     val secrets: SecretStore = if (!demo && WindowsCredentialStore.isSupported()) WindowsCredentialStore() else InMemorySecretStore()
     val accounts: AccountRepository = if (demo) FakeAccountRepository()
-        else FileAccountRepository(dirs.accountsFile, secrets, ElyByClient(http), scope).also { it.refreshAllInBackground() }
+        else FileAccountRepository(
+            dirs.accountsFile, secrets, ElyByClient(http), scope,
+            // Вход через Microsoft включается, только если в сборку встроен ID приложения Azure.
+            microsoft = BuildInfo.microsoftClientId?.let { app.youlauncher.data.accounts.MicrosoftAuthClient(http, it) },
+        ).also { it.refreshAllInBackground() }
     private val injector = AuthlibInjector(http, dirs.toolsDir, {
         Downloader(http, DownloaderConfig(retries = settings.settings.value.network.retries, allowedHosts = INJECTOR_HOSTS))
     })

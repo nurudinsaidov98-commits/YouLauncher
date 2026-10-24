@@ -58,6 +58,27 @@ import app.youlauncher.resources.accounts_add_offline
 import app.youlauncher.resources.accounts_copy_uuid
 import app.youlauncher.resources.accounts_ely_about
 import app.youlauncher.resources.accounts_ely_register
+import app.youlauncher.resources.accounts_add_microsoft
+import app.youlauncher.resources.accounts_subtitle_ms
+import app.youlauncher.resources.accounts_notice_body_ms
+import app.youlauncher.resources.account_type_microsoft
+import app.youlauncher.resources.ms_code_copied
+import app.youlauncher.resources.ms_copy
+import app.youlauncher.resources.ms_error_child
+import app.youlauncher.resources.ms_error_declined
+import app.youlauncher.resources.ms_error_expired
+import app.youlauncher.resources.ms_error_no_game
+import app.youlauncher.resources.ms_error_no_xbox
+import app.youlauncher.resources.ms_error_not_approved
+import app.youlauncher.resources.ms_error_region
+import app.youlauncher.resources.ms_note
+import app.youlauncher.resources.ms_open
+import app.youlauncher.resources.ms_retry
+import app.youlauncher.resources.ms_starting
+import app.youlauncher.resources.ms_step
+import app.youlauncher.resources.ms_title
+import app.youlauncher.resources.ms_waiting
+import app.youlauncher.core.repo.AuthFailure
 import app.youlauncher.resources.accounts_empty_body
 import app.youlauncher.resources.accounts_empty_title
 import app.youlauncher.resources.accounts_last_used
@@ -109,7 +130,14 @@ import app.youlauncher.ui.icons.Symbols
 import app.youlauncher.ui.rememberViewModel
 import org.jetbrains.compose.resources.stringResource
 
-private enum class AccountDialog { Offline, Ely }
+private enum class AccountDialog { Offline, Ely, Microsoft }
+
+/** Подпись типа аккаунта (офлайн, Ely.by, Microsoft). */
+fun accountTypeLabel(type: AccountType): org.jetbrains.compose.resources.StringResource = when (type) {
+    AccountType.Offline -> Res.string.account_type_offline
+    AccountType.ElyBy -> Res.string.account_type_ely
+    AccountType.Microsoft -> Res.string.account_type_microsoft
+}
 
 @Composable
 fun AccountsScreen() {
@@ -118,14 +146,20 @@ fun AccountsScreen() {
     val accounts by vm.accounts.collectAsState()
     val activeId by vm.activeId.collectAsState()
     var dialog by remember { mutableStateOf<AccountDialog?>(null) }
+    // Команда «signInMicrosoft» сразу открывает вход через Microsoft (так делаются снимки экрана).
+    val ui = app.youlauncher.ui.LocalAppUi.current
+    LaunchedEffect(ui.pendingAction) { if (ui.consume("signInMicrosoft") && vm.microsoftAvailable) dialog = AccountDialog.Microsoft }
     var removing by remember { mutableStateOf<Account?>(null) }
 
     Column(Modifier.fillMaxSize().padding(start = Gaps.screen, end = Gaps.screen, top = Gaps.screen), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        ScreenHeader(stringResource(Res.string.nav_accounts), subtitle = stringResource(Res.string.accounts_subtitle)) {
+        ScreenHeader(stringResource(Res.string.nav_accounts), subtitle = stringResource(if (vm.microsoftAvailable) Res.string.accounts_subtitle_ms else Res.string.accounts_subtitle)) {
             FilledTonalButton(onClick = { dialog = AccountDialog.Offline }, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.PersonAdd, stringResource(Res.string.accounts_add_offline)) }
             Button(onClick = { vm.resetEly(); dialog = AccountDialog.Ely }, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.Login, stringResource(Res.string.accounts_add_ely)) }
+            if (vm.microsoftAvailable) {
+                Button(onClick = { dialog = AccountDialog.Microsoft }, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.Login, stringResource(Res.string.accounts_add_microsoft)) }
+            }
         }
-        Notice()
+        Notice(vm.microsoftAvailable)
         if (accounts.isEmpty()) {
             EmptyState(Illustration.Accounts, stringResource(Res.string.accounts_empty_title), stringResource(Res.string.accounts_empty_body)) {
                 Button(onClick = { dialog = AccountDialog.Offline }, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.PersonAdd, stringResource(Res.string.accounts_add_offline)) }
@@ -138,7 +172,10 @@ fun AccountsScreen() {
                         active = acc.id == activeId,
                         onUse = { vm.setActive(acc.id) },
                         onRemove = { removing = acc },
-                        onReauth = { vm.updateEly { it.copy(login = acc.login.orEmpty()) }; dialog = AccountDialog.Ely },
+                        onReauth = {
+                            if (acc.type == AccountType.Microsoft) dialog = AccountDialog.Microsoft
+                            else { vm.updateEly { it.copy(login = acc.login.orEmpty()) }; dialog = AccountDialog.Ely }
+                        },
                         onRefresh = { vm.refresh(acc) },
                         modifier = Modifier.animateItem(
                             fadeInSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
@@ -154,6 +191,7 @@ fun AccountsScreen() {
     when (dialog) {
         AccountDialog.Offline -> OfflineDialog(vm, onDismiss = { dialog = null })
         AccountDialog.Ely -> ElyDialog(vm, onDismiss = { dialog = null })
+        AccountDialog.Microsoft -> MicrosoftDialog(vm, onDismiss = { vm.cancelMicrosoft(); dialog = null })
         null -> Unit
     }
     removing?.let { acc ->
@@ -170,13 +208,13 @@ fun AccountsScreen() {
 }
 
 @Composable
-private fun Notice() {
+private fun Notice(microsoft: Boolean) {
     Surface(shape = MaterialTheme.shapes.extraLarge, color = MaterialTheme.colorScheme.secondaryContainer, modifier = Modifier.fillMaxWidth()) {
         Row(Modifier.padding(20.dp), horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.Top) {
             Icon(Symbols.InfoFilled, null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
             Column(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.weight(1f)) {
                 Text(stringResource(Res.string.accounts_notice_title), style = MaterialTheme.typography.titleSmallEmphasized, color = MaterialTheme.colorScheme.onSecondaryContainer)
-                Text(stringResource(Res.string.accounts_notice_body), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSecondaryContainer)
+                Text(stringResource(if (microsoft) Res.string.accounts_notice_body_ms else Res.string.accounts_notice_body), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSecondaryContainer)
             }
         }
     }
@@ -196,9 +234,13 @@ private fun AccountCard(acc: Account, active: Boolean, onUse: () -> Unit, onRemo
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                     Text(acc.username, style = MaterialTheme.typography.titleLargeEmphasized)
-                    Surface(shape = MaterialTheme.shapes.small, color = if (acc.type == AccountType.ElyBy) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest) {
+                    Surface(shape = MaterialTheme.shapes.small, color = when (acc.type) {
+                        AccountType.ElyBy -> MaterialTheme.colorScheme.tertiaryContainer
+                        AccountType.Microsoft -> MaterialTheme.colorScheme.secondaryContainer
+                        AccountType.Offline -> MaterialTheme.colorScheme.surfaceContainerHighest
+                    }) {
                         Text(
-                            stringResource(if (acc.type == AccountType.ElyBy) Res.string.account_type_ely else Res.string.account_type_offline),
+                            stringResource(accountTypeLabel(acc.type)),
                             style = MaterialTheme.typography.labelSmall,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         )
@@ -220,7 +262,7 @@ private fun AccountCard(acc: Account, active: Boolean, onUse: () -> Unit, onRemo
             } else {
                 TextButton(onClick = onUse, shapes = ButtonDefaults.shapes()) { Text(stringResource(Res.string.accounts_use)) }
             }
-            if (acc.type == AccountType.ElyBy && !acc.needsReauth) {
+            if (acc.type != AccountType.Offline && !acc.needsReauth) {
                 TIconButton(Symbols.Sync, stringResource(Res.string.accounts_refresh), onRefresh)
             }
             TIconButton(Symbols.ContentCopy, stringResource(Res.string.accounts_copy_uuid), {
@@ -362,5 +404,83 @@ private fun ElyDialog(vm: AccountsViewModel, onDismiss: () -> Unit) {
             }
         },
         dismissButton = { TextButton(onClick = onDismiss, enabled = !form.busy, shapes = ButtonDefaults.shapes()) { Text(stringResource(Res.string.action_cancel)) } },
+    )
+}
+
+/**
+ * Вход через Microsoft по коду устройства: код крупно, кнопки «Скопировать» и «Открыть microsoft.com/link»,
+ * ожидание подтверждения в браузере. Пароль вводится только на сайте Microsoft.
+ */
+@Composable
+private fun MicrosoftDialog(vm: AccountsViewModel, onDismiss: () -> Unit) {
+    val graph = LocalAppGraph.current
+    val state by vm.ms.collectAsState()
+    LaunchedEffect(Unit) { vm.startMicrosoft(onDismiss) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = { Icon(Symbols.Login, null) },
+        title = { Text(stringResource(Res.string.ms_title)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(14.dp), modifier = Modifier.widthIn(min = 380.dp, max = 440.dp)) {
+                when (val s = state) {
+                    MsLogin.Idle, MsLogin.Starting -> Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        LoadingIndicator(Modifier.size(36.dp))
+                        Text(stringResource(Res.string.ms_starting), style = MaterialTheme.typography.bodyLarge)
+                    }
+                    is MsLogin.Code -> {
+                        Text(stringResource(Res.string.ms_step), style = MaterialTheme.typography.bodyMedium)
+                        Surface(shape = MaterialTheme.shapes.extraLarge, color = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier.fillMaxWidth()) {
+                            Row(Modifier.padding(horizontal = 20.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    s.code.userCode,
+                                    style = MaterialTheme.typography.displaySmallEmphasized,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.weight(1f),
+                                )
+                                TIconButton(Symbols.ContentCopy, stringResource(Res.string.ms_copy), {
+                                    Platform.copy(s.code.userCode)
+                                    graph.messenger.show(Res.string.ms_code_copied)
+                                })
+                            }
+                        }
+                        Button(
+                            onClick = { Platform.copy(s.code.userCode); Platform.openUrl(s.code.verificationUri) },
+                            shapes = ButtonDefaults.shapes(),
+                            modifier = Modifier.fillMaxWidth(),
+                        ) { IconLabel(Symbols.OpenInNew, stringResource(Res.string.ms_open)) }
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                            LoadingIndicator(Modifier.size(28.dp))
+                            Text(stringResource(Res.string.ms_waiting), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        Text(stringResource(Res.string.ms_note), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    is MsLogin.Failed -> Surface(shape = MaterialTheme.shapes.medium, color = MaterialTheme.colorScheme.errorContainer) {
+                        Row(Modifier.padding(12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Symbols.ErrorFilled, null, tint = MaterialTheme.colorScheme.onErrorContainer, modifier = Modifier.size(20.dp))
+                            Text(
+                                when (s.reason) {
+                                    AuthFailure.Declined -> stringResource(Res.string.ms_error_declined)
+                                    AuthFailure.Expired -> stringResource(Res.string.ms_error_expired)
+                                    AuthFailure.NoXboxAccount -> stringResource(Res.string.ms_error_no_xbox)
+                                    AuthFailure.ChildAccount -> stringResource(Res.string.ms_error_child)
+                                    AuthFailure.Region -> stringResource(Res.string.ms_error_region)
+                                    AuthFailure.NoGame -> stringResource(Res.string.ms_error_no_game)
+                                    AuthFailure.AppNotApproved -> stringResource(Res.string.ms_error_not_approved)
+                                    null -> stringResource(Res.string.ely_error_network, s.message)
+                                },
+                                color = MaterialTheme.colorScheme.onErrorContainer,
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            if (state is MsLogin.Failed) {
+                Button(onClick = { vm.startMicrosoft(onDismiss) }, shapes = ButtonDefaults.shapes()) { Text(stringResource(Res.string.ms_retry)) }
+            }
+        },
+        dismissButton = { TextButton(onClick = onDismiss, shapes = ButtonDefaults.shapes()) { Text(stringResource(Res.string.action_cancel)) } },
     )
 }

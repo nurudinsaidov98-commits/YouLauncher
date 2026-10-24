@@ -85,6 +85,7 @@ object ScreenShots {
             ui.pendingAction = "settings:Background"
         }),
         ScreenShot("settings-network", Screen.Settings, frames = 120, prepare = { _, ui -> ui.pendingAction = "settings:Network" }),
+        ScreenShot("accounts-microsoft", Screen.Accounts, frames = 90, prepare = { _, ui -> ui.pendingAction = "signInMicrosoft" }),
         ScreenShot("settings-java", Screen.Settings, frames = 150, prepare = { _, ui -> ui.pendingAction = "settings:Java" }),
         ScreenShot("settings-about", Screen.Settings, frames = 150, prepare = { _, ui -> ui.pendingAction = "settings:About" }),
         ScreenShot("settings-colors", Screen.Settings, frames = 120, prepare = { g, ui ->

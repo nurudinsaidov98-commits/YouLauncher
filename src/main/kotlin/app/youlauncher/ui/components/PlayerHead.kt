@@ -93,7 +93,7 @@ fun rememberActiveSkinUrl(): String? {
     val accounts = app.youlauncher.ui.LocalAppGraph.current.accounts
     val list by accounts.accounts.collectAsState()
     val activeId by accounts.activeId.collectAsState()
-    return list.firstOrNull { it.id == activeId }?.takeIf { it.type == app.youlauncher.core.model.AccountType.ElyBy }?.skinUrl
+    return list.firstOrNull { it.id == activeId }?.takeIf { it.type != app.youlauncher.core.model.AccountType.Offline }?.skinUrl
 }
 
 /**

@@ -3,7 +3,7 @@ package app.youlauncher.core.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class AccountType { Offline, ElyBy }
+enum class AccountType { Offline, ElyBy, Microsoft }
 
 /** Аккаунт без секретов: токены лежат только в Windows Credential Manager. */
 @Serializable

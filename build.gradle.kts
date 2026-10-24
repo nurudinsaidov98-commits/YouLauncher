@@ -72,6 +72,7 @@ val generateBuildSecrets by tasks.registering {
     // Версия и репозиторий обновлений тоже идут в ресурс сборки (одна версия для jar, MSI и «О программе»).
     val appVersion = project.version.toString()
     val updateRepo = (project.findProperty("updateRepo") as String?) ?: System.getenv("YOULAUNCHER_UPDATE_REPO")
+    val msClientId = (project.findProperty("msClientId") as String?) ?: System.getenv("YOULAUNCHER_MS_CLIENT_ID")
     inputs.property("version", appVersion)
     doLast {
         val dir = buildSecretsDir.get().asFile
@@ -79,6 +80,8 @@ val generateBuildSecrets by tasks.registering {
         dir.mkdirs()
         val lines = mutableListOf("version=$appVersion")
         updateRepo?.trim()?.takeIf { Regex("[\\w.-]+/[\\w.-]+").matches(it) }?.let { lines += "updateRepo=$it" }
+        // ID приложения Azure для входа через Microsoft: общедоступный клиент, не секрет. Без него кнопки входа нет.
+        msClientId?.trim()?.takeIf { Regex("[0-9a-fA-F-]{36}").matches(it) }?.let { lines += "msClientId=$it" }
         // Переменная прежнего названия тоже принимается, чтобы не задавать ключ заново.
         val key = (System.getenv("YOULAUNCHER_CURSEFORGE_KEY") ?: System.getenv("TERRANE_CURSEFORGE_KEY"))?.trim().orEmpty()
         // Сообщения сборки на ASCII: консоль PowerShell по умолчанию не в UTF-8.

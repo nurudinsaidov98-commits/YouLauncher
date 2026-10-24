@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accounts_add_microsoft">Войти через Microsoft</string>
+    <string name="accounts_subtitle_ms">Офлайн-аккаунты, Ely.by и Microsoft</string>
+    <string name="account_type_microsoft">Аккаунт Microsoft</string>
+    <string name="accounts_notice_body_ms">Офлайн-аккаунты и Ely.by работают в одиночной игре, по локальной сети и на серверах с Ely.by или офлайн-режимом. Для официальных серверов и Realms войдите через Microsoft: нужна купленная Minecraft: Java Edition.</string>
+    <string name="ms_title">Вход через Microsoft</string>
+    <string name="ms_starting">Получаем код входа…</string>
+    <string name="ms_step">Откройте страницу Microsoft и введите этот код:</string>
+    <string name="ms_copy">Скопировать код</string>
+    <string name="ms_code_copied">Код скопирован</string>
+    <string name="ms_open">Открыть microsoft.com/link</string>
+    <string name="ms_waiting">Ждём подтверждения в браузере…</string>
+    <string name="ms_note">Пароль вводится только на сайте Microsoft, лаунчер его не видит. Сессия хранится в диспетчере учётных данных Windows.</string>
+    <string name="ms_retry">Попробовать снова</string>
+    <string name="ms_error_declined">Вход отменён в окне Microsoft.</string>
+    <string name="ms_error_expired">Код устарел. Нажмите «Попробовать снова», чтобы получить новый.</string>
+    <string name="ms_error_no_xbox">У этого аккаунта Microsoft нет профиля Xbox. Создайте его на xbox.com и попробуйте снова.</string>
+    <string name="ms_error_child">Это детский аккаунт: взрослый в семейной группе Microsoft должен разрешить вход.</string>
+    <string name="ms_error_region">Xbox Live недоступен в стране этого аккаунта.</string>
+    <string name="ms_error_no_game">На этом аккаунте не куплена Minecraft: Java Edition.</string>
+    <string name="ms_error_not_approved">Mojang ещё не одобрила вход через Microsoft для этой сборки лаунчера. Пока можно играть с офлайн-аккаунтом или через Ely.by.</string>
+</resources>

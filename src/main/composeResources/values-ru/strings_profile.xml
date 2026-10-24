@@ -7,7 +7,7 @@
     <string name="profile_menu_add_account">Добавить аккаунт</string>
     <string name="profile_change_banner">Сменить баннер</string>
     <string name="profile_change_avatar">Сменить аватар</string>
-    <string name="profile_avatar_skin">Голова скина Ely.by в аватаре</string>
+    <string name="profile_avatar_skin">Голова скина в аватаре</string>
     <string name="profile_copy_nick">Скопировать ник</string>
     <string name="profile_nick_copied">Ник скопирован</string>
     <string name="profile_stat_play">В игре</string>

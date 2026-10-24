@@ -211,6 +211,11 @@ class FakeAccountRepository : AccountRepository {
     private val active = MutableStateFlow<String?>(state.value.firstOrNull()?.id)
     override val activeId: StateFlow<String?> = active.asStateFlow()
 
+    // Демо: вход через Microsoft показывает код и ждёт, пока его не отменят (настоящего сервера нет).
+    override val microsoftAvailable: Boolean get() = true
+    override suspend fun microsoftDeviceCode() = app.youlauncher.core.repo.MicrosoftDeviceCode("F7KQ-29MX", "https://www.microsoft.com/link", "demo", 5, Long.MAX_VALUE)
+    override suspend fun loginMicrosoft(code: app.youlauncher.core.repo.MicrosoftDeviceCode): AuthResult = kotlinx.coroutines.awaitCancellation()
+
     override suspend fun addOffline(nick: String): Account {
         val acc = Account(UUID.randomUUID().toString(), AccountType.Offline, nick, offlineUuid(nick), addedAt = System.currentTimeMillis())
         state.update { it + acc }

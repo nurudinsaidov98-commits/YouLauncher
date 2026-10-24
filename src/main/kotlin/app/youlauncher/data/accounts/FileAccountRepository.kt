@@ -8,6 +8,7 @@ import app.youlauncher.core.readJsonOrNull
 import app.youlauncher.core.repo.AccountRepository
 import app.youlauncher.core.repo.AccountSession
 import app.youlauncher.core.repo.AuthResult
+import app.youlauncher.core.repo.MicrosoftDeviceCode
 import app.youlauncher.core.repo.ReauthRequiredException
 import app.youlauncher.core.secure.SecretStore
 import app.youlauncher.core.writeJson
@@ -32,14 +33,17 @@ fun dashedUuid(raw: String): String =
     if (raw.length == 32 && !raw.contains('-')) "${raw.substring(0, 8)}-${raw.substring(8, 12)}-${raw.substring(12, 16)}-${raw.substring(16, 20)}-${raw.substring(20)}" else raw
 
 /**
- * Аккаунты: список без секретов в accounts.json, токены Ely.by только в хранилище секретов
- * (диспетчер учётных данных Windows) под именем ely-session:<id>. Пароль нигде не хранится.
+ * Аккаунты: список без секретов в accounts.json, токены Ely.by и Microsoft только в хранилище секретов
+ * (диспетчер учётных данных Windows) под именами ely-session:<id> и ms-session:<id>. Пароль нигде не хранится.
  */
 class FileAccountRepository(
     private val file: Path,
     private val secrets: SecretStore,
     private val ely: ElyByClient,
     private val scope: CoroutineScope,
+    // null, если в сборке не задан ID приложения Azure для входа через Microsoft.
+    private val microsoft: MicrosoftAuthClient? = null,
+    private val now: () -> Long = System::currentTimeMillis,
 ) : AccountRepository {
     private val stored = file.readJsonOrNull(AccountsFile.serializer()) ?: AccountsFile()
     // Ссылки на скины из прежних версий были по http: переводим на https, иначе голова скина не загрузится.
@@ -115,6 +119,7 @@ class FileAccountRepository(
      */
     override suspend fun refresh(id: String): Boolean {
         val acc = state.value.firstOrNull { it.id == id } ?: return false
+        if (acc.type == AccountType.Microsoft) return refreshMicrosoft(acc)
         if (acc.type != AccountType.ElyBy) return true
         val session = readSession(id) ?: run { markReauth(id, true); return false }
         return try {
@@ -149,7 +154,7 @@ class FileAccountRepository(
     /** Фоновое обновление всех сессий Ely.by при старте лаунчера. */
     fun refreshAllInBackground() {
         scope.launch(Dispatchers.IO) {
-            state.value.filter { it.type == AccountType.ElyBy }.forEach { refresh(it.id) }
+            state.value.filter { it.type != AccountType.Offline }.forEach { refresh(it.id) }
         }
     }
 
@@ -160,6 +165,7 @@ class FileAccountRepository(
             readSession(id)?.let { s -> runCatching { ely.invalidate(s.accessToken, s.clientToken) } }
             runCatching { secrets.delete(secretName(id)) }
         }
+        if (acc.type == AccountType.Microsoft) runCatching { secrets.delete(msSecretName(id)) }
         mutex.withLock {
             state.update { list -> list.filterNot { it.id == id } }
             if (active.value == id) active.value = state.value.firstOrNull()?.id
@@ -179,12 +185,79 @@ class FileAccountRepository(
             return AccountSession(acc.username, acc.uuid, UUID.randomUUID().toString().replace("-", ""), AccountType.Offline)
         }
         if (!refresh(id)) throw ReauthRequiredException(acc.username)
+        if (acc.type == AccountType.Microsoft) {
+            val ms = readMicrosoft(id) ?: throw ReauthRequiredException(acc.username)
+            return AccountSession(ms.name, ms.uuid, ms.accessToken, AccountType.Microsoft)
+        }
         val s = readSession(id) ?: throw ReauthRequiredException(acc.username)
         val fresh = state.value.first { it.id == id }
         return AccountSession(fresh.username, fresh.uuid, s.accessToken, AccountType.ElyBy)
     }
 
+    // Microsoft: сессия Minecraft и токен обновления Microsoft лежат только в хранилище секретов.
+    private fun msSecretName(id: String) = "ms-session:$id"
+
+    private fun readMicrosoft(id: String): MicrosoftSession? = runCatching {
+        secrets.read(msSecretName(id))?.let { YouLauncherJson.decodeFromString(MicrosoftSession.serializer(), it) }
+    }.getOrNull()
+
+    private fun writeMicrosoft(id: String, s: MicrosoftSession) =
+        secrets.write(msSecretName(id), YouLauncherJson.encodeToString(MicrosoftSession.serializer(), s))
+
+    override val microsoftAvailable: Boolean get() = microsoft != null
+
+    override suspend fun microsoftDeviceCode(): MicrosoftDeviceCode =
+        (microsoft ?: throw UnsupportedOperationException("Вход через Microsoft не настроен в этой сборке")).deviceCode()
+
+    override suspend fun loginMicrosoft(code: MicrosoftDeviceCode): AuthResult {
+        val client = microsoft ?: return AuthResult.Failure("Вход через Microsoft не настроен в этой сборке")
+        val session = try {
+            client.awaitLogin(code)
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            return AuthResult.Failure(e.message ?: e::class.simpleName.orEmpty(), MicrosoftParsing.reason(e))
+        }
+        val account = mutex.withLock {
+            // Повторный вход в тот же аккаунт обновляет запись.
+            val existing = state.value.firstOrNull { it.type == AccountType.Microsoft && it.uuid == session.uuid }
+            val acc = (existing ?: Account(UUID.randomUUID().toString(), AccountType.Microsoft, session.name, session.uuid, addedAt = System.currentTimeMillis()))
+                .withMicrosoft(session)
+            writeMicrosoft(acc.id, session)
+            change { list -> if (existing != null) list.map { if (it.id == acc.id) acc else it } else list + acc }
+            if (active.value == null) active.value = acc.id
+            acc
+        }
+        return AuthResult.Success(account)
+    }
+
+    /**
+     * Сессия Minecraft живёт около суток: заранее обновляется по токену Microsoft.
+     * false и пометка «нужен вход», если Microsoft отклонил токен; при ошибке сети сессия остаётся как есть.
+     */
+    private suspend fun refreshMicrosoft(acc: Account): Boolean {
+        val current = readMicrosoft(acc.id) ?: run { markReauth(acc.id, true); return false }
+        if (current.expiresAt - now() > MS_REFRESH_MARGIN_MS) return true
+        val client = microsoft ?: return true
+        return try {
+            val fresh = client.refresh(current.refreshToken)
+            writeMicrosoft(acc.id, fresh)
+            mutex.withLock { change { list -> list.map { if (it.id == acc.id) it.withMicrosoft(fresh) else it } } }
+            true
+        } catch (e: MicrosoftAuthException.InvalidGrant) {
+            markReauth(acc.id, true)
+            false
+        } catch (e: Exception) {
+            true
+        }
+    }
+
+    private fun Account.withMicrosoft(s: MicrosoftSession) =
+        copy(username = s.name, needsReauth = false, skinUrl = s.skinUrl, slimSkin = s.slim, capeUrl = s.capeUrl)
+
     companion object {
         const val CLIENT_TOKEN = "ely-client-token"
+        /** Сессия Minecraft обновляется, если до её конца меньше 10 минут. */
+        const val MS_REFRESH_MARGIN_MS = 10 * 60 * 1000L
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accounts_add_microsoft">Sign in with Microsoft</string>
+    <string name="accounts_subtitle_ms">Offline, Ely.by and Microsoft accounts</string>
+    <string name="account_type_microsoft">Microsoft account</string>
+    <string name="accounts_notice_body_ms">Offline and Ely.by accounts work in single player, on LAN and on servers with Ely.by or offline mode. For official servers and Realms, sign in with Microsoft: you need a purchased copy of Minecraft: Java Edition.</string>
+    <string name="ms_title">Sign in with Microsoft</string>
+    <string name="ms_starting">Getting a sign-in code…</string>
+    <string name="ms_step">Open the Microsoft page and enter this code:</string>
+    <string name="ms_copy">Copy code</string>
+    <string name="ms_code_copied">Code copied</string>
+    <string name="ms_open">Open microsoft.com/link</string>
+    <string name="ms_waiting">Waiting for confirmation in the browser…</string>
+    <string name="ms_note">You enter your password only on the Microsoft website; the launcher never sees it. The session is kept in Windows Credential Manager.</string>
+    <string name="ms_retry">Try again</string>
+    <string name="ms_error_declined">Sign-in was cancelled in the Microsoft window.</string>
+    <string name="ms_error_expired">The code has expired. Press “Try again” to get a new one.</string>
+    <string name="ms_error_no_xbox">This Microsoft account has no Xbox profile. Create one on xbox.com and try again.</string>
+    <string name="ms_error_child">This is a child account: an adult in the Microsoft family group has to allow sign-in.</string>
+    <string name="ms_error_region">Xbox Live is not available in this account's country.</string>
+    <string name="ms_error_no_game">Minecraft: Java Edition is not purchased on this account.</string>
+    <string name="ms_error_not_approved">Mojang has not approved Microsoft sign-in for this launcher build yet. Meanwhile you can play with an offline or Ely.by account.</string>
+</resources>

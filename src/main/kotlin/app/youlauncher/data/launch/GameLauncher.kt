@@ -286,6 +286,8 @@ class GameLauncher(
         return when (session.type) {
             AccountType.ElyBy -> LaunchAccount(session.username, session.uuid, session.accessToken, "mojang")
             AccountType.Offline -> LaunchAccount(session.username, session.uuid, session.accessToken, "legacy")
+            // Microsoft: обычная лицензионная сессия, authlib-injector не нужен.
+            AccountType.Microsoft -> LaunchAccount(session.username, session.uuid, session.accessToken, "msa")
         }
     }
 
