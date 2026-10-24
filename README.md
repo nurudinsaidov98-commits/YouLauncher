@@ -244,6 +244,14 @@ gradlew.bat packageMsi   :: установщик MSI
 
 <div align="center">
 
+Made by **Eroun97** together with **Claude** (Anthropic) · Создан **Eroun97** вместе с **Claude** (Anthropic)
+
+</div>
+
+---
+
+<div align="center">
+
 **License · Лицензия — [MIT](LICENSE)**: use it, change it, build your own launcher on top of it · берите, меняйте и делайте на его основе своё.
 Third-party components are listed in [NOTICE](NOTICE) · сторонние компоненты перечислены в [NOTICE](NOTICE).
 Icons: Material Symbols (Apache 2.0) · Fonts: Google Sans Flex, Google Sans Code (OFL 1.1).
