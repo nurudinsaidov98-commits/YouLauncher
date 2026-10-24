@@ -150,18 +150,19 @@ fun YouLauncherTheme(
             animate = ui.motion != MotionLevel.Off,
         ) {
             // Свои цвета ролей поверх динамической схемы: меняют все элементы, которые берут эти роли.
-            if (theme.colorOverrides.isEmpty()) content()
-            else {
-                val base = MaterialTheme.colorScheme
-                val scheme = remember(base, theme.colorOverrides) { ColorOverrides.apply(base, theme.colorOverrides) }
-                MaterialExpressiveTheme(
-                    colorScheme = scheme,
-                    motionScheme = MaterialTheme.motionScheme,
-                    shapes = MaterialTheme.shapes,
-                    typography = MaterialTheme.typography,
-                    content = content,
-                )
+            // Обёртка есть всегда: если бы она появлялась только со своими цветами, весь интерфейс
+            // пересоздавался бы при первом своём цвете (сбрасывалась прокрутка и состояние экранов).
+            val base = MaterialTheme.colorScheme
+            val scheme = remember(base, theme.colorOverrides) {
+                if (theme.colorOverrides.isEmpty()) base else ColorOverrides.apply(base, theme.colorOverrides)
             }
+            MaterialExpressiveTheme(
+                colorScheme = scheme,
+                motionScheme = MaterialTheme.motionScheme,
+                shapes = MaterialTheme.shapes,
+                typography = MaterialTheme.typography,
+                content = content,
+            )
         }
     }
 }

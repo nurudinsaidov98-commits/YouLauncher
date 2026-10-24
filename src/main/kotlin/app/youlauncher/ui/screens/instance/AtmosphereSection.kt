@@ -84,7 +84,7 @@ fun AtmosphereSection(inst: Instance, vm: InstanceViewModel) {
             }
             BuiltinWallpapers.all.forEach { w ->
                 MiniTile(selected = a.wallpaper == w.key, label = stringResource(w.name), onClick = { vm.update { it.copy(atmosphere = it.atmosphere.copy(wallpaper = w.key)) } }) {
-                    ArtLayer(w.style, rememberSceneScheme(w.seedArgb), w.artSeed, still, noParallax, 0.3f, Modifier.fillMaxSize())
+                    ArtLayer(w.style, rememberSceneScheme(w.seedArgb), w.artSeed, still, noParallax, 0.3f, Modifier.fillMaxSize(), preview = true)
                 }
             }
         }

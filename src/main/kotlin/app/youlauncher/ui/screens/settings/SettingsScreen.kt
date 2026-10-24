@@ -198,7 +198,7 @@ fun SettingsScreen() {
     val graph = LocalAppGraph.current
     val settings by graph.settings.settings.collectAsState()
     val update: ((LauncherSettings) -> LauncherSettings) -> Unit = { graph.settings.update(it) }
-    val listState = rememberLazyListState()
+    val listState = LocalAppUi.current.settingsList
     val scope = rememberCoroutineScope()
     val pages = SettingsPage.entries
     val ui = LocalAppUi.current

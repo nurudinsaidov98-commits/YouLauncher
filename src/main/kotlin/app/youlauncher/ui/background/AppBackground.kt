@@ -137,8 +137,8 @@ fun BackdropLayer(backdrop: Backdrop, time: State<Float>, parallax: State<Offset
 private val StillTime: State<Float> = mutableStateOf(0f)
 
 @Composable
-fun ArtLayer(style: ArtStyle, scheme: ColorScheme, seed: Long, time: State<Float>, parallax: State<Offset>, blurScale: Float, modifier: Modifier) {
-    val blur = ArtBlur.radius(style.blurred, blurScale).dp
+fun ArtLayer(style: ArtStyle, scheme: ColorScheme, seed: Long, time: State<Float>, parallax: State<Offset>, blurScale: Float, modifier: Modifier, preview: Boolean = false) {
+    val blur = (if (preview) ArtBlur.previewRadius(style.blurred) else ArtBlur.radius(style.blurred, blurScale)).dp
     val scale = if (blur > 0.dp) 1f / SOFT_BLUR_FACTOR else 1f
     Canvas(modifier.softBlur(blur, SOFT_BLUR_FACTOR)) {
         drawArt(style, scheme, seed, time.value, parallax.value * scale)
@@ -179,4 +179,7 @@ object ArtBlur {
         val s = blurScale.coerceIn(0f, 1f)
         return if (softStyle) 12f + 68f * s else if (s < 0.02f) 0f else 56f * s
     }
+
+    /** Плитки выбора фона маленькие: радиус как у фона на весь экран превращал их в пятна. Мягким стилям чуть-чуть, чётким без размытия. */
+    fun previewRadius(softStyle: Boolean): Float = if (softStyle) 10f else 0f
 }

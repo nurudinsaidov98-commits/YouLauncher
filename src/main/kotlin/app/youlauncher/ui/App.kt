@@ -93,6 +93,9 @@ class AppUiState {
     /** Для скриншотов и тестов заставка не нужна. */
     var skipSplash = false
 
+    /** Прокрутка настроек живёт здесь: при смене языка дерево интерфейса пересоздаётся, а место в настройках должно остаться. */
+    val settingsList = androidx.compose.foundation.lazy.LazyListState()
+
     /** Версия, выбранная в мастере создания: фон показывает её атмосферу. */
     var previewVersion by mutableStateOf<String?>(null)
 
@@ -148,6 +151,8 @@ fun App(graph: AppGraph, navigator: Navigator, ui: AppUiState) {
                     // Короткая заставка, пока прогреваются шрифты и данные.
                     kotlinx.coroutines.delay(900)
                     ready = true
+                    // Заставка один раз за запуск: при смене языка интерфейс пересоздаётся, но заставку не повторяет.
+                    ui.skipSplash = true
                 }
                 val effectsIn = MaterialTheme.motionScheme.slowEffectsSpec<Float>()
                 val effectsOut = MaterialTheme.motionScheme.defaultEffectsSpec<Float>()

@@ -227,7 +227,7 @@ fun BackgroundSection(s: LauncherSettings, update: ((LauncherSettings) -> Launch
         FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             LiveBackground.entries.forEach { live ->
                 Tile(selected = live == bg.live, label = stringResource(live.label()), onClick = { setBg { it.copy(live = live, kind = BackgroundKind.Live) } }) {
-                    ArtLayer(live.toArt(), MaterialTheme.colorScheme, live.toArt().ordinal * 7919L + 17, time, remember { mutableStateOf(androidx.compose.ui.geometry.Offset.Zero) }, 0.4f, Modifier.fillMaxSize())
+                    ArtLayer(live.toArt(), MaterialTheme.colorScheme, live.toArt().ordinal * 7919L + 17, time, remember { mutableStateOf(androidx.compose.ui.geometry.Offset.Zero) }, 0.4f, Modifier.fillMaxSize(), preview = true)
                 }
             }
         }
@@ -360,7 +360,7 @@ private val noParallax = mutableStateOf(androidx.compose.ui.geometry.Offset.Zero
 @Composable
 private fun BuiltinTile(w: BuiltinWallpaper, selected: Boolean, onClick: () -> Unit) {
     Tile(selected, stringResource(w.name), onClick) {
-        ArtLayer(w.style, rememberSceneScheme(w.seedArgb), w.artSeed, still, noParallax, 0.3f, Modifier.fillMaxSize())
+        ArtLayer(w.style, rememberSceneScheme(w.seedArgb), w.artSeed, still, noParallax, 0.3f, Modifier.fillMaxSize(), preview = true)
     }
 }
 
