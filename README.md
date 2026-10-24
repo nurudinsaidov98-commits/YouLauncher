@@ -34,7 +34,7 @@
 
 ---
 
-## 🇬🇧 English
+## 🌍 English
 
 ### A launcher that feels like a modern Android app
 
@@ -46,25 +46,25 @@
 <tr>
 <td width="50%" valign="top">
 
-**🌀 Springy motion**
+**🌀 Springy motion**<br>
 Every animation is a physical spring from the M3 motion scheme. Pick how bouncy it feels: *Standard*, *Bouncy* or *Jelly*.
 
-**🔷 Shape morphing**
+**🔷 Shape morphing**<br>
 Buttons change shape when pressed, loading indicators morph between M3 shapes, progress bars are wavy.
 
-**🎨 Dynamic color**
+**🎨 Dynamic color**<br>
 The whole palette is built from one seed color, from your wallpaper, or from the game version you pick.
 
 </td>
 <td width="50%" valign="top">
 
-**🖌️ Your color for every element**
+**🖌️ Your color for every element**<br>
 All 35 color roles of the M3 scheme can be set individually: tonal palettes, HCT sliders, HEX, live WCAG contrast check.
 
-**🌄 Living backgrounds**
+**🌄 Living backgrounds**<br>
 28 built-in wallpapers and live backgrounds drawn by code, depth parallax, blur, your own pictures — even a separate one for each instance.
 
-**🏷️ Version emblems**
+**🏷️ Version emblems**<br>
 The key feature of each Minecraft update is drawn as a composition of M3 shapes in the version picker.
 
 </td>
@@ -131,7 +131,7 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 
 ---
 
-## 🇷🇺 Русский
+## 🌏 Русский
 
 ### Лаунчер, который ощущается как современное Android-приложение
 
@@ -143,25 +143,25 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 <tr>
 <td width="50%" valign="top">
 
-**🌀 Пружинные анимации**
+**🌀 Пружинные анимации**<br>
 Каждое движение — физическая пружина из схемы движения M3. Упругость на выбор: *Стандарт*, *Упругие* или *Желе*.
 
-**🔷 Морфинг форм**
+**🔷 Морфинг форм**<br>
 Кнопки меняют форму при нажатии, индикаторы загрузки перетекают между формами M3, полосы прогресса волнистые.
 
-**🎨 Динамический цвет**
+**🎨 Динамический цвет**<br>
 Вся палитра строится из одного цвета, из ваших обоев или из выбранной версии игры.
 
 </td>
 <td width="50%" valign="top">
 
-**🖌️ Свой цвет для каждого элемента**
+**🖌️ Свой цвет для каждого элемента**<br>
 Все 35 цветовых ролей схемы M3 настраиваются по отдельности: тональные палитры, ползунки HCT, HEX, проверка контраста WCAG.
 
-**🌄 Живые фоны**
+**🌄 Живые фоны**<br>
 28 встроенных обоев и живые фоны, нарисованные кодом, параллакс по глубине, размытие, свои картинки — даже отдельные для каждого экземпляра.
 
-**🏷️ Эмблемы версий**
+**🏷️ Эмблемы версий**<br>
 Главная новинка каждого обновления Minecraft нарисована композицией из форм M3 прямо в выборе версии.
 
 </td>
