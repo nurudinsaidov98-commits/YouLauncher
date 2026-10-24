@@ -32,9 +32,7 @@ import com.materialkolor.dynamicColorScheme
 fun PlayerHead(uuid: String, size: Dp = 40.dp, modifier: Modifier = Modifier, skin: ImageBitmap? = null) {
     val dark = app.youlauncher.ui.theme.LocalIsDark.current
     val pattern = remember(uuid) { HeadPattern.from(uuid) }
-    val scheme = remember(uuid, dark) {
-        dynamicColorScheme(Color(SceneGenerator.seedFor(uuid)), isDark = dark, style = PaletteStyle.Vibrant)
-    }
+    val scheme = remember(uuid, dark) { SceneSchemes.get(SceneGenerator.seedFor(uuid), dark) }
     val palette = remember(scheme) {
         listOf(scheme.primary, scheme.primaryContainer, scheme.tertiary, scheme.secondaryContainer, scheme.onPrimaryContainer, scheme.tertiaryContainer)
     }

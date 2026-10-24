@@ -69,10 +69,29 @@ fun LoaderType.symbol(): ImageVector = when (this) {
     LoaderType.NeoForge -> Symbols.Handyman
 }
 
-/** Цветовая схема сцены версии (кэшируется по seed и режиму). */
+/** Цветовая схема сцены версии (общий кэш по seed и режиму, см. [SceneSchemes]). */
 @Composable
 fun rememberSceneScheme(seedArgb: Int, dark: Boolean = LocalIsDark.current): ColorScheme =
-    remember(seedArgb, dark) { dynamicColorScheme(Color(seedArgb), isDark = dark, style = PaletteStyle.Vibrant) }
+    remember(seedArgb, dark) { SceneSchemes.get(seedArgb, dark) }
+
+/**
+ * Схемы MaterialKolor для обложек, значков, плиток обоев и аватаров. Построение схемы заметно дорогое, а одних
+ * плиток обоев на экране 28: без общего кэша каждый вход на экран заново считал десятки схем.
+ */
+object SceneSchemes {
+    private const val MAX = 256
+    private val cache = object : LinkedHashMap<Long, ColorScheme>(64, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Long, ColorScheme>?) = size > MAX
+    }
+
+    fun get(seedArgb: Int, dark: Boolean): ColorScheme {
+        val key = (seedArgb.toLong() shl 1) or (if (dark) 1L else 0L)
+        synchronized(cache) { cache[key]?.let { return it } }
+        val scheme = dynamicColorScheme(Color(seedArgb), isDark = dark, style = PaletteStyle.Vibrant)
+        synchronized(cache) { cache[key] = scheme }
+        return scheme
+    }
+}
 
 /** Значок экземпляра: символ внутри формы M3 в цветах сцены его версии или в своём цвете экземпляра. */
 @Composable

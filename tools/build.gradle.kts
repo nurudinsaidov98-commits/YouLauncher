@@ -144,3 +144,14 @@ tasks.register<JavaExec>("renderBanner") {
     mainClass = "app.youlauncher.tools.RenderBannerKt"
     args(root.dir("docs").asFile.absolutePath)
 }
+
+tasks.register<JavaExec>("benchNavigation") {
+    group = "youlauncher"
+    description = "Переходы между экранами в настоящем окне: пауза до первого кадра и худший кадр"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass = "app.youlauncher.tools.BenchNavigationKt"
+    systemProperty("youlauncher.home", layout.buildDirectory.dir("bench-home").get().asFile.absolutePath)
+    systemProperty("youlauncher.demo", "true")
+    jvmArgs("-XX:+UseSerialGC", "-Xms64m", "-Xmx768m", "-XX:MetaspaceSize=128m", "-XX:ReservedCodeCacheSize=128m", "-Dskiko.gpu.resourceCacheLimit=100663296")
+    (project.findProperty("benchJvm") as String?)?.split(' ')?.let { jvmArgs(it) }
+}

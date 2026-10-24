@@ -1,5 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import java.util.Base64
+import java.util.concurrent.TimeUnit
 
 plugins {
     kotlin("jvm") version "2.4.21"
@@ -139,12 +140,17 @@ compose.desktop {
         mainClass = "app.youlauncher.MainKt"
         javaHome = jdk21Home.get()
         // Память: живых данных у лаунчера десятки мегабайт, поэтому сборщик Serial (у G1 около 50 МБ служебных структур),
-        // маленькая стартовая куча, которая растёт по мере нужды и отдаётся системе после сборки, и потолок 768 МБ.
-        // Кэш GPU-ресурсов Skia ограничен 96 МБ (по умолчанию 256 МБ). Замеры в docs/DECISIONS.md.
+        // куча растёт по мере нужды и отдаётся системе после сборки, потолок 768 МБ. Кэш GPU-ресурсов Skia 96 МБ.
+        // Отзывчивость: стартовая куча 64 МБ и пороги метаданных классов и кэша кода с запасом, иначе в первые минуты
+        // идут полные сборки мусора по 50–80 мс («Metadata/CodeCache GC Threshold»). Кэш классов (AppCDS) собирается
+        // на компьютере пользователя (см. ClassCache); без архива Java работает как обычно.
         jvmArgs += listOf(
             "-Dfile.encoding=UTF-8", "-Xss2m",
-            "-XX:+UseSerialGC", "-Xms24m", "-Xmx768m", "-XX:MinHeapFreeRatio=10", "-XX:MaxHeapFreeRatio=25",
-            "-XX:ReservedCodeCacheSize=64m",
+            "-XX:+UseSerialGC", "-Xms64m", "-Xmx768m", "-XX:MinHeapFreeRatio=10", "-XX:MaxHeapFreeRatio=25",
+            "-XX:MetaspaceSize=128m", "-XX:ReservedCodeCacheSize=128m",
+            // Без -Xshare:auto (оно и так по умолчанию): иначе оно перебило бы -Xshare:dump при сборке архива.
+            // Прямой слэш: jpackage читает опции из файла аргументов, где обратный слэш экранирует символ.
+            "-XX:SharedArchiveFile=\$APPDIR/youlauncher.jsa", "-Xlog:cds=off", "-Xlog:cds+dynamic=off",
             "-Dskiko.gpu.resourceCacheLimit=100663296",
         )
         nativeDistributions {
@@ -177,10 +183,42 @@ compose.desktop {
 
 // Портативная сборка: после `gradlew.bat exportApp` в папке проекта появится YouLauncher-App\YouLauncher.exe,
 // его можно запускать двойным кликом или перенести на другой компьютер вместе с папкой.
+// Список классов для кэша классов Java: собранная программа один раз проходит по всем экранам на демо-данных
+// (на экране мелькнёт окно примерно на полминуты) и записывает загруженные классы в app/classes.lst.
+// Сам архив собирается уже у пользователя (пути в нём абсолютные). -PnoCds пропускает шаг.
+val cdsClassList by tasks.registering {
+    group = "distribution"
+    description = "Готовит список классов для кэша классов Java (AppCDS) тренировочным запуском программы"
+    dependsOn("createDistributable")
+    onlyIf { !project.hasProperty("noCds") && System.getProperty("os.name").startsWith("Windows") }
+    val dist = layout.buildDirectory.dir("compose/binaries/main/app/YouLauncher")
+    doLast {
+        val dir = dist.get().asFile
+        val list = File(dir, "app/classes.lst").apply { delete() }
+        val train = File(dir, "cds-train").apply { deleteRecursively() }
+        // Пути относительно папки программы: JAVA_TOOL_OPTIONS не переносит пробелы и кириллицу.
+        val pb = ProcessBuilder(File(dir, "YouLauncher.exe").path).directory(dir).redirectErrorStream(true)
+            .redirectOutput(ProcessBuilder.Redirect.DISCARD)
+        pb.environment()["JAVA_TOOL_OPTIONS"] = "-XX:DumpLoadedClassList=app\\classes.lst -Dyoulauncher.home=cds-train\\home " +
+            "-Dyoulauncher.demo=true -Dyoulauncher.benchNavigation=cds-train\\report.txt"
+        val p = pb.start()
+        val done = p.waitFor(4, TimeUnit.MINUTES)
+        if (!done) p.destroyForcibly()
+        val report = File(train, "report.txt")
+        if (done && list.length() > 0 && report.exists()) {
+            logger.lifecycle("CDS class list: ${list.readLines().size} classes")
+        } else {
+            list.delete()
+            logger.warn("CDS class list NOT created (training run failed), the app will start without the class cache")
+        }
+        train.deleteRecursively()
+    }
+}
+
 val exportApp by tasks.registering(Sync::class) {
     group = "distribution"
     description = "Собирает портативное приложение в папку YouLauncher-App (YouLauncher.exe со встроенной Java)"
-    dependsOn("createDistributable")
+    dependsOn("createDistributable", cdsClassList)
     from(layout.buildDirectory.dir("compose/binaries/main/app/YouLauncher"))
     into(layout.projectDirectory.dir("YouLauncher-App"))
 }

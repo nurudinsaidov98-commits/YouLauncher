@@ -113,6 +113,15 @@ fun main(args: Array<String>) {
                 val mode = graph.settings.settings.value.ui.windowMode
                 if (mode != app.youlauncher.core.settings.WindowMode.Normal) controller.applyMode(mode)
             }
+            // Замер отзывчивости для разработки (youlauncher.benchNavigation), в обычном запуске не включается.
+            app.youlauncher.ui.NavigationBench.reportFile?.let { file ->
+                LaunchedEffect(Unit) {
+                    ui.skipSplash = true
+                    app.youlauncher.ui.NavigationBench.run(navigator, graph.instances.instances.value.firstOrNull()?.id, app.youlauncher.ui.NavigationBench.writer(file))
+                    graph.shutdown()
+                    exitApplication()
+                }
+            }
             // Свёрнутое окно отдаёт память: кэш картинок очищается, сборка мусора сжимает кучу и возвращает её системе.
             LaunchedEffect(windowState.isMinimized) {
                 if (windowState.isMinimized) {

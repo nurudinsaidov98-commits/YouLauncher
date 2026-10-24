@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Text
@@ -78,11 +78,14 @@ object EnvText {
 fun InstanceSettingsTab(inst: Instance, vm: InstanceViewModel) {
     val graph = LocalAppGraph.current
     val global = graph.settings.settings.value.game
-    Column(
-        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 24.dp, vertical = 12.dp),
+    // Ленивый список: при открытии вкладки строятся только видимые разделы (раньше сразу все, вместе с 28 плитками обоев).
+    LazyColumn(
+        Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        SettingsSection(stringResource(Res.string.settings_general), icon = Symbols.Tune) {
+        item {
+SettingsSection(stringResource(Res.string.settings_general), icon = Symbols.Tune) {
             TextFieldRow(stringResource(Res.string.field_name), inst.name, { v -> vm.update { it.copy(name = v) } })
             SettingLabel(stringResource(Res.string.wizard_icon))
             @OptIn(ExperimentalLayoutApi::class)
@@ -106,23 +109,31 @@ fun InstanceSettingsTab(inst: Instance, vm: InstanceViewModel) {
                 supporting = stringResource(Res.string.settings_tags_hint),
             )
         }
+        }
 
-        SettingsSection(stringResource(Res.string.version_section), icon = Symbols.DeployedCodeUpdate) {
+        item {
+SettingsSection(stringResource(Res.string.version_section), icon = Symbols.DeployedCodeUpdate) {
             VersionSection(inst, vm)
         }
-
-        SettingsSection(stringResource(Res.string.instance_look), icon = Symbols.Palette) {
-            CardLookSection(inst, vm)
         }
 
-        SettingsSection(stringResource(Res.string.backup_section), icon = Symbols.Backup) {
+        item {
+SettingsSection(stringResource(Res.string.instance_look), icon = Symbols.Palette) {
+            CardLookSection(inst, vm)
+        }
+        }
+
+        item {
+SettingsSection(stringResource(Res.string.backup_section), icon = Symbols.Backup) {
             val navigator = app.youlauncher.ui.navigation.LocalNavigator.current
             BackupSection(inst, vm, onOpenInstance = { id -> navigator.navigate(app.youlauncher.ui.navigation.Screen.Instance(id)) })
         }
+        }
 
-        AtmosphereSection(inst, vm)
+        item { AtmosphereSection(inst, vm) }
 
-        SettingsSection(stringResource(Res.string.settings_memory), icon = Symbols.Memory) {
+        item {
+SettingsSection(stringResource(Res.string.settings_memory), icon = Symbols.Memory) {
             val useGlobal = inst.java.maxMemoryMb == null
             SwitchRow(stringResource(Res.string.settings_use_global), useGlobal, { on ->
                 vm.update { it.copy(java = it.java.copy(minMemoryMb = if (on) null else global.minMemoryMb, maxMemoryMb = if (on) null else global.maxMemoryMb)) }
@@ -149,8 +160,10 @@ fun InstanceSettingsTab(inst: Instance, vm: InstanceViewModel) {
                 enabled = !useGlobal,
             )
         }
+        }
 
-        SettingsSection(stringResource(Res.string.instance_java), icon = Symbols.Coffee) {
+        item {
+SettingsSection(stringResource(Res.string.instance_java), icon = Symbols.Coffee) {
             JavaPicker(
                 inst.java.javaPath,
                 { p -> vm.update { it.copy(java = it.java.copy(javaPath = p)) } },
@@ -170,8 +183,10 @@ fun InstanceSettingsTab(inst: Instance, vm: InstanceViewModel) {
                 supporting = stringResource(Res.string.settings_env_hint),
             )
         }
+        }
 
-        SettingsSection(stringResource(Res.string.settings_resolution), icon = Symbols.DesktopWindows) {
+        item {
+SettingsSection(stringResource(Res.string.settings_resolution), icon = Symbols.DesktopWindows) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 TextFieldRow(stringResource(Res.string.settings_width), (inst.width ?: global.width).toString(), { v -> v.toIntOrNull()?.let { w -> vm.update { it.copy(width = w) } } }, Modifier.weight(1f), numeric = true)
                 TextFieldRow(stringResource(Res.string.settings_height), (inst.height ?: global.height).toString(), { v -> v.toIntOrNull()?.let { h -> vm.update { it.copy(height = h) } } }, Modifier.weight(1f), numeric = true)
@@ -184,11 +199,14 @@ fun InstanceSettingsTab(inst: Instance, vm: InstanceViewModel) {
                 supporting = stringResource(Res.string.settings_quick_join_hint),
             )
         }
+        }
 
-        SettingsSection(stringResource(Res.string.settings_pre_launch), icon = Symbols.Terminal) {
+        item {
+SettingsSection(stringResource(Res.string.settings_pre_launch), icon = Symbols.Terminal) {
             TextFieldRow(stringResource(Res.string.settings_pre_launch), inst.java.preLaunchCommand.orEmpty(), { v -> vm.update { it.copy(java = it.java.copy(preLaunchCommand = v.ifBlank { null })) } })
             TextFieldRow(stringResource(Res.string.settings_post_exit), inst.java.postExitCommand.orEmpty(), { v -> vm.update { it.copy(java = it.java.copy(postExitCommand = v.ifBlank { null })) } })
             TextFieldRow(stringResource(Res.string.settings_wrapper), inst.java.wrapperCommand.orEmpty(), { v -> vm.update { it.copy(java = it.java.copy(wrapperCommand = v.ifBlank { null })) } })
+        }
         }
     }
 }

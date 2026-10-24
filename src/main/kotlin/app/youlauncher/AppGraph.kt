@@ -163,9 +163,21 @@ class AppGraph(
     val instanceBackups = InstanceBackups(instances, dirs.backupsDir)
 
     init {
+        // Классы экранов подгружаются заранее в фоне с низким приоритетом: первый переход не ждёт загрузки классов.
+        val classCache = app.youlauncher.data.system.ClassCache(AppDirs.appDirectory(), BuildInfo.version)
+        Thread({ Thread.sleep(2_000); classCache.preload() }, "youlauncher-class-preload").apply {
+            isDaemon = true
+            priority = Thread.MIN_PRIORITY
+            start()
+        }
         if (!demo) {
             val sys = settings.settings.value.system
             if (sys.autoCleanCache) scope.launch { runCatching { cacheCleaner.clean(sys.cacheMaxAgeDays) } }
+            // Кэш классов Java собирается в фоне через полминуты после запуска, если его нет или он устарел.
+            if (classCache.needsBuild()) scope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                kotlinx.coroutines.delay(30_000)
+                classCache.build()
+            }
             // Проверка обновлений при запуске: только сообщение, загрузка по кнопке в «О программе».
             if (updater.configured && sys.updateChannel != UpdateChannel.Off) scope.launch {
                 runCatching { updater.check(sys.updateChannel, BuildInfo.version) }.getOrNull()?.let { messenger.show(Res.string.update_available_msg, it.version) }

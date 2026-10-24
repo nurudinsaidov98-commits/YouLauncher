@@ -40,3 +40,35 @@ class SystemServicesTest {
         }
     }
 }
+
+class ClassCacheTest {
+    @Test
+    fun `class list lines become class names, service lines are skipped`() {
+        val c = app.youlauncher.data.system.ClassLists
+        assertEquals("java.lang.Object", c.className("java/lang/Object id: 0"))
+        assertEquals("app.youlauncher.MainKt", c.className("app/youlauncher/MainKt id: 622"))
+        assertEquals(null, c.className("# NOTE: Do not modify this file."))
+        assertEquals(null, c.className("@lambda-proxy java/lang/Foo bar"))
+        assertEquals(null, c.className("app/youlauncher/Foo\$\$Lambda/0x1 id: 5"))
+        assertEquals(null, c.className("   "))
+    }
+
+    @Test
+    fun `archive is rebuilt after a move or a new build`() {
+        val dir = Files.createTempDirectory("app")
+        Files.createDirectories(dir.resolve("app"))
+        Files.writeString(dir.resolve("YouLauncher.exe"), "")
+        Files.writeString(dir.resolve("app/youlauncher-1.0-aaa.jar"), "")
+        val cache = app.youlauncher.data.system.ClassCache(dir, "1.0")
+        assertFalse(cache.needsBuild(), "без списка классов собирать нечего")
+        Files.writeString(dir.resolve("app/classes.lst"), "java/lang/Object id: 0\n")
+        assertTrue(cache.needsBuild(), "списка достаточно, архива ещё нет")
+        Files.writeString(dir.resolve("app/youlauncher.jsa"), "x")
+        Files.writeString(dir.resolve("app/youlauncher.jsa.stamp"), cache.expectedStamp())
+        assertFalse(cache.needsBuild())
+        // Новая сборка той же версии: другой jar.
+        Files.move(dir.resolve("app/youlauncher-1.0-aaa.jar"), dir.resolve("app/youlauncher-1.0-bbb.jar"))
+        assertTrue(cache.needsBuild())
+        assertTrue(app.youlauncher.data.system.ClassCache(dir, "1.0").preload() >= 1)
+    }
+}
