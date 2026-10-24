@@ -33,6 +33,9 @@ import kotlinx.coroutines.launch
 
 enum class CatalogSource { Modrinth, CurseForge }
 
+/** Что каталог запоминает, пока открыта страница мода: поиск, фильтры, результаты и прокрутку списка. */
+data class ModsMemory(val state: ModsState, val firstItem: Int, val firstOffset: Int, val selected: Map<String, ModProject> = emptyMap())
+
 data class ModsState(
     val source: CatalogSource = CatalogSource.Modrinth,
     val query: ModQuery = ModQuery(),
@@ -52,6 +55,7 @@ data class ModsState(
 class ModsViewModel(
     private val graph: AppGraph,
     targetInstanceId: String?,
+    restore: ModsMemory? = null,
     dispatcher: CoroutineDispatcher = Dispatchers.Main.immediate,
 ) : ViewModel(dispatcher) {
     private val _state = MutableStateFlow(ModsState())
@@ -59,12 +63,26 @@ class ModsViewModel(
     val progress: StateFlow<Map<String, InstallProgress>> = graph.modInstaller.progress
     private var searchJob: Job? = null
 
+    // Позиция списка: запоминается вместе с поиском, чтобы после страницы мода вернуться на то же место.
+    var scrollIndex = restore?.firstItem ?: 0
+    var scrollOffset = restore?.firstOffset ?: 0
+
     init {
-        val target = targetInstanceId?.let { graph.instances.get(it) }
-            ?: graph.settings.settings.value.lastInstanceId?.let { graph.instances.get(it) }
-            ?: graph.instances.instances.value.firstOrNull { it.isModded }
-        selectTarget(target)
+        val saved = restore?.state
+        if (saved != null) {
+            // Возврат со страницы мода: прежние поиск, фильтры и результаты без нового запроса.
+            _state.value = saved.copy(loading = false, loadingMore = false)
+            if (saved.results.isEmpty()) search()
+            else saved.target?.let { t -> scope.launch { _state.update { it.copy(installed = graph.modInstaller.installedProjectIds(t.id)) } } }
+        } else {
+            val target = targetInstanceId?.let { graph.instances.get(it) }
+                ?: graph.settings.settings.value.lastInstanceId?.let { graph.instances.get(it) }
+                ?: graph.instances.instances.value.firstOrNull { it.isModded }
+            selectTarget(target)
+        }
     }
+
+    fun memory() = ModsMemory(_state.value.copy(loading = false, loadingMore = false), scrollIndex, scrollOffset, _selected.value)
 
     val catalog: ModCatalog get() = if (_state.value.source == CatalogSource.Modrinth) graph.modrinth else graph.curseForge
 
@@ -151,7 +169,7 @@ class ModsViewModel(
     }
 
     // Выбор нескольких проектов галочками для установки одним окном.
-    private val _selected = MutableStateFlow<Map<String, ModProject>>(emptyMap())
+    private val _selected = MutableStateFlow(restore?.selected ?: emptyMap())
     val selected: StateFlow<Map<String, ModProject>> = _selected.asStateFlow()
 
     fun toggleSelected(project: ModProject) = _selected.update { if (project.id in it) it - project.id else it + (project.id to project) }

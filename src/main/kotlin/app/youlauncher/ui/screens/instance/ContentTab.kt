@@ -43,6 +43,7 @@ import app.youlauncher.core.model.ContentFile
 import app.youlauncher.core.model.Instance
 import app.youlauncher.core.repo.ContentKind
 import app.youlauncher.resources.Res
+import app.youlauncher.resources.action_clear
 import app.youlauncher.resources.action_remove
 import app.youlauncher.resources.content_add_files
 import app.youlauncher.resources.content_browse
@@ -102,6 +103,7 @@ fun ContentTab(inst: Instance, vm: InstanceViewModel, kind: ContentKind?) {
                 onValueChange = { query = it },
                 placeholder = { Text(stringResource(Res.string.content_search)) },
                 leadingIcon = { Icon(Symbols.Search, null) },
+                trailingIcon = if (query.isNotEmpty()) ({ TIconButton(Symbols.Close, stringResource(Res.string.action_clear), { query = "" }) }) else null,
                 singleLine = true,
                 shape = MaterialTheme.shapes.extraLarge,
                 modifier = Modifier.weight(1f),

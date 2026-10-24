@@ -44,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import app.youlauncher.resources.Res
+import app.youlauncher.ui.components.TIconButton
+import app.youlauncher.resources.action_clear
 import app.youlauncher.resources.palette_empty
 import app.youlauncher.resources.palette_hint
 import app.youlauncher.ui.icons.Symbols
@@ -113,6 +115,7 @@ fun CommandPalette(onDismiss: () -> Unit) {
                     onValueChange = { query = it; selected = 0 },
                     placeholder = { Text(stringResource(Res.string.palette_hint)) },
                     leadingIcon = { Icon(Symbols.Search, contentDescription = null) },
+                    trailingIcon = if (query.isNotEmpty()) ({ TIconButton(Symbols.Close, stringResource(Res.string.action_clear), { query = ""; selected = 0 }) }) else null,
                     singleLine = true,
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,

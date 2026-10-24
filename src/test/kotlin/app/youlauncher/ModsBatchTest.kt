@@ -37,9 +37,29 @@ class ModsBatchTest {
     private suspend fun until(condition: () -> Boolean) = withTimeout(15_000) { while (!condition()) delay(20) }
 
     @Test
+    fun `catalog keeps search, results, selection and scroll after visiting a mod page`() = runBlocking<Unit> {
+        val target = graph.instances.instances.value.first { it.isModded }
+        val vm = ModsViewModel(graph, target.id, dispatcher = Dispatchers.Unconfined)
+        vm.setText("swift")
+        until { !vm.state.value.loading && vm.state.value.query.text == "swift" && vm.state.value.results.isNotEmpty() }
+        vm.toggleSelected(vm.state.value.results.first())
+        vm.scrollIndex = 7; vm.scrollOffset = 12
+        val memory = vm.memory()
+        vm.clear()
+        // Вернулись со страницы мода: всё как было, без нового запроса (результаты те же объекты).
+        val back = ModsViewModel(graph, target.id, memory, Dispatchers.Unconfined)
+        assertEquals("swift", back.state.value.query.text)
+        assertTrue(back.state.value.results === memory.state.results)
+        assertEquals(1, back.selected.value.size)
+        assertEquals(7, back.scrollIndex)
+        assertEquals(12, back.scrollOffset)
+        assertTrue(!back.state.value.loading)
+    }
+
+    @Test
     fun `selected mods are previewed with dependencies and installed together`() = runBlocking<Unit> {
         val target = graph.instances.instances.value.first { it.isModded }
-        val vm = ModsViewModel(graph, target.id, Dispatchers.Unconfined)
+        val vm = ModsViewModel(graph, target.id, dispatcher = Dispatchers.Unconfined)
         val projects = graph.modrinth.search(ModQuery()).hits.take(4)
         projects.forEach(vm::toggleSelected)
         assertEquals(4, vm.selected.value.size)
@@ -67,7 +87,7 @@ class ModsBatchTest {
     @Test
     fun `single install asks only when dependencies must be downloaded`() = runBlocking<Unit> {
         val target = graph.instances.instances.value.first { it.isModded }
-        val vm = ModsViewModel(graph, target.id, Dispatchers.Unconfined)
+        val vm = ModsViewModel(graph, target.id, dispatcher = Dispatchers.Unconfined)
         val hits = graph.modrinth.search(ModQuery()).hits
         val withDeps = hits.first { graph.modInstaller.preview(target.id, it).toDownload.isNotEmpty() }
         val plain = hits.first { graph.modInstaller.preview(target.id, it).dependencies.isEmpty() }

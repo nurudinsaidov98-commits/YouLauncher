@@ -36,6 +36,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -54,6 +56,8 @@ import app.youlauncher.core.model.ProjectType
 import app.youlauncher.core.repo.InstallProgress
 import app.youlauncher.core.repo.ModSort
 import app.youlauncher.resources.Res
+import app.youlauncher.ui.components.TIconButton
+import app.youlauncher.resources.action_clear
 import app.youlauncher.resources.action_install
 import app.youlauncher.resources.action_installed
 import app.youlauncher.resources.action_retry
@@ -133,7 +137,10 @@ fun ModSort.label(): StringResource = when (this) {
 @Composable
 fun ModsScreen(screen: Screen.Mods) {
     val graph = LocalAppGraph.current
-    val vm = rememberViewModel(screen.instanceId) { ModsViewModel(graph, screen.instanceId) }
+    // Состояние каталога сохраняется, когда открывают страницу мода, и возвращается при выходе с неё.
+    val ui = LocalAppUi.current
+    val vm = rememberViewModel(screen.instanceId) { ModsViewModel(graph, screen.instanceId, ui.modsMemory[screen.instanceId]) }
+    DisposableEffect(vm) { onDispose { ui.modsMemory[screen.instanceId] = vm.memory() } }
     val state by vm.state.collectAsState()
     val progress by vm.progress.collectAsState()
     val navigator = LocalNavigator.current
@@ -164,6 +171,7 @@ fun ModsScreen(screen: Screen.Mods) {
                         onValueChange = vm::setText,
                         placeholder = { Text(stringResource(Res.string.mods_search, state.source.name)) },
                         leadingIcon = { Icon(Symbols.Search, null) },
+                        trailingIcon = if (state.query.text.isNotEmpty()) ({ TIconButton(Symbols.Close, stringResource(Res.string.action_clear), { vm.setText("") }) }) else null,
                         singleLine = true,
                         shape = MaterialTheme.shapes.extraLarge,
                         modifier = Modifier.weight(1f),
@@ -270,7 +278,10 @@ private fun Results(state: ModsState, progress: Map<String, InstallProgress>, vm
         }
         state.results.isEmpty() -> EmptyState(Illustration.Search, stringResource(Res.string.mods_no_results_title), stringResource(Res.string.mods_no_results_body))
         else -> {
-            val listState = rememberLazyListState()
+            val listState = rememberLazyListState(vm.scrollIndex, vm.scrollOffset)
+            LaunchedEffect(listState) {
+                snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }.collect { (i, o) -> vm.scrollIndex = i; vm.scrollOffset = o }
+            }
             val nearEnd by remember { derivedStateOf { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index?.let { it >= state.results.size - 3 } == true } }
             LaunchedEffect(nearEnd, state.results.size) { if (nearEnd) vm.loadMore() }
             val selected by vm.selected.collectAsState()

@@ -96,6 +96,9 @@ class AppUiState {
     /** Прокрутка настроек живёт здесь: при смене языка дерево интерфейса пересоздаётся, а место в настройках должно остаться. */
     val settingsList = androidx.compose.foundation.lazy.LazyListState()
 
+    /** Каталог модов по целевому экземпляру: поиск, фильтры и прокрутка переживают переход на страницу мода. */
+    val modsMemory = HashMap<String?, app.youlauncher.ui.screens.mods.ModsMemory>()
+
     /** Версия, выбранная в мастере создания: фон показывает её атмосферу. */
     var previewVersion by mutableStateOf<String?>(null)
 

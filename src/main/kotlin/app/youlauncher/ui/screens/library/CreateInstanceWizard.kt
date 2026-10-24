@@ -68,6 +68,8 @@ import app.youlauncher.core.repo.LoaderVersion
 import app.youlauncher.core.repo.NewInstanceSpec
 import app.youlauncher.core.repo.VersionType
 import app.youlauncher.resources.Res
+import app.youlauncher.ui.components.TIconButton
+import app.youlauncher.resources.action_clear
 import app.youlauncher.resources.feature_heading
 import app.youlauncher.core.VersionFeatures
 import app.youlauncher.ui.components.Emblems
@@ -375,6 +377,7 @@ private fun VersionStep(model: WizardModel, versions: List<GameVersion>?, onChan
                 onValueChange = { onChange(model.copy(versionQuery = it)) },
                 placeholder = { Text(stringResource(Res.string.wizard_version_search)) },
                 leadingIcon = { Icon(Symbols.Search, null) },
+                trailingIcon = if (model.versionQuery.isNotEmpty()) ({ TIconButton(Symbols.Close, stringResource(Res.string.action_clear), { onChange(model.copy(versionQuery = "")) }) }) else null,
                 singleLine = true,
                 shape = MaterialTheme.shapes.extraLarge,
                 modifier = Modifier.weight(1f),
