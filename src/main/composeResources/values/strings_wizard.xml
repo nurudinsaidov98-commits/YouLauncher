@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wizard_title">New instance</string>
+    <string name="wizard_step_version">Version</string>
+    <string name="wizard_step_loader">Loader</string>
+    <string name="wizard_step_details">Details</string>
+    <string name="wizard_step_resources">Resources</string>
+    <string name="wizard_step_summary">Summary</string>
+    <string name="wizard_step_of">Step %1$d of %2$d</string>
+    <string name="wizard_version_title">Choose a game version</string>
+    <string name="wizard_version_hint">The background shows the atmosphere of the chosen version.</string>
+    <string name="wizard_version_search">Search versions</string>
+    <string name="wizard_releases">Releases</string>
+    <string name="wizard_snapshots">Snapshots</string>
+    <string name="wizard_old">Old versions</string>
+    <string name="wizard_loader_title">Mod loader</string>
+    <string name="wizard_loader_hint">Vanilla runs the game without mods. Fabric and Quilt are light and fast, Forge and NeoForge support large modpacks.</string>
+    <string name="wizard_loader_version">Loader version</string>
+    <string name="wizard_loader_unstable">Show unstable</string>
+    <string name="wizard_loader_latest">latest</string>
+    <string name="wizard_loader_recommended">recommended</string>
+    <string name="wizard_loader_beta">beta</string>
+    <string name="wizard_loader_none">No loader versions for this game version</string>
+    <string name="wizard_details_title">Name and look</string>
+    <string name="wizard_icon">Icon</string>
+    <string name="wizard_group">Group (optional)</string>
+    <string name="wizard_resources_title">Memory and Java</string>
+    <string name="wizard_memory">Memory: %1$s</string>
+    <string name="wizard_memory_hint">Recommended for your computer: up to %1$s. Large modpacks need 6–8 GB.</string>
+    <string name="wizard_java_auto">Java is chosen automatically for the game version and downloaded from Mojang if needed.</string>
+    <string name="wizard_summary_title">Ready to create</string>
+    <string name="wizard_summary_version">Game version</string>
+    <string name="wizard_summary_loader">Loader</string>
+    <string name="wizard_summary_memory">Memory</string>
+    <string name="wizard_summary_note">Game files will be downloaded from the official Mojang servers on first launch.</string>
+    <string name="wizard_loading_versions">Loading versions…</string>
+    <string name="wizard_versions_error">Could not load the version list</string>
+    <string name="memory_gb">%1$s GB</string>
+
+    <string name="fab_new_instance">New instance</string>
+    <string name="fab_import">Import modpack or instance</string>
+    <string name="fab_menu">Create</string>
+    <string name="import_title">Import</string>
+    <string name="import_body">Supported: Modrinth (.mrpack), CurseForge modpacks (.zip), MultiMC and Prism instances (.zip).</string>
+    <string name="import_choose">Choose file</string>
+    <string name="msg_imported">Imported “%1$s”</string>
+    <string name="msg_import_started">Importing “%1$s”…</string>
+    <string name="msg_import_failed">Could not import: %1$s</string>
+    <string name="msg_shortcut_created">Shortcut created on the desktop</string>
+    <string name="msg_shortcut_failed">Could not create the shortcut</string>
+</resources>

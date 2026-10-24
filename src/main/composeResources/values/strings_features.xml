@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_heading">Highlight of this version</string>
+    <string name="feature_classic">Classic versions</string>
+    <string name="feature_snapshot">Test build</string>
+    <string name="feature_the_end">The End and the dragon</string>
+    <string name="feature_jungle">Jungles</string>
+    <string name="feature_trading">Trading and emeralds</string>
+    <string name="feature_wither">The Wither</string>
+    <string name="feature_redstone">Comparators and hoppers</string>
+    <string name="feature_horses">Horses</string>
+    <string name="feature_biomes">Dozens of new biomes</string>
+    <string name="feature_monuments">Underwater monuments</string>
+    <string name="feature_elytra">Elytra and shields</string>
+    <string name="feature_frost">Polar bears and magma</string>
+    <string name="feature_mansions">Woodland mansions and the totem</string>
+    <string name="feature_colors">A world of color: concrete and terracotta</string>
+    <string name="feature_ocean">Underwater life and the trident</string>
+    <string name="feature_villages">Villages and pillagers</string>
+    <string name="feature_bees">Bees and honeycombs</string>
+    <string name="feature_nether">The reworked Nether</string>
+    <string name="feature_amethyst">Amethyst, copper and axolotls</string>
+    <string name="feature_mountains">Huge mountains and caves</string>
+    <string name="feature_deep_dark">The deep dark and the warden</string>
+    <string name="feature_cherry">Cherry groves and archaeology</string>
+    <string name="feature_trials">Trials, the breeze and the mace</string>
+    <string name="feature_bundles">Bundles</string>
+    <string name="feature_pale_garden">The pale garden and the creaking</string>
+    <string name="feature_variants">New farm animal variants</string>
+    <string name="feature_happy_ghast">The happy ghast and flying</string>
+    <string name="feature_copper">The copper golem</string>
+    <string name="feature_spears">Spears and nautiluses</string>
+    <string name="feature_dandelion">Golden dandelion and baby mobs</string>
+    <string name="feature_sulfur_cube">Sulfur cube and sulfur caves</string>
+    <string name="feature_autumn_forest">Autumn forest and camps</string>
+</resources>

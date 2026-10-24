@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="console_subtitle">Вывод лаунчера и игры</string>
+    <string name="console_search">Поиск по журналу</string>
+    <string name="console_follow">Следить за новыми строками</string>
+    <string name="console_copy_all">Копировать видимые строки</string>
+    <string name="console_copied">Скопировано строк: %1$d</string>
+    <string name="console_clear">Очистить консоль</string>
+    <string name="console_export">Сохранить в файл</string>
+    <string name="console_exported">Журнал сохранён: %1$s</string>
+    <string name="console_source_all">Все источники</string>
+    <string name="console_source_launcher">Лаунчер</string>
+    <string name="console_source_game">Игра</string>
+    <string name="console_empty_title">В консоли тихо</string>
+    <string name="console_empty_body">Запустите экземпляр, и его вывод будет появляться здесь в реальном времени.</string>
+    <string name="console_no_matches">Нет строк под выбранные фильтры</string>
+    <string name="console_lines">%1$d из %2$d строк</string>
+    <string name="crash_title">Игра завершилась с ошибкой</string>
+    <string name="crash_body">Код выхода %1$d. Отчёт о сбое сохранён, паролей и токенов в нём нет.</string>
+    <string name="crash_open_report">Открыть отчёт</string>
+    <string name="crash_copy_report">Копировать отчёт</string>
+</resources>

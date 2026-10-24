@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_servers">Servers</string>
+    <string name="servers_hint">The same list as the in-game server menu. “Play” starts the game and joins the server right away.</string>
+    <string name="servers_refresh">Refresh</string>
+    <string name="servers_empty_title">No servers yet</string>
+    <string name="servers_empty_body">Add a server by address: it shows up in the game too.</string>
+    <string name="server_add">Add server</string>
+    <string name="server_add_confirm">Add</string>
+    <string name="server_name">Name</string>
+    <string name="server_address">Address</string>
+    <string name="server_remove">Remove server</string>
+    <string name="server_pinging">Pinging…</string>
+    <string name="server_offline">Not responding</string>
+    <string name="server_players">%1$d of %2$d</string>
+    <string name="server_ping_ms">%1$d ms</string>
+    <string name="server_added">Server “%1$s” added</string>
+    <string name="server_save_failed">Could not save the server list: %1$s</string>
+</resources>

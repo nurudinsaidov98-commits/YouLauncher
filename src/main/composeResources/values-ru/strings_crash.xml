@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="crash_title">Что-то пошло не так</string>
+    <string name="crash_body">В интерфейсе лаунчера произошла ошибка. Игры и файлы не затронуты, отчёт без паролей и токенов уже сохранён. Можно вернуться в лаунчер.</string>
+    <string name="crash_body_repeated">Ошибка повторяется. Отчёт сохранён: пришлите его автору, а лаунчер лучше перезапустить.</string>
+    <string name="crash_retry">Вернуться в лаунчер</string>
+    <string name="crash_copy">Скопировать отчёт</string>
+    <string name="crash_open">Открыть папку с отчётом</string>
+    <string name="crash_close">Закрыть YouLauncher</string>
+</resources>

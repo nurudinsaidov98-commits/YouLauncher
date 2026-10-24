@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_overview">Overview</string>
+    <string name="tab_mods">Mods</string>
+    <string name="tab_resourcepacks">Resource packs</string>
+    <string name="tab_shaders">Shaders</string>
+    <string name="tab_worlds">Worlds</string>
+    <string name="tab_screenshots">Screenshots</string>
+    <string name="tab_settings">Settings</string>
+    <string name="tab_log">Log</string>
+
+    <string name="instance_not_found">Instance not found</string>
+    <string name="instance_play_time">Play time</string>
+    <string name="instance_last_played">Last played</string>
+    <string name="instance_launches">Launches</string>
+    <string name="instance_created">Created</string>
+    <string name="instance_activity">Activity in the last 30 days</string>
+    <string name="instance_info">About</string>
+    <string name="instance_java">Java</string>
+    <string name="instance_java_auto">Automatic</string>
+    <string name="instance_memory">Memory</string>
+    <string name="instance_folder">Folder</string>
+    <string name="instance_tags">Tags</string>
+
+    <string name="content_add_files">Add files</string>
+    <string name="content_browse">Browse catalog</string>
+    <string name="content_update_all">Update all</string>
+    <string name="content_update_available">Update: %1$s</string>
+    <string name="content_enabled">Enabled</string>
+    <string name="content_search">Search in this instance</string>
+    <string name="content_empty_title">Nothing here yet</string>
+    <string name="content_empty_mods">Install mods from the catalog or add .jar files.</string>
+    <string name="content_empty_packs">Add resource packs from the catalog or as .zip files.</string>
+    <string name="content_vanilla_mods">Mods need a loader. Change the loader in the instance settings.</string>
+    <string name="msg_removed">Removed “%1$s”</string>
+    <string name="msg_files_added">Files added: %1$d</string>
+    <string name="msg_updated">Updated: %1$d</string>
+
+    <string name="worlds_empty_title">No worlds yet</string>
+    <string name="worlds_empty_body">Worlds you create in the game will appear here.</string>
+    <string name="world_backup">Back up</string>
+    <string name="world_backup_done">Backup of “%1$s” saved</string>
+    <string name="world_mode_survival">Survival</string>
+    <string name="world_mode_creative">Creative</string>
+    <string name="world_mode_hardcore">Hardcore</string>
+    <string name="world_mode_adventure">Adventure</string>
+    <string name="world_mode_spectator">Spectator</string>
+    <string name="dialog_delete_world_title">Delete world “%1$s”?</string>
+    <string name="dialog_delete_world_body">This cannot be undone. Make a backup first if you might need it.</string>
+
+    <string name="screenshots_empty_title">No screenshots</string>
+    <string name="screenshots_empty_body">Press F2 in the game to take a screenshot.</string>
+    <string name="screenshot_copy_path">Copy path</string>
+
+    <string name="settings_general">General</string>
+    <string name="settings_group">Group</string>
+    <string name="settings_tags_hint">Comma separated</string>
+    <string name="settings_memory">Memory</string>
+    <string name="settings_memory_range">From %1$s to %2$s</string>
+    <string name="settings_use_global">Use global settings</string>
+    <string name="settings_java_path">Java path</string>
+    <string name="settings_java_choose">Choose java.exe</string>
+    <string name="settings_jvm_args">JVM arguments</string>
+    <string name="settings_resolution">Window size</string>
+    <string name="settings_fullscreen">Fullscreen</string>
+    <string name="settings_width">Width</string>
+    <string name="settings_height">Height</string>
+    <string name="settings_quick_join">Join server on launch</string>
+    <string name="settings_quick_join_hint">host:port, leave empty to open the main menu</string>
+    <string name="settings_env">Environment variables</string>
+    <string name="settings_env_hint">One per line: NAME=value</string>
+    <string name="settings_pre_launch">Command before launch</string>
+    <string name="settings_post_exit">Command after exit</string>
+    <string name="settings_wrapper">Wrapper command</string>
+    <string name="settings_saved">Saved</string>
+
+    <string name="log_empty_title">No log yet</string>
+    <string name="log_empty_body">Launch the instance and its output will appear here.</string>
+    <string name="log_open_console">Open in console</string>
+    <string name="version_section">Version and loader</string>
+    <string name="version_current">Now: %1$s</string>
+    <string name="version_change">Change version</string>
+    <string name="version_change_title">Change version</string>
+    <string name="version_change_body">Worlds and mods stay. Mods from catalogs are checked against the new version: matching ones update, the rest are turned off (files are not deleted).</string>
+    <string name="version_game">Game version</string>
+    <string name="version_loader">Loader</string>
+    <string name="version_loader_version">Loader version</string>
+    <string name="version_loader_none">%1$s does not support %2$s yet</string>
+    <string name="version_loader_recommended">recommended</string>
+    <string name="version_loader_latest">latest</string>
+    <string name="version_loader_beta">beta</string>
+    <string name="version_downgrade">You are moving to an older game version. Worlds opened in the newer version may get damaged.</string>
+    <string name="version_backup">Back up worlds</string>
+    <string name="version_checking">Checking mods…</string>
+    <string name="version_no_mods">No mods, nothing to check.</string>
+    <string name="compat_update">updates to %1$s</string>
+    <string name="compat_same">fits</string>
+    <string name="compat_incompatible">will be turned off</string>
+    <string name="compat_unknown">cannot check</string>
+    <string name="compat_summary">Update: %1$d · fit: %2$d · turned off: %3$d · unchecked: %4$d</string>
+    <string name="version_apply">Apply</string>
+    <string name="version_change_done">Version changed to %1$s, files affected: %2$d</string>
+    <string name="version_change_failed">Could not change the version: %1$s</string>
+    <string name="loader_update_available">A newer loader version is available: %1$s</string>
+    <string name="loader_update">Update loader</string>
+    <string name="loader_updated">Loader updated to %1$s. It installs on the next launch.</string>
+</resources>

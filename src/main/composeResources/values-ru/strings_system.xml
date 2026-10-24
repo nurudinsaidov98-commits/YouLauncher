@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_notifications">Уведомления Windows</string>
+    <string name="settings_notifications_hint">Когда вы в другом окне: сбой игры, окончание установки модов</string>
+    <string name="settings_sounds">Звуки интерфейса</string>
+    <string name="settings_sounds_hint">Тихие короткие звуки при запуске игры, успехе и ошибке. Синтезируются лаунчером</string>
+    <string name="settings_cache">Кэш</string>
+    <string name="cache_size">Занято: %1$s</string>
+    <string name="cache_clean">Очистить кэш</string>
+    <string name="cache_cleaned">Освобождено: %1$s</string>
+    <string name="cache_auto">Удалять файлы кэша старше %1$d дней при запуске</string>
+    <string name="notify_crash_title">Игра завершилась сбоем</string>
+    <string name="notify_crash_body">Экземпляр «%1$s». Подробности в журнале лаунчера.</string>
+    <string name="notify_install_title">Установка модов завершена</string>
+</resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wp_dawn_blobs">Dawn blobs</string>
+    <string name="wp_lagoon_blobs">Lagoon</string>
+    <string name="wp_meadow_hills">Meadow hills</string>
+    <string name="wp_dusk_hills">Dusk hills</string>
+    <string name="wp_coral_arcs">Coral arcs</string>
+    <string name="wp_mint_arcs">Mint arcs</string>
+    <string name="wp_berry_bubbles">Berry bubbles</string>
+    <string name="wp_sky_bubbles">Sky bubbles</string>
+    <string name="wp_amber_horizon">Amber sunset</string>
+    <string name="wp_ocean_horizon">Ocean horizon</string>
+    <string name="wp_lilac_mesh">Lilac haze</string>
+    <string name="wp_citrus_mesh">Citrus haze</string>
+    <string name="wp_garden_collage">Garden of shapes</string>
+    <string name="wp_candy_collage">Candy mosaic</string>
+    <string name="wp_tide_waves">Tide</string>
+    <string name="wp_ember_waves">Embers</string>
+    <string name="wp_rose_morph">Rose morph</string>
+    <string name="wp_jade_morph">Jade morph</string>
+    <string name="wp_blossom_petals">Blossom</string>
+    <string name="wp_autumn_petals">Leaf fall</string>
+    <string name="wp_cosmic_orbits">Cosmos</string>
+    <string name="wp_citrine_orbits">Citrine orbits</string>
+    <string name="wp_silk_ribbons">Silk ribbons</string>
+    <string name="wp_tide_ribbons">Sea ribbons</string>
+    <string name="wp_polar_aurora">Polar aurora</string>
+    <string name="wp_violet_aurora">Violet aurora</string>
+    <string name="wp_party_confetti">Celebration</string>
+    <string name="wp_mint_confetti">Mint confetti</string>
+</resources>

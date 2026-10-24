@@ -1,0 +1,11 @@
+.gradle/
+build/
+tools/build/
+YouLauncher-App/
+YouLauncher-App.zip
+.idea/
+*.iml
+local.properties
+.kotlin/
+*.log
+YouLauncher-*-windows.zip

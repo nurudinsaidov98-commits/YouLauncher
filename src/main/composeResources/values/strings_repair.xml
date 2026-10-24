@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="repair_instance">Repair instance</string>
+    <string name="repair_hint">Checks every game, loader and mod file by hash and re-downloads damaged ones. Worlds and settings are not touched.</string>
+    <string name="repair_done">Instance checked. Mods re-downloaded: %1$d</string>
+    <string name="repair_failed">Repair failed: %1$s</string>
+    <string name="diag_title">Diagnostics</string>
+    <string name="diag_body">A report for the author: system, settings, instances and logs. Tokens, passwords and your Windows user name are not included.</string>
+    <string name="diag_save">Save report</string>
+    <string name="diag_saved">Report saved: %1$s</string>
+</resources>

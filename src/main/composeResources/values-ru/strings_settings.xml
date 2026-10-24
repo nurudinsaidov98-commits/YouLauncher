@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_subtitle">Оформление, игра, Java и папки</string>
+    <string name="settings_appearance">Оформление</string>
+    <string name="settings_theme">Тема</string>
+    <string name="settings_accent">Цвет акцента</string>
+    <string name="settings_palette_style">Стиль палитры</string>
+    <string name="settings_contrast">Контрастность</string>
+    <string name="settings_language">Язык</string>
+    <string name="settings_amoled">Чёрный фон в тёмной теме</string>
+    <string name="settings_amoled_hint">Экономит заряд на OLED-экранах</string>
+
+    <string name="settings_interface">Интерфейс</string>
+    <string name="settings_scale">Масштаб интерфейса</string>
+    <string name="settings_font_size">Размер текста</string>
+    <string name="settings_font">Шрифт</string>
+    <string name="settings_font_flex">Google Sans Flex</string>
+    <string name="settings_font_system">Системный</string>
+    <string name="settings_corners">Скругление углов</string>
+    <string name="settings_density">Плотность</string>
+    <string name="density_comfortable">Просторно</string>
+    <string name="density_compact">Компактно</string>
+    <string name="settings_motion">Анимации</string>
+    <string name="settings_bounce">Пружинистость</string>
+    <string name="bounce_standard">Стандарт M3</string>
+    <string name="bounce_bouncy">Упругие</string>
+    <string name="bounce_jelly">Желе</string>
+    <string name="motion_full">Полные</string>
+    <string name="motion_reduced">Уменьшенные</string>
+    <string name="motion_off">Выключены</string>
+    <string name="settings_navigation">Навигация</string>
+    <string name="nav_side">Боковая панель</string>
+    <string name="nav_bottom">Нижняя панель</string>
+
+    <string name="settings_game">Игра</string>
+    <string name="settings_memory_global">Память для новых экземпляров</string>
+    <string name="settings_memory_recommended">Рекомендуемый максимум для этого компьютера: %1$s из %2$s</string>
+    <string name="settings_jvm_preset">Пресет JVM</string>
+    <string name="preset_none">Без пресета</string>
+    <string name="preset_aikar">G1GC (Aikar)</string>
+    <string name="preset_zgc">ZGC</string>
+    <string name="preset_fast">Быстрый старт</string>
+    <string name="settings_jvm_custom">Дополнительные аргументы JVM</string>
+    <string name="settings_close_on_start">Закрывать лаунчер после запуска игры</string>
+    <string name="settings_console_on_start">Открывать консоль при запуске игры</string>
+
+    <string name="settings_java">Java</string>
+    <string name="settings_java_auto_download">Автоматически скачивать нужную Java с серверов Mojang</string>
+    <string name="settings_java_global">Java для всех экземпляров</string>
+    <string name="settings_java_global_hint">Оставьте пустым, чтобы Java подбиралась под каждую версию игры</string>
+    <string name="java_item">Java %1$s · %2$s</string>
+    <string name="java_auto_global">Автоматически под каждую версию игры</string>
+    <string name="instance_java_auto_for">Автоматически (нужна Java %1$d)</string>
+    <string name="java_found">Найденные Java</string>
+    <string name="java_refresh">Искать снова</string>
+    <string name="java_none_found">Java в системе не найдена. Лаунчер скачает нужную сам или скачайте её ниже.</string>
+    <string name="java_check">Проверить</string>
+    <string name="java_check_ok">Работает: %1$s</string>
+    <string name="java_check_fail">Не запускается: %1$s</string>
+    <string name="java_download_title">Скачать Java (Eclipse Temurin)</string>
+    <string name="java_download_body">Сборки Eclipse Temurin с adoptium.net, архив сверяется по sha256. Java 8 нужна версиям до 1.16, 17 до 1.20.4, 21 до 1.21.11, 25 версиям 26.x.</string>
+    <string name="java_download_major">Java %1$d</string>
+    <string name="java_downloaded">Java %1$s установлена</string>
+    <string name="java_download_failed">Не удалось скачать Java %1$d: %2$s</string>
+    <string name="java_src_system">системная</string>
+    <string name="java_src_custom">своя</string>
+
+    <string name="settings_folders">Папки</string>
+    <string name="settings_data_folder">Данные лаунчера</string>
+    <string name="settings_cache_folder">Кэш загрузок</string>
+    <string name="settings_logs_folder">Журналы</string>
+    <string name="settings_portable">Включён портативный режим: данные хранятся рядом с YouLauncher.exe</string>
+
+    <string name="settings_network">Загрузки</string>
+    <string name="settings_threads">Параллельных загрузок</string>
+    <string name="settings_speed_limit">Ограничение скорости</string>
+    <string name="settings_speed_unlimited">Без ограничения</string>
+    <string name="settings_speed_value">%1$s МБ/с</string>
+
+    <string name="settings_about">О программе</string>
+    <string name="settings_version">Версия %1$s</string>
+    <string name="settings_licenses">Лицензии</string>
+    <string name="settings_open_data">Открыть папку</string>
+
+    <string name="theme_system">Системная</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+
+    <string name="contrast_reduced">Пониженная</string>
+    <string name="contrast_standard">Обычная</string>
+    <string name="contrast_medium">Средняя</string>
+    <string name="contrast_high">Высокая</string>
+
+    <string name="language_system">Как в системе</string>
+    <string name="language_ru">Русский</string>
+    <string name="language_en">English</string>
+
+    <string name="style_tonal_spot">Тональный</string>
+    <string name="style_neutral">Нейтральный</string>
+    <string name="style_vibrant">Яркий</string>
+    <string name="style_expressive">Выразительный</string>
+    <string name="style_rainbow">Радуга</string>
+    <string name="style_fruit_salad">Фруктовый салат</string>
+    <string name="style_monochrome">Монохром</string>
+    <string name="style_fidelity">Точный</string>
+    <string name="style_content">По содержимому</string>
+    <string name="cf_key_title">Ключ API CurseForge</string>
+    <string name="cf_key_body">CurseForge открывает официальный API только по личному ключу. Получите бесплатный ключ на console.curseforge.com и вставьте его сюда. Ключ проверяется и хранится в диспетчере учётных данных Windows, а не в файлах.</string>
+    <string name="cf_key_env">Используется ключ из переменной окружения %1$s.</string>
+    <string name="cf_key_label">Ключ API</string>
+    <string name="cf_key_stored">Ключ сохранён в диспетчере учётных данных Windows</string>
+    <string name="cf_key_saved">Ключ проверен и сохранён. CurseForge готов к работе.</string>
+    <string name="cf_key_invalid">Ключ не подошёл: %1$s</string>
+    <string name="cf_key_save">Проверить и сохранить</string>
+    <string name="cf_key_delete">Удалить ключ</string>
+    <string name="cf_key_get">Получить ключ</string>
+    <string name="cf_key_show">Показать ключ</string>
+    <string name="cf_key_hide">Скрыть ключ</string>
+    <string name="cf_key_builtin">CurseForge работает с ключом, встроенным в эту сборку YouLauncher. Можно указать свой ключ вместо него.</string>
+</resources>

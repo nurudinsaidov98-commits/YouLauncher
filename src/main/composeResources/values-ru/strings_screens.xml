@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Главная -->
+    <string name="home_greeting_morning">Доброе утро</string>
+    <string name="home_greeting_day">Добрый день</string>
+    <string name="home_greeting_evening">Добрый вечер</string>
+    <string name="home_greeting_night">Доброй ночи</string>
+    <string name="home_ready">Всё готово. Продолжайте с того места, где остановились.</string>
+    <string name="home_continue">Продолжить игру</string>
+    <string name="home_recent">Ваши экземпляры</string>
+    <string name="home_choose_instance">Выбрать экземпляр</string>
+    <string name="home_play_as">Вы играете как %1$s</string>
+    <string name="home_no_account">Аккаунт не выбран</string>
+    <string name="home_add_account">Добавить аккаунт</string>
+    <string name="home_empty_title">Библиотека пока пуста</string>
+    <string name="home_empty_body">Создайте первый экземпляр: выберите версию игры и загрузчик, а YouLauncher скачает всё нужное с официальных серверов.</string>
+    <string name="home_stats">Статистика</string>
+    <string name="home_stats_playtime">Время в игре</string>
+    <string name="home_stats_launches">Запуски</string>
+    <string name="home_stats_instances">Экземпляры</string>
+    <string name="home_stats_last14">Последние 14 дней</string>
+    <string name="home_shortcuts">Ярлыки</string>
+    <string name="home_last_session">Последний сеанс</string>
+    <string name="home_last_session_body">%1$s в «%2$s», %3$s</string>
+    <string name="home_last_session_none">Вы ещё не играли. Первый сеанс появится здесь.</string>
+    <string name="home_widgets_edit">Настроить виджеты</string>
+    <string name="shortcut_new_instance">Новый экземпляр</string>
+    <string name="shortcut_mods">Найти моды</string>
+    <string name="shortcut_console">Консоль</string>
+    <string name="shortcut_folder">Папка игры</string>
+    <string name="home_not_played">Ещё не запускали</string>
+    <string name="home_open_instance">Открыть страницу экземпляра</string>
+
+    <!-- Запуск -->
+    <string name="launch_stage_preparing">Подготовка</string>
+    <string name="launch_stage_java">Проверка Java</string>
+    <string name="launch_stage_libraries">Загрузка библиотек</string>
+    <string name="launch_stage_assets">Загрузка ресурсов</string>
+    <string name="launch_stage_loader">Установка загрузчика</string>
+    <string name="launch_stage_starting">Запуск игры</string>
+    <string name="launch_stage_running">Игра запущена</string>
+    <string name="launch_running_for">Идёт уже %1$s</string>
+    <string name="launch_crashed">Игра завершилась с ошибкой (код %1$d)</string>
+    <string name="launch_failed">Не удалось запустить: %1$s</string>
+    <string name="launch_started">«%1$s» запускается</string>
+    <string name="action_view_log">Открыть журнал</string>
+    <string name="action_dismiss">Скрыть</string>
+    <string name="action_open">Открыть</string>
+
+    <!-- Библиотека -->
+    <string name="library_search">Поиск экземпляров</string>
+    <string name="library_all">Все</string>
+    <string name="library_favorites">Избранное</string>
+    <string name="library_sort">Сортировка</string>
+    <string name="sort_last_played">По последнему запуску</string>
+    <string name="sort_name">По имени</string>
+    <string name="sort_play_time">По времени в игре</string>
+    <string name="sort_created">По дате создания</string>
+    <string name="sort_version">По версии игры</string>
+    <string name="library_group_none">Без группы</string>
+    <string name="library_import">Импорт</string>
+    <string name="library_new">Новый экземпляр</string>
+    <string name="library_no_results_title">Ничего не нашлось</string>
+    <string name="library_no_results_body">Попробуйте другой запрос или сбросьте фильтры.</string>
+    <string name="library_reset_filters">Сбросить фильтры</string>
+    <string name="menu_play">Играть</string>
+    <string name="menu_open">Открыть</string>
+    <string name="menu_favorite_add">В избранное</string>
+    <string name="menu_favorite_remove">Убрать из избранного</string>
+    <string name="menu_duplicate">Дублировать</string>
+    <string name="menu_rename">Переименовать</string>
+    <string name="menu_open_folder">Открыть папку</string>
+    <string name="menu_delete">Удалить</string>
+    <string name="menu_shortcut">Ярлык на рабочий стол</string>
+    <string name="dialog_delete_instance_title">Удалить «%1$s»?</string>
+    <string name="dialog_delete_instance_body">Миры, моды и настройки этого экземпляра будут удалены. Общие библиотеки и ресурсы останутся в кэше.</string>
+    <string name="dialog_duplicate_title">Дублировать экземпляр</string>
+    <string name="dialog_rename_title">Переименовать экземпляр</string>
+    <string name="field_name">Название</string>
+    <string name="copy_suffix">%1$s (копия)</string>
+    <string name="msg_instance_created">Экземпляр «%1$s» создан</string>
+    <string name="msg_instance_deleted">Экземпляр «%1$s» удалён</string>
+    <string name="msg_instance_duplicated">Копия «%1$s» создана</string>
+    <string name="msg_undo">Отменить</string>
+    <string name="error_name_empty">Введите название</string>
+    <string name="error_name_taken">Экземпляр с таким названием уже есть</string>
+
+    <!-- Аккаунты (кратко) -->
+    <string name="account_type_offline">Офлайн-аккаунт</string>
+    <string name="account_type_ely">Аккаунт Ely.by</string>
+    <string name="export_title">Экспорт</string>
+    <string name="export_mrpack">Сборка Modrinth (.mrpack)</string>
+    <string name="export_prism">Экземпляр Prism или MultiMC (.zip)</string>
+    <string name="msg_exported">Экспортировано: %1$s</string>
+    <string name="msg_export_failed">Не удалось экспортировать: %1$s</string>
+    <string name="modsets_title">Наборы модов</string>
+    <string name="modset_save">Сохранить текущий набор</string>
+    <string name="modset_name">Название набора</string>
+    <string name="modset_saved">Набор «%1$s» сохранён</string>
+    <string name="modset_applied">Набор «%1$s» применён</string>
+    <string name="modsets_empty">Наборов пока нет. Набор запоминает, какие моды включены.</string>
+    <string name="modset_save_confirm">Сохранить</string>
+    <string name="modset_delete">Удалить набор</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="repair_instance">Починить экземпляр</string>
+    <string name="repair_hint">Проверяет все файлы игры, загрузчика и модов по хешам и скачивает заново повреждённые. Миры и настройки не трогаются.</string>
+    <string name="repair_done">Экземпляр проверен. Модов скачано заново: %1$d</string>
+    <string name="repair_failed">Починка не удалась: %1$s</string>
+    <string name="diag_title">Диагностика</string>
+    <string name="diag_body">Отчёт для автора: система, настройки, экземпляры и журналы. Токены, пароли и имя пользователя Windows в него не попадают.</string>
+    <string name="diag_save">Сохранить отчёт</string>
+    <string name="diag_saved">Отчёт сохранён: %1$s</string>
+</resources>

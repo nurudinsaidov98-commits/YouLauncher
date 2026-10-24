@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_window_mode">Window mode</string>
+    <string name="window_normal">Normal</string>
+    <string name="window_compact">Compact</string>
+    <string name="window_mini">Mini</string>
+    <string name="settings_home_widgets">Home widgets</string>
+    <string name="widget_continue">Continue playing</string>
+    <string name="widget_recent">Recent instances</string>
+    <string name="widget_last_session">Last session</string>
+    <string name="widget_stats">Statistics</string>
+    <string name="widget_shortcuts">Shortcuts</string>
+    <string name="widget_up">Move up</string>
+    <string name="widget_down">Move down</string>
+    <string name="settings_hotkeys">Keyboard shortcuts</string>
+    <string name="hotkeys_reset">Defaults</string>
+    <string name="hotkey_palette">Command palette</string>
+    <string name="hotkey_none">not set</string>
+    <string name="hotkey_change">Change</string>
+    <string name="hotkey_record_title">Shortcut: %1$s</string>
+    <string name="hotkey_record_body">Press the new shortcut. It needs Ctrl or Alt, except F1–F12.</string>
+    <string name="hotkey_press">Press keys…</string>
+    <string name="hotkey_conflict">It is used by “%1$s” now and will be taken from it</string>
+    <string name="hotkey_clear">Remove</string>
+    <string name="settings_transfer">Move settings</string>
+    <string name="settings_transfer_body">A file with appearance, background, interface and game settings. Paths of this computer and secrets are not included.</string>
+    <string name="settings_export">Export settings</string>
+    <string name="settings_import">Import settings</string>
+    <string name="settings_exported">Settings saved: %1$s</string>
+    <string name="settings_imported">Settings applied</string>
+    <string name="settings_import_invalid">This is not a YouLauncher settings file</string>
+    <string name="settings_transfer_failed">Could not save: %1$s</string>
+</resources>

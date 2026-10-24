@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="palette_hint">Команда, раздел или экземпляр</string>
+    <string name="palette_empty">Ничего не найдено</string>
+    <string name="cmd_go_to">Перейти в раздел</string>
+    <string name="cmd_theme_toggle">Переключить светлую или тёмную тему</string>
+    <string name="cmd_motion_toggle">Уменьшить анимации или вернуть их</string>
+    <string name="cmd_play_instance">Играть в «%1$s»</string>
+    <string name="cmd_open_instance">Открыть «%1$s»</string>
+    <string name="cmd_instance">Экземпляр · %1$s</string>
+    <string name="cmd_new_instance">Создать новый экземпляр</string>
+    <string name="cmd_add_account">Добавить аккаунт</string>
+    <string name="cmd_open_data">Открыть папку данных лаунчера</string>
+    <string name="cmd_action">Действие</string>
+</resources>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="time_just_now">just now</string>
+    <string name="time_never">never</string>
+    <string name="time_yesterday">yesterday</string>
+    <plurals name="time_minutes_ago">
+        <item quantity="one">%1$d minute ago</item>
+        <item quantity="other">%1$d minutes ago</item>
+    </plurals>
+    <plurals name="time_hours_ago">
+        <item quantity="one">%1$d hour ago</item>
+        <item quantity="other">%1$d hours ago</item>
+    </plurals>
+    <plurals name="time_days_ago">
+        <item quantity="one">%1$d day ago</item>
+        <item quantity="other">%1$d days ago</item>
+    </plurals>
+    <plurals name="time_weeks_ago">
+        <item quantity="one">%1$d week ago</item>
+        <item quantity="other">%1$d weeks ago</item>
+    </plurals>
+    <plurals name="time_months_ago">
+        <item quantity="one">%1$d month ago</item>
+        <item quantity="other">%1$d months ago</item>
+    </plurals>
+    <string name="duration_hm">%1$d h %2$d min</string>
+    <string name="duration_h">%1$d h</string>
+    <string name="duration_m">%1$d min</string>
+    <string name="duration_zero">0 min</string>
+    <plurals name="count_mods">
+        <item quantity="one">%1$d mod</item>
+        <item quantity="other">%1$d mods</item>
+    </plurals>
+    <plurals name="count_instances">
+        <item quantity="one">%1$d instance</item>
+        <item quantity="other">%1$d instances</item>
+    </plurals>
+    <plurals name="count_launches">
+        <item quantity="one">%1$d launch</item>
+        <item quantity="other">%1$d launches</item>
+    </plurals>
+    <plurals name="count_results">
+        <item quantity="one">%1$d result</item>
+        <item quantity="other">%1$d results</item>
+    </plurals>
+    <plurals name="count_downloads">
+        <item quantity="one">%1$s download</item>
+        <item quantity="other">%1$s downloads</item>
+    </plurals>
+    <string name="size_kb">%1$s KB</string>
+    <string name="size_mb">%1$s MB</string>
+    <string name="size_gb">%1$s GB</string>
+    <string name="number_thousands">%1$sK</string>
+    <string name="number_millions">%1$sM</string>
+</resources>

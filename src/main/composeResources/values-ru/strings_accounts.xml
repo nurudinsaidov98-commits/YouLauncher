@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accounts_subtitle">Офлайн-аккаунты и Ely.by</string>
+    <string name="accounts_add_offline">Офлайн-аккаунт</string>
+    <string name="accounts_add_ely">Войти через Ely.by</string>
+    <string name="accounts_active">Активный</string>
+    <string name="accounts_use">Выбрать</string>
+    <string name="accounts_copy_uuid">Копировать UUID</string>
+    <string name="accounts_uuid_copied">UUID скопирован</string>
+    <string name="accounts_remove">Удалить аккаунт</string>
+    <string name="accounts_remove_title">Удалить «%1$s»?</string>
+    <string name="accounts_remove_body">Аккаунт будет удалён из YouLauncher. Для Ely.by сессия закрывается, а токен удаляется из диспетчера учётных данных Windows.</string>
+    <string name="accounts_reauth">Войти заново</string>
+    <string name="accounts_refresh">Проверить сессию</string>
+    <string name="accounts_session_ok">Сессия Ely.by для %1$s действует</string>
+    <string name="accounts_session_expired">Сессия Ely.by для %1$s истекла: войдите заново</string>
+    <string name="accounts_last_used">Использовался %1$s</string>
+    <string name="accounts_empty_title">Аккаунтов пока нет</string>
+    <string name="accounts_empty_body">Добавьте офлайн-аккаунт с любым ником или войдите через Ely.by, чтобы был скин.</string>
+    <string name="accounts_notice_title">Об этих аккаунтах</string>
+    <string name="accounts_notice_body">YouLauncher поддерживает только офлайн-аккаунты и Ely.by. С ними нельзя играть на официальных серверах и в Realms: там нужен лицензионный аккаунт Microsoft. Зато они работают в одиночной игре, по локальной сети и на серверах с Ely.by или офлайн-режимом.</string>
+    <string name="accounts_ely_about">Ely.by это независимый сервис скинов и авторизации. YouLauncher обращается к authserver.ely.by и подключает authlib-injector, чтобы скины работали в игре.</string>
+    <string name="accounts_ely_register">Создать аккаунт Ely.by</string>
+
+    <string name="offline_title">Офлайн-аккаунт</string>
+    <string name="offline_body">Выберите ник. UUID вычисляется из него, поэтому один и тот же ник всегда получает один и тот же UUID.</string>
+    <string name="offline_nick">Ник</string>
+    <string name="offline_nick_hint">3–16 символов: латинские буквы, цифры, подчёркивание</string>
+    <string name="offline_nick_invalid">Нужно 3–16 латинских букв, цифр или подчёркиваний</string>
+    <string name="offline_nick_taken">Такой ник уже добавлен</string>
+
+    <string name="ely_title">Вход через Ely.by</string>
+    <string name="ely_login">Почта или ник</string>
+    <string name="ely_password">Пароль</string>
+    <string name="ely_password_note">Пароль нужен один раз для получения токена и нигде не сохраняется.</string>
+    <string name="ely_totp">Код двухфакторной защиты</string>
+    <string name="ely_totp_body">Аккаунт защищён двухфакторной аутентификацией. Введите код из приложения-аутентификатора.</string>
+    <string name="ely_sign_in">Войти</string>
+    <string name="ely_show_password">Показать пароль</string>
+    <string name="ely_hide_password">Скрыть пароль</string>
+    <string name="ely_error_credentials">Неверный логин или пароль</string>
+    <string name="ely_error_network">Не удалось связаться с Ely.by: %1$s</string>
+    <string name="ely_signed_in">Вы вошли как %1$s</string>
+    <string name="offline_added">Аккаунт «%1$s» добавлен</string>
+    <string name="account_removed">Аккаунт «%1$s» удалён</string>
+</resources>

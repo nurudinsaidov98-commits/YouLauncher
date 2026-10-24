@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_window_mode">Режим окна</string>
+    <string name="window_normal">Обычное</string>
+    <string name="window_compact">Компактное</string>
+    <string name="window_mini">Мини</string>
+    <string name="settings_home_widgets">Виджеты главной</string>
+    <string name="widget_continue">Продолжить игру</string>
+    <string name="widget_recent">Недавние экземпляры</string>
+    <string name="widget_last_session">Последний сеанс</string>
+    <string name="widget_stats">Статистика</string>
+    <string name="widget_shortcuts">Ярлыки</string>
+    <string name="widget_up">Выше</string>
+    <string name="widget_down">Ниже</string>
+    <string name="settings_hotkeys">Горячие клавиши</string>
+    <string name="hotkeys_reset">Стандартные</string>
+    <string name="hotkey_palette">Палитра команд</string>
+    <string name="hotkey_none">не задано</string>
+    <string name="hotkey_change">Изменить</string>
+    <string name="hotkey_record_title">Сочетание: %1$s</string>
+    <string name="hotkey_record_body">Нажмите новое сочетание. Нужен Ctrl или Alt, кроме клавиш F1–F12.</string>
+    <string name="hotkey_press">Нажмите клавиши…</string>
+    <string name="hotkey_conflict">Сейчас оно у действия «%1$s» и будет снято с него</string>
+    <string name="hotkey_clear">Убрать</string>
+    <string name="settings_transfer">Перенос настроек</string>
+    <string name="settings_transfer_body">Файл с настройками оформления, фона, интерфейса и игры. Пути этого компьютера и секреты в него не попадают.</string>
+    <string name="settings_export">Экспорт настроек</string>
+    <string name="settings_import">Импорт настроек</string>
+    <string name="settings_exported">Настройки сохранены: %1$s</string>
+    <string name="settings_imported">Настройки применены</string>
+    <string name="settings_import_invalid">Это не файл настроек YouLauncher</string>
+    <string name="settings_transfer_failed">Не удалось сохранить: %1$s</string>
+</resources>

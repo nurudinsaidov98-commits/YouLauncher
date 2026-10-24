@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Home -->
+    <string name="home_greeting_morning">Good morning</string>
+    <string name="home_greeting_day">Good afternoon</string>
+    <string name="home_greeting_evening">Good evening</string>
+    <string name="home_greeting_night">Good night</string>
+    <string name="home_ready">Everything is ready. Pick up where you left off.</string>
+    <string name="home_continue">Continue playing</string>
+    <string name="home_recent">Your instances</string>
+    <string name="home_choose_instance">Choose instance</string>
+    <string name="home_play_as">Playing as %1$s</string>
+    <string name="home_no_account">No account selected</string>
+    <string name="home_add_account">Add account</string>
+    <string name="home_empty_title">Your library is empty</string>
+    <string name="home_empty_body">Create your first instance: choose a game version and a loader, and YouLauncher will download everything from the official servers.</string>
+    <string name="home_stats">Statistics</string>
+    <string name="home_stats_playtime">Play time</string>
+    <string name="home_stats_launches">Launches</string>
+    <string name="home_stats_instances">Instances</string>
+    <string name="home_stats_last14">Last 14 days</string>
+    <string name="home_shortcuts">Shortcuts</string>
+    <string name="home_last_session">Last session</string>
+    <string name="home_last_session_body">%1$s in “%2$s”, %3$s</string>
+    <string name="home_last_session_none">You haven’t played yet. The first session will appear here.</string>
+    <string name="home_widgets_edit">Customize widgets</string>
+    <string name="shortcut_new_instance">New instance</string>
+    <string name="shortcut_mods">Find mods</string>
+    <string name="shortcut_console">Console</string>
+    <string name="shortcut_folder">Game folder</string>
+    <string name="home_not_played">Not played yet</string>
+    <string name="home_open_instance">Open instance page</string>
+
+    <!-- Launch -->
+    <string name="launch_stage_preparing">Preparing</string>
+    <string name="launch_stage_java">Checking Java</string>
+    <string name="launch_stage_libraries">Downloading libraries</string>
+    <string name="launch_stage_assets">Downloading assets</string>
+    <string name="launch_stage_loader">Installing the loader</string>
+    <string name="launch_stage_starting">Starting the game</string>
+    <string name="launch_stage_running">Game is running</string>
+    <string name="launch_running_for">Running for %1$s</string>
+    <string name="launch_crashed">The game crashed (exit code %1$d)</string>
+    <string name="launch_failed">Launch failed: %1$s</string>
+    <string name="launch_started">“%1$s” is starting</string>
+    <string name="action_view_log">Open log</string>
+    <string name="action_dismiss">Dismiss</string>
+    <string name="action_open">Open</string>
+
+    <!-- Library -->
+    <string name="library_search">Search instances</string>
+    <string name="library_all">All</string>
+    <string name="library_favorites">Favorites</string>
+    <string name="library_sort">Sort</string>
+    <string name="sort_last_played">Last played</string>
+    <string name="sort_name">Name</string>
+    <string name="sort_play_time">Play time</string>
+    <string name="sort_created">Date created</string>
+    <string name="sort_version">Game version</string>
+    <string name="library_group_none">Ungrouped</string>
+    <string name="library_import">Import</string>
+    <string name="library_new">New instance</string>
+    <string name="library_no_results_title">Nothing matches</string>
+    <string name="library_no_results_body">Try another search or reset the filters.</string>
+    <string name="library_reset_filters">Reset filters</string>
+    <string name="menu_play">Play</string>
+    <string name="menu_open">Open</string>
+    <string name="menu_favorite_add">Add to favorites</string>
+    <string name="menu_favorite_remove">Remove from favorites</string>
+    <string name="menu_duplicate">Duplicate</string>
+    <string name="menu_rename">Rename</string>
+    <string name="menu_open_folder">Open folder</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_shortcut">Create desktop shortcut</string>
+    <string name="dialog_delete_instance_title">Delete “%1$s”?</string>
+    <string name="dialog_delete_instance_body">Worlds, mods and settings of this instance will be removed. Shared libraries and assets stay in the cache.</string>
+    <string name="dialog_duplicate_title">Duplicate instance</string>
+    <string name="dialog_rename_title">Rename instance</string>
+    <string name="field_name">Name</string>
+    <string name="copy_suffix">%1$s (copy)</string>
+    <string name="msg_instance_created">Instance “%1$s” created</string>
+    <string name="msg_instance_deleted">Instance “%1$s” deleted</string>
+    <string name="msg_instance_duplicated">Copy “%1$s” created</string>
+    <string name="msg_undo">Undo</string>
+    <string name="error_name_empty">Enter a name</string>
+    <string name="error_name_taken">An instance with this name already exists</string>
+
+    <!-- Accounts (short) -->
+    <string name="account_type_offline">Offline account</string>
+    <string name="account_type_ely">Ely.by account</string>
+    <string name="export_title">Export</string>
+    <string name="export_mrpack">Modrinth modpack (.mrpack)</string>
+    <string name="export_prism">Prism or MultiMC instance (.zip)</string>
+    <string name="msg_exported">Exported: %1$s</string>
+    <string name="msg_export_failed">Could not export: %1$s</string>
+    <string name="modsets_title">Mod sets</string>
+    <string name="modset_save">Save current set</string>
+    <string name="modset_name">Set name</string>
+    <string name="modset_saved">Set “%1$s” saved</string>
+    <string name="modset_applied">Set “%1$s” applied</string>
+    <string name="modsets_empty">No saved sets yet. A set remembers which mods are on.</string>
+    <string name="modset_save_confirm">Save</string>
+    <string name="modset_delete">Delete set</string>
+</resources>

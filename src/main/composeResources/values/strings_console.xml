@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="console_subtitle">Launcher and game output</string>
+    <string name="console_search">Search the log</string>
+    <string name="console_follow">Follow new lines</string>
+    <string name="console_copy_all">Copy visible lines</string>
+    <string name="console_copied">Copied %1$d lines</string>
+    <string name="console_clear">Clear console</string>
+    <string name="console_export">Save to file</string>
+    <string name="console_exported">Log saved: %1$s</string>
+    <string name="console_source_all">All sources</string>
+    <string name="console_source_launcher">Launcher</string>
+    <string name="console_source_game">Game</string>
+    <string name="console_empty_title">The console is quiet</string>
+    <string name="console_empty_body">Launch an instance and its output will stream here in real time.</string>
+    <string name="console_no_matches">No lines match the filters</string>
+    <string name="console_lines">%1$d of %2$d lines</string>
+    <string name="crash_title">The game crashed</string>
+    <string name="crash_body">Exit code %1$d. The crash report is saved, it has no passwords or tokens.</string>
+    <string name="crash_open_report">Open report</string>
+    <string name="crash_copy_report">Copy report</string>
+</resources>

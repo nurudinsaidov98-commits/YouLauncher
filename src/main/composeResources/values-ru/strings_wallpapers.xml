@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wp_dawn_blobs">Рассветные пятна</string>
+    <string name="wp_lagoon_blobs">Лагуна</string>
+    <string name="wp_meadow_hills">Луговые холмы</string>
+    <string name="wp_dusk_hills">Сумеречные холмы</string>
+    <string name="wp_coral_arcs">Коралловые дуги</string>
+    <string name="wp_mint_arcs">Мятные дуги</string>
+    <string name="wp_berry_bubbles">Ягодные пузыри</string>
+    <string name="wp_sky_bubbles">Небесные пузыри</string>
+    <string name="wp_amber_horizon">Янтарный закат</string>
+    <string name="wp_ocean_horizon">Океанский горизонт</string>
+    <string name="wp_lilac_mesh">Сиреневая дымка</string>
+    <string name="wp_citrus_mesh">Цитрусовая дымка</string>
+    <string name="wp_garden_collage">Сад форм</string>
+    <string name="wp_candy_collage">Конфетная мозаика</string>
+    <string name="wp_tide_waves">Прилив</string>
+    <string name="wp_ember_waves">Угольки</string>
+    <string name="wp_rose_morph">Розовый морфинг</string>
+    <string name="wp_jade_morph">Нефритовый морфинг</string>
+    <string name="wp_blossom_petals">Цветение</string>
+    <string name="wp_autumn_petals">Листопад</string>
+    <string name="wp_cosmic_orbits">Космос</string>
+    <string name="wp_citrine_orbits">Цитриновые орбиты</string>
+    <string name="wp_silk_ribbons">Шёлковые ленты</string>
+    <string name="wp_tide_ribbons">Морские ленты</string>
+    <string name="wp_polar_aurora">Полярное сияние</string>
+    <string name="wp_violet_aurora">Фиолетовое сияние</string>
+    <string name="wp_party_confetti">Праздник</string>
+    <string name="wp_mint_confetti">Мятное конфетти</string>
+</resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">YouLauncher</string>
+    <string name="app_disclaimer">Неофициальный лаунчер, не связан с Mojang и Microsoft</string>
+
+    <!-- Навигация -->
+    <string name="nav_home">Главная</string>
+    <string name="nav_library">Библиотека</string>
+    <string name="nav_mods">Моды</string>
+    <string name="nav_accounts">Аккаунты</string>
+    <string name="nav_console">Консоль</string>
+    <string name="nav_settings">Настройки</string>
+    <string name="nav_expand">Развернуть навигацию</string>
+    <string name="nav_collapse">Свернуть навигацию</string>
+    <string name="nav_back">Назад</string>
+
+    <!-- Окно -->
+    <string name="window_minimize">Свернуть</string>
+    <string name="window_maximize">Развернуть</string>
+    <string name="window_restore">Восстановить</string>
+    <string name="window_close">Закрыть</string>
+    <string name="window_search_hint">Поиск или команда</string>
+
+    <!-- Seed-цвета -->
+    <string name="seed_forest">Лес</string>
+    <string name="seed_ocean">Океан</string>
+    <string name="seed_sunset">Закат</string>
+    <string name="seed_amethyst">Аметист</string>
+    <string name="seed_rose">Роза</string>
+    <string name="seed_lagoon">Лагуна</string>
+    <string name="seed_amber">Янтарь</string>
+    <string name="seed_indigo">Индиго</string>
+    <string name="seed_moss">Мох</string>
+    <string name="seed_sand">Песок</string>
+
+    <!-- Общие -->
+    <string name="action_play">Играть</string>
+    <string name="action_stop">Остановить</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_ok">Готово</string>
+    <string name="action_close">Закрыть</string>
+    <string name="action_create">Создать</string>
+    <string name="action_next">Далее</string>
+    <string name="action_back">Назад</string>
+    <string name="action_save">Сохранить</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_copy">Копировать</string>
+    <string name="action_retry">Повторить</string>
+    <string name="action_open_folder">Открыть папку</string>
+    <string name="action_install">Установить</string>
+    <string name="action_installed">Установлено</string>
+    <string name="action_add">Добавить</string>
+    <string name="action_remove">Убрать</string>
+    <string name="action_search">Поиск</string>
+    <string name="action_clear">Очистить</string>
+    <string name="action_more">Ещё</string>
+</resources>

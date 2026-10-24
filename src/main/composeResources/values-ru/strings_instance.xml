@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_overview">Обзор</string>
+    <string name="tab_mods">Моды</string>
+    <string name="tab_resourcepacks">Ресурспаки</string>
+    <string name="tab_shaders">Шейдеры</string>
+    <string name="tab_worlds">Миры</string>
+    <string name="tab_screenshots">Скриншоты</string>
+    <string name="tab_settings">Настройки</string>
+    <string name="tab_log">Журнал</string>
+
+    <string name="instance_not_found">Экземпляр не найден</string>
+    <string name="instance_play_time">Время в игре</string>
+    <string name="instance_last_played">Последний запуск</string>
+    <string name="instance_launches">Запуски</string>
+    <string name="instance_created">Создан</string>
+    <string name="instance_activity">Активность за 30 дней</string>
+    <string name="instance_info">Сведения</string>
+    <string name="instance_java">Java</string>
+    <string name="instance_java_auto">Автоматически</string>
+    <string name="instance_memory">Память</string>
+    <string name="instance_folder">Папка</string>
+    <string name="instance_tags">Теги</string>
+
+    <string name="content_add_files">Добавить файлы</string>
+    <string name="content_browse">Открыть каталог</string>
+    <string name="content_update_all">Обновить все</string>
+    <string name="content_update_available">Обновление: %1$s</string>
+    <string name="content_enabled">Включён</string>
+    <string name="content_search">Поиск в экземпляре</string>
+    <string name="content_empty_title">Здесь пока пусто</string>
+    <string name="content_empty_mods">Установите моды из каталога или добавьте файлы .jar.</string>
+    <string name="content_empty_packs">Добавьте ресурспаки из каталога или файлы .zip.</string>
+    <string name="content_vanilla_mods">Для модов нужен загрузчик. Смените его в настройках экземпляра.</string>
+    <string name="msg_removed">Удалено: «%1$s»</string>
+    <string name="msg_files_added">Добавлено файлов: %1$d</string>
+    <string name="msg_updated">Обновлено: %1$d</string>
+
+    <string name="worlds_empty_title">Миров пока нет</string>
+    <string name="worlds_empty_body">Миры, которые вы создадите в игре, появятся здесь.</string>
+    <string name="world_backup">Резервная копия</string>
+    <string name="world_backup_done">Копия мира «%1$s» сохранена</string>
+    <string name="world_mode_survival">Выживание</string>
+    <string name="world_mode_creative">Творчество</string>
+    <string name="world_mode_hardcore">Хардкор</string>
+    <string name="world_mode_adventure">Приключение</string>
+    <string name="world_mode_spectator">Наблюдение</string>
+    <string name="dialog_delete_world_title">Удалить мир «%1$s»?</string>
+    <string name="dialog_delete_world_body">Это действие нельзя отменить. Сделайте резервную копию, если мир может понадобиться.</string>
+
+    <string name="screenshots_empty_title">Скриншотов нет</string>
+    <string name="screenshots_empty_body">Нажмите F2 в игре, чтобы сделать скриншот.</string>
+    <string name="screenshot_copy_path">Копировать путь</string>
+
+    <string name="settings_general">Основное</string>
+    <string name="settings_group">Группа</string>
+    <string name="settings_tags_hint">Через запятую</string>
+    <string name="settings_memory">Память</string>
+    <string name="settings_memory_range">От %1$s до %2$s</string>
+    <string name="settings_use_global">Как в общих настройках</string>
+    <string name="settings_java_path">Путь к Java</string>
+    <string name="settings_java_choose">Выбрать java.exe</string>
+    <string name="settings_jvm_args">Аргументы JVM</string>
+    <string name="settings_resolution">Размер окна игры</string>
+    <string name="settings_fullscreen">Во весь экран</string>
+    <string name="settings_width">Ширина</string>
+    <string name="settings_height">Высота</string>
+    <string name="settings_quick_join">Сразу зайти на сервер</string>
+    <string name="settings_quick_join_hint">адрес:порт, оставьте пустым для главного меню</string>
+    <string name="settings_env">Переменные окружения</string>
+    <string name="settings_env_hint">По одной в строке: ИМЯ=значение</string>
+    <string name="settings_pre_launch">Команда перед запуском</string>
+    <string name="settings_post_exit">Команда после выхода</string>
+    <string name="settings_wrapper">Команда-обёртка</string>
+    <string name="settings_saved">Сохранено</string>
+
+    <string name="log_empty_title">Журнала пока нет</string>
+    <string name="log_empty_body">Запустите экземпляр, и его вывод появится здесь.</string>
+    <string name="log_open_console">Открыть в консоли</string>
+    <string name="version_section">Версия и загрузчик</string>
+    <string name="version_current">Сейчас: %1$s</string>
+    <string name="version_change">Сменить версию</string>
+    <string name="version_change_title">Смена версии</string>
+    <string name="version_change_body">Миры и моды останутся. Моды из каталогов проверятся под новую версию: подходящие обновятся, остальные выключатся (файлы не удаляются).</string>
+    <string name="version_game">Версия игры</string>
+    <string name="version_loader">Загрузчик</string>
+    <string name="version_loader_version">Версия загрузчика</string>
+    <string name="version_loader_none">%1$s пока не поддерживает %2$s</string>
+    <string name="version_loader_recommended">рекомендуемая</string>
+    <string name="version_loader_latest">последняя</string>
+    <string name="version_loader_beta">бета</string>
+    <string name="version_downgrade">Вы переходите на более старую версию игры. Миры, открытые в новой версии, могут повредиться.</string>
+    <string name="version_backup">Сделать резервные копии миров</string>
+    <string name="version_checking">Проверяем моды…</string>
+    <string name="version_no_mods">Модов нет, проверять нечего.</string>
+    <string name="compat_update">обновится до %1$s</string>
+    <string name="compat_same">подходит</string>
+    <string name="compat_incompatible">будет выключен</string>
+    <string name="compat_unknown">проверить нельзя</string>
+    <string name="compat_summary">Обновятся: %1$d · подходят: %2$d · выключатся: %3$d · без проверки: %4$d</string>
+    <string name="version_apply">Применить</string>
+    <string name="version_change_done">Версия изменена на %1$s, затронуто файлов: %2$d</string>
+    <string name="version_change_failed">Не удалось сменить версию: %1$s</string>
+    <string name="loader_update_available">Доступна новая версия загрузчика: %1$s</string>
+    <string name="loader_update">Обновить загрузчик</string>
+    <string name="loader_updated">Загрузчик обновлён до %1$s. Он установится при следующем запуске.</string>
+</resources>

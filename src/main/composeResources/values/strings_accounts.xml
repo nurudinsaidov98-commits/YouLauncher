@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accounts_subtitle">Offline and Ely.by accounts</string>
+    <string name="accounts_add_offline">Offline account</string>
+    <string name="accounts_add_ely">Sign in with Ely.by</string>
+    <string name="accounts_active">Active</string>
+    <string name="accounts_use">Use</string>
+    <string name="accounts_copy_uuid">Copy UUID</string>
+    <string name="accounts_uuid_copied">UUID copied</string>
+    <string name="accounts_remove">Remove account</string>
+    <string name="accounts_remove_title">Remove “%1$s”?</string>
+    <string name="accounts_remove_body">The account will be removed from YouLauncher. For Ely.by the session is closed and the token is deleted from Windows Credential Manager.</string>
+    <string name="accounts_reauth">Sign in again</string>
+    <string name="accounts_refresh">Check session</string>
+    <string name="accounts_session_ok">Ely.by session for %1$s is valid</string>
+    <string name="accounts_session_expired">Ely.by session for %1$s has expired: sign in again</string>
+    <string name="accounts_last_used">Last used %1$s</string>
+    <string name="accounts_empty_title">No accounts yet</string>
+    <string name="accounts_empty_body">Add an offline account with any nickname or sign in with Ely.by to have a skin.</string>
+    <string name="accounts_notice_title">About these accounts</string>
+    <string name="accounts_notice_body">YouLauncher supports offline and Ely.by accounts only. They do not work on official servers and Realms, which require a licensed Microsoft account. They do work in single player, on LAN and on servers with Ely.by or offline mode enabled.</string>
+    <string name="accounts_ely_about">Ely.by is an independent skin and authentication service. YouLauncher talks to authserver.ely.by and adds authlib-injector so skins work in the game.</string>
+    <string name="accounts_ely_register">Create an Ely.by account</string>
+
+    <string name="offline_title">Offline account</string>
+    <string name="offline_body">Choose a nickname. The UUID is derived from it, so the same nickname always gets the same UUID.</string>
+    <string name="offline_nick">Nickname</string>
+    <string name="offline_nick_hint">3–16 characters: latin letters, digits, underscore</string>
+    <string name="offline_nick_invalid">Use 3–16 latin letters, digits or underscore</string>
+    <string name="offline_nick_taken">This nickname is already added</string>
+
+    <string name="ely_title">Sign in with Ely.by</string>
+    <string name="ely_login">Email or nickname</string>
+    <string name="ely_password">Password</string>
+    <string name="ely_password_note">The password is used once to get a token and is never stored.</string>
+    <string name="ely_totp">Two-factor code</string>
+    <string name="ely_totp_body">Your account is protected with two-factor authentication. Enter the code from your authenticator app.</string>
+    <string name="ely_sign_in">Sign in</string>
+    <string name="ely_show_password">Show password</string>
+    <string name="ely_hide_password">Hide password</string>
+    <string name="ely_error_credentials">Wrong login or password</string>
+    <string name="ely_error_network">Could not reach Ely.by: %1$s</string>
+    <string name="ely_signed_in">Signed in as %1$s</string>
+    <string name="offline_added">Account “%1$s” added</string>
+    <string name="account_removed">Account “%1$s” removed</string>
+</resources>

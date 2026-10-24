@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="palette_hint">Type a command, section or instance</string>
+    <string name="palette_empty">Nothing found</string>
+    <string name="cmd_go_to">Go to section</string>
+    <string name="cmd_theme_toggle">Switch light / dark theme</string>
+    <string name="cmd_motion_toggle">Toggle reduced motion</string>
+    <string name="cmd_play_instance">Play “%1$s”</string>
+    <string name="cmd_open_instance">Open “%1$s”</string>
+    <string name="cmd_instance">Instance · %1$s</string>
+    <string name="cmd_new_instance">Create a new instance</string>
+    <string name="cmd_add_account">Add an account</string>
+    <string name="cmd_open_data">Open the launcher data folder</string>
+    <string name="cmd_action">Action</string>
+</resources>

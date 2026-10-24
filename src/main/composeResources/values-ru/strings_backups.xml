@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="instance_look">Вид карточки</string>
+    <string name="instance_color">Цвет</string>
+    <string name="instance_color_version">Как у версии</string>
+    <string name="instance_cover">Баннер</string>
+    <string name="instance_cover_choose">Выбрать баннер</string>
+    <string name="instance_banner_reset">Баннер по умолчанию (сцена версии)</string>
+    <string name="instance_look_menu">Оформление этого экземпляра</string>
+    <string name="instance_look_hint">Действует только в этом экземпляре. Общий фон и другие экземпляры не меняются.</string>
+    <string name="instance_background_choose">Своё изображение для фона</string>
+    <string name="instance_background_reset">Фон из общих настроек</string>
+    <string name="atmo_add_image">Добавить изображение</string>
+    <string name="atmo_own_image">Своё изображение</string>
+    <string name="instance_cover_reset">Сцена версии</string>
+    <string name="backup_section">Резервные копии</string>
+    <string name="backup_body">Копия всего экземпляра: миры, моды, настройки, наборы модов. Восстановление создаёт новый экземпляр и не трогает этот.</string>
+    <string name="backup_now">Сделать копию сейчас</string>
+    <string name="backup_last">Последняя копия %1$s</string>
+    <string name="backup_schedule">По расписанию</string>
+    <string name="backup_off">Выключено</string>
+    <string name="backup_daily">Каждый день</string>
+    <string name="backup_weekly">Каждую неделю</string>
+    <string name="backup_auto">автоматическая</string>
+    <string name="backup_restore">Восстановить</string>
+    <string name="backup_delete">Удалить копию</string>
+    <string name="backup_done">Копия сохранена: %1$s</string>
+    <string name="backup_failed">Не удалось: %1$s</string>
+    <string name="backup_restored">Восстановлено в «%1$s»</string>
+    <string name="backup_restored_name">%1$s (копия от %2$s)</string>
+</resources>

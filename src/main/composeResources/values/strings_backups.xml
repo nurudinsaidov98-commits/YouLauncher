@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="instance_look">Card look</string>
+    <string name="instance_color">Color</string>
+    <string name="instance_color_version">Like the version</string>
+    <string name="instance_cover">Banner</string>
+    <string name="instance_cover_choose">Choose banner</string>
+    <string name="instance_banner_reset">Default banner (version scene)</string>
+    <string name="instance_look_menu">Look of this instance</string>
+    <string name="instance_look_hint">Applies only to this instance. The common background and other instances stay as they are.</string>
+    <string name="instance_background_choose">Own background image</string>
+    <string name="instance_background_reset">Background from common settings</string>
+    <string name="atmo_add_image">Add image</string>
+    <string name="atmo_own_image">Own image</string>
+    <string name="instance_cover_reset">Version scene</string>
+    <string name="backup_section">Backups</string>
+    <string name="backup_body">A copy of the whole instance: worlds, mods, settings, mod sets. Restoring creates a new instance and leaves this one untouched.</string>
+    <string name="backup_now">Back up now</string>
+    <string name="backup_last">Last backup %1$s</string>
+    <string name="backup_schedule">On a schedule</string>
+    <string name="backup_off">Off</string>
+    <string name="backup_daily">Every day</string>
+    <string name="backup_weekly">Every week</string>
+    <string name="backup_auto">automatic</string>
+    <string name="backup_restore">Restore</string>
+    <string name="backup_delete">Delete backup</string>
+    <string name="backup_done">Backup saved: %1$s</string>
+    <string name="backup_failed">Failed: %1$s</string>
+    <string name="backup_restored">Restored as “%1$s”</string>
+    <string name="backup_restored_name">%1$s (backup of %2$s)</string>
+</resources>

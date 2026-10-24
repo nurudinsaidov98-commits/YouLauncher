@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="time_just_now">только что</string>
+    <string name="time_never">ещё не запускали</string>
+    <string name="time_yesterday">вчера</string>
+    <plurals name="time_minutes_ago">
+        <item quantity="one">%1$d минуту назад</item>
+        <item quantity="few">%1$d минуты назад</item>
+        <item quantity="many">%1$d минут назад</item>
+        <item quantity="other">%1$d минуты назад</item>
+    </plurals>
+    <plurals name="time_hours_ago">
+        <item quantity="one">%1$d час назад</item>
+        <item quantity="few">%1$d часа назад</item>
+        <item quantity="many">%1$d часов назад</item>
+        <item quantity="other">%1$d часа назад</item>
+    </plurals>
+    <plurals name="time_days_ago">
+        <item quantity="one">%1$d день назад</item>
+        <item quantity="few">%1$d дня назад</item>
+        <item quantity="many">%1$d дней назад</item>
+        <item quantity="other">%1$d дня назад</item>
+    </plurals>
+    <plurals name="time_weeks_ago">
+        <item quantity="one">%1$d неделю назад</item>
+        <item quantity="few">%1$d недели назад</item>
+        <item quantity="many">%1$d недель назад</item>
+        <item quantity="other">%1$d недели назад</item>
+    </plurals>
+    <plurals name="time_months_ago">
+        <item quantity="one">%1$d месяц назад</item>
+        <item quantity="few">%1$d месяца назад</item>
+        <item quantity="many">%1$d месяцев назад</item>
+        <item quantity="other">%1$d месяца назад</item>
+    </plurals>
+    <string name="duration_hm">%1$d ч %2$d мин</string>
+    <string name="duration_h">%1$d ч</string>
+    <string name="duration_m">%1$d мин</string>
+    <string name="duration_zero">0 мин</string>
+    <plurals name="count_mods">
+        <item quantity="one">%1$d мод</item>
+        <item quantity="few">%1$d мода</item>
+        <item quantity="many">%1$d модов</item>
+        <item quantity="other">%1$d мода</item>
+    </plurals>
+    <plurals name="count_instances">
+        <item quantity="one">%1$d экземпляр</item>
+        <item quantity="few">%1$d экземпляра</item>
+        <item quantity="many">%1$d экземпляров</item>
+        <item quantity="other">%1$d экземпляра</item>
+    </plurals>
+    <plurals name="count_launches">
+        <item quantity="one">%1$d запуск</item>
+        <item quantity="few">%1$d запуска</item>
+        <item quantity="many">%1$d запусков</item>
+        <item quantity="other">%1$d запуска</item>
+    </plurals>
+    <plurals name="count_results">
+        <item quantity="one">%1$d результат</item>
+        <item quantity="few">%1$d результата</item>
+        <item quantity="many">%1$d результатов</item>
+        <item quantity="other">%1$d результата</item>
+    </plurals>
+    <plurals name="count_downloads">
+        <item quantity="one">%1$s загрузка</item>
+        <item quantity="few">%1$s загрузки</item>
+        <item quantity="many">%1$s загрузок</item>
+        <item quantity="other">%1$s загрузки</item>
+    </plurals>
+    <string name="size_kb">%1$s КБ</string>
+    <string name="size_mb">%1$s МБ</string>
+    <string name="size_gb">%1$s ГБ</string>
+    <string name="number_thousands">%1$s тыс.</string>
+    <string name="number_millions">%1$s млн</string>
+</resources>

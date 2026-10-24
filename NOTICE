@@ -1,0 +1,87 @@
+YouLauncher
+Copyright (c) 2026 Eroun97. Лицензия MIT, см. LICENSE. Licensed under the MIT License, see LICENSE.
+Неофициальный лаунчер Minecraft Java Edition. Не связан с Mojang и Microsoft.
+Unofficial Minecraft Java Edition launcher. Not affiliated with Mojang or Microsoft.
+"Minecraft" является товарным знаком Mojang Synergies AB. Лаунчер не поставляет игровые файлы:
+клиент, библиотеки, ассеты и Java скачиваются с официальных серверов Mojang на компьютере пользователя.
+
+Логотип YouLauncher, иконка приложения, встроенные фоны и иллюстрации нарисованы кодом и являются
+частью этого проекта.
+
+---------------------------------------------------------------------------------------------
+Сторонние компоненты, входящие в приложение
+---------------------------------------------------------------------------------------------
+
+Material Symbols (стиль Rounded)
+  Copyright Google LLC
+  https://github.com/google/material-design-icons
+  Лицензия: Apache License 2.0 (licenses/Apache-2.0-MaterialSymbols.txt)
+  Используются пути SVG без изменений, преобразованные в ImageVector (src/main/kotlin/app/youlauncher/ui/icons/Symbols.kt).
+
+Google Sans Flex
+  Copyright 2015 The Google Sans Flex Authors (https://github.com/googlefonts/googlesans-flex)
+  Лицензия: SIL Open Font License 1.1 (licenses/OFL-GoogleSansFlex.txt)
+  "Google", "Google Sans" и "Google Sans Flex" являются товарными знаками Google LLC.
+  Использование шрифта не означает связи YouLauncher с Google или одобрения со стороны Google.
+
+Google Sans Code
+  Copyright 2025 The Google Sans Code Project Authors (https://github.com/googlefonts/googlesans-code)
+  Лицензия: SIL Open Font License 1.1 (licenses/OFL-GoogleSansCode.txt)
+
+Compose Multiplatform, Jetpack Compose, Material 3, androidx.graphics.shapes
+  Copyright JetBrains s.r.o., The Android Open Source Project
+  Лицензия: Apache License 2.0
+
+Kotlin, kotlinx.coroutines, kotlinx.serialization, Ktor
+  Copyright JetBrains s.r.o. and contributors
+  Лицензия: Apache License 2.0
+
+MaterialKolor
+  Copyright Jordon de Hoog
+  https://github.com/jordond/MaterialKolor
+  Лицензия: MIT License
+
+material-color-utilities
+  Copyright Google LLC
+  Лицензия: Apache License 2.0
+
+JNA (Java Native Access)
+  Copyright Timothy Wall and contributors
+  Лицензия: Apache License 2.0 (на выбор с LGPL 2.1)
+
+SLF4J (slf4j-nop)
+  Copyright QOS.ch Sarl
+  Лицензия: MIT License
+
+Встроенная среда выполнения Java (в портативной сборке и установщике)
+  Eclipse Temurin / OpenJDK, Лицензия: GPLv2 с Classpath Exception
+
+---------------------------------------------------------------------------------------------
+Скачиваемые во время работы (не входят в приложение)
+---------------------------------------------------------------------------------------------
+
+authlib-injector (для аккаунтов Ely.by)
+  https://github.com/yushijinhun/authlib-injector
+  Лицензия: GNU AGPL v3. Скачивается из GitHub Releases по требованию с проверкой хеша.
+
+Игровые файлы Minecraft, библиотеки и среда Java от Mojang
+  Скачиваются с официальных серверов Mojang (piston-meta.mojang.com, libraries.minecraft.net,
+  resources.download.minecraft.net) и проверяются по SHA-1. Использование регулируется
+  Minecraft EULA: https://www.minecraft.net/eula
+
+Загрузчики модов Fabric, Quilt, Forge и NeoForge
+  Скачиваются по выбору пользователя из их официальных источников (meta.fabricmc.net, meta.quiltmc.org,
+  maven.minecraftforge.net, maven.neoforged.net); устанавливаются на компьютере пользователя.
+  Лицензии: Fabric и Quilt Apache 2.0, Forge и NeoForge LGPL 2.1.
+
+Eclipse Temurin (кнопка «Скачать Java»)
+  Скачивается с api.adoptium.net и GitHub Releases Adoptium, проверяется по sha256.
+  Лицензия: GPLv2 с Classpath Exception.
+
+Моды, ресурспаки, шейдеры и сборки
+  Скачиваются по выбору пользователя из каталогов Modrinth (api.modrinth.com) и CurseForge
+  (api.curseforge.com) с проверкой хешей. Права на содержимое принадлежат его авторам, условия
+  указаны на страницах проектов. Данные каталогов используются по правилам API Modrinth и CurseForge.
+
+Ely.by
+  Сервис аккаунтов и скинов (authserver.ely.by, skinsystem.ely.by); не связан с YouLauncher.

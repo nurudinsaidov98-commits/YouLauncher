@@ -1,0 +1,173 @@
+package app.youlauncher.ui.theme
+
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MotionScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
+import app.youlauncher.core.settings.MotionLevel
+import app.youlauncher.core.settings.PaletteStyleOption
+import app.youlauncher.core.settings.SpringBounce
+import app.youlauncher.core.settings.ThemeMode
+import app.youlauncher.core.settings.ThemeSettings
+import app.youlauncher.core.settings.UiSettings
+import app.youlauncher.resources.Res
+import app.youlauncher.resources.seed_amber
+import app.youlauncher.resources.seed_amethyst
+import app.youlauncher.resources.seed_forest
+import app.youlauncher.resources.seed_indigo
+import app.youlauncher.resources.seed_lagoon
+import app.youlauncher.resources.seed_moss
+import app.youlauncher.resources.seed_ocean
+import app.youlauncher.resources.seed_rose
+import app.youlauncher.resources.seed_sand
+import app.youlauncher.resources.seed_sunset
+import com.materialkolor.DynamicMaterialExpressiveTheme
+import com.materialkolor.PaletteStyle
+import org.jetbrains.compose.resources.StringResource
+
+@Immutable
+data class SeedColor(val name: StringResource, val color: Color)
+
+/**
+ * Seed-цвета, которые предлагаются в настройках. Это единственное место в приложении, где цвета
+ * заданы числами: вся остальная палитра вычисляется из выбранного seed по алгоритму Material You.
+ */
+val SeedColors: List<SeedColor> = listOf(
+    SeedColor(Res.string.seed_forest, Color(0xFF3F7D4E)),
+    SeedColor(Res.string.seed_ocean, Color(0xFF1E6FB8)),
+    SeedColor(Res.string.seed_sunset, Color(0xFFD1562B)),
+    SeedColor(Res.string.seed_amethyst, Color(0xFF7B4FC9)),
+    SeedColor(Res.string.seed_rose, Color(0xFFC2306B)),
+    SeedColor(Res.string.seed_lagoon, Color(0xFF00897B)),
+    SeedColor(Res.string.seed_amber, Color(0xFFE0A100)),
+    SeedColor(Res.string.seed_indigo, Color(0xFF3F51B5)),
+    SeedColor(Res.string.seed_moss, Color(0xFF6B7F2A)),
+    SeedColor(Res.string.seed_sand, Color(0xFFA1785C)),
+)
+
+val DefaultSeed: Color get() = SeedColors.first().color
+
+fun ThemeSettings.seedColor(): Color = seed?.let { Color(it.toInt()).copy(alpha = 1f) } ?: DefaultSeed
+
+fun Color.toSeedLong(): Long = toArgb().toLong() and 0xFFFFFFFFL
+
+fun PaletteStyleOption.toKolor(): PaletteStyle = when (this) {
+    PaletteStyleOption.TonalSpot -> PaletteStyle.TonalSpot
+    PaletteStyleOption.Neutral -> PaletteStyle.Neutral
+    PaletteStyleOption.Vibrant -> PaletteStyle.Vibrant
+    PaletteStyleOption.Expressive -> PaletteStyle.Expressive
+    PaletteStyleOption.Rainbow -> PaletteStyle.Rainbow
+    PaletteStyleOption.FruitSalad -> PaletteStyle.FruitSalad
+    PaletteStyleOption.Monochrome -> PaletteStyle.Monochrome
+    PaletteStyleOption.Fidelity -> PaletteStyle.Fidelity
+    PaletteStyleOption.Content -> PaletteStyle.Content
+}
+
+/** Текущий режим анимаций: фоны и декоративные эффекты сверяются с ним. */
+val LocalMotionLevel = staticCompositionLocalOf { MotionLevel.Full }
+
+/** Тёмная ли сейчас тема (нужно фонам и иллюстрациям). */
+val LocalIsDark = staticCompositionLocalOf { false }
+
+fun motionSchemeFor(level: MotionLevel, bounce: SpringBounce = SpringBounce.Standard): MotionScheme = when (level) {
+    MotionLevel.Full -> if (bounce == SpringBounce.Standard) MotionScheme.expressive() else SpringyMotionScheme(bounce)
+    MotionLevel.Reduced -> MotionScheme.standard()
+    MotionLevel.Off -> InstantMotionScheme
+}
+
+/**
+ * Выразительная схема движения с усиленным отскоком: пространственные пружины M3 Expressive
+ * с меньшим затуханием (заметный «перехлёст» и возврат), пружины эффектов без отскока,
+ * чтобы цвет и прозрачность не мерцали.
+ */
+class SpringyMotionScheme(bounce: SpringBounce) : MotionScheme {
+    private val damping = when (bounce) {
+        SpringBounce.Jelly -> 0.42f
+        else -> 0.58f
+    }
+    private val fastDamping = when (bounce) {
+        SpringBounce.Jelly -> 0.45f
+        else -> 0.55f
+    }
+    private val stiffnessScale = if (bounce == SpringBounce.Jelly) 0.85f else 1f
+
+    override fun <T> defaultSpatialSpec(): FiniteAnimationSpec<T> = spring(damping, 380f * stiffnessScale)
+    override fun <T> fastSpatialSpec(): FiniteAnimationSpec<T> = spring(fastDamping, 800f * stiffnessScale)
+    override fun <T> slowSpatialSpec(): FiniteAnimationSpec<T> = spring(damping, 200f * stiffnessScale)
+    override fun <T> defaultEffectsSpec(): FiniteAnimationSpec<T> = spring(1f, 1600f)
+    override fun <T> fastEffectsSpec(): FiniteAnimationSpec<T> = spring(1f, 3800f)
+    override fun <T> slowEffectsSpec(): FiniteAnimationSpec<T> = spring(1f, 800f)
+}
+
+@Composable
+fun isDarkTheme(mode: ThemeMode): Boolean = when (mode) {
+    ThemeMode.System -> isSystemInDarkTheme()
+    ThemeMode.Light -> false
+    ThemeMode.Dark -> true
+}
+
+/**
+ * Тема YouLauncher: Material 3 Expressive через MaterialKolor (динамическая схема из seed),
+ * выразительная схема движения, типографика Google Sans Flex и формы с настраиваемым скруглением.
+ */
+@Composable
+fun YouLauncherTheme(
+    theme: ThemeSettings,
+    ui: UiSettings,
+    seedOverride: Color? = null,
+    content: @Composable () -> Unit,
+) {
+    val dark = isDarkTheme(theme.mode)
+    val seed = seedOverride ?: theme.seedColor()
+    val base = LocalDensity.current
+    val density = Density(base.density * ui.scale, base.fontScale * ui.fontScale)
+
+    CompositionLocalProvider(
+        LocalDensity provides density,
+        LocalMotionLevel provides ui.motion,
+        LocalIsDark provides dark,
+    ) {
+        DynamicMaterialExpressiveTheme(
+            seedColor = seed,
+            motionScheme = remember(ui.motion, ui.bounce) { motionSchemeFor(ui.motion, ui.bounce) },
+            isDark = dark,
+            isAmoled = theme.amoled,
+            style = theme.style.toKolor(),
+            contrastLevel = theme.contrast.level,
+            shapes = youlauncherShapes(ui.cornerScale),
+            typography = youlauncherTypography(ui.font),
+            animate = ui.motion != MotionLevel.Off,
+        ) {
+            // Свои цвета ролей поверх динамической схемы: меняют все элементы, которые берут эти роли.
+            if (theme.colorOverrides.isEmpty()) content()
+            else {
+                val base = MaterialTheme.colorScheme
+                val scheme = remember(base, theme.colorOverrides) { ColorOverrides.apply(base, theme.colorOverrides) }
+                MaterialExpressiveTheme(
+                    colorScheme = scheme,
+                    motionScheme = MaterialTheme.motionScheme,
+                    shapes = MaterialTheme.shapes,
+                    typography = MaterialTheme.typography,
+                    content = content,
+                )
+            }
+        }
+    }
+}
+
+/** Цвет текста поверх затемнения (scrim) на изображениях и сценах: светлый в обеих темах. */
+@Composable
+fun onScrimColor(): Color =
+    if (LocalIsDark.current) androidx.compose.material3.MaterialTheme.colorScheme.onSurface
+    else androidx.compose.material3.MaterialTheme.colorScheme.inverseOnSurface

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wizard_title">Новый экземпляр</string>
+    <string name="wizard_step_version">Версия</string>
+    <string name="wizard_step_loader">Загрузчик</string>
+    <string name="wizard_step_details">Оформление</string>
+    <string name="wizard_step_resources">Ресурсы</string>
+    <string name="wizard_step_summary">Итог</string>
+    <string name="wizard_step_of">Шаг %1$d из %2$d</string>
+    <string name="wizard_version_title">Выберите версию игры</string>
+    <string name="wizard_version_hint">Фон показывает атмосферу выбранной версии.</string>
+    <string name="wizard_version_search">Поиск версий</string>
+    <string name="wizard_releases">Релизы</string>
+    <string name="wizard_snapshots">Снапшоты</string>
+    <string name="wizard_old">Старые версии</string>
+    <string name="wizard_loader_title">Загрузчик модов</string>
+    <string name="wizard_loader_hint">Vanilla запускает игру без модов. Fabric и Quilt лёгкие и быстрые, Forge и NeoForge подходят для больших сборок.</string>
+    <string name="wizard_loader_version">Версия загрузчика</string>
+    <string name="wizard_loader_unstable">Показывать нестабильные</string>
+    <string name="wizard_loader_latest">последняя</string>
+    <string name="wizard_loader_recommended">рекомендуемая</string>
+    <string name="wizard_loader_beta">бета</string>
+    <string name="wizard_loader_none">Для этой версии игры нет версий загрузчика</string>
+    <string name="wizard_details_title">Название и вид</string>
+    <string name="wizard_icon">Значок</string>
+    <string name="wizard_group">Группа (необязательно)</string>
+    <string name="wizard_resources_title">Память и Java</string>
+    <string name="wizard_memory">Память: %1$s</string>
+    <string name="wizard_memory_hint">Рекомендуем для вашего компьютера: до %1$s. Большим сборкам нужно 6–8 ГБ.</string>
+    <string name="wizard_java_auto">Java подбирается автоматически под версию игры и при необходимости скачивается с серверов Mojang.</string>
+    <string name="wizard_summary_title">Всё готово к созданию</string>
+    <string name="wizard_summary_version">Версия игры</string>
+    <string name="wizard_summary_loader">Загрузчик</string>
+    <string name="wizard_summary_memory">Память</string>
+    <string name="wizard_summary_note">Файлы игры скачаются с официальных серверов Mojang при первом запуске.</string>
+    <string name="wizard_loading_versions">Загружаем список версий…</string>
+    <string name="wizard_versions_error">Не удалось загрузить список версий</string>
+    <string name="memory_gb">%1$s ГБ</string>
+
+    <string name="fab_new_instance">Новый экземпляр</string>
+    <string name="fab_import">Импорт сборки или экземпляра</string>
+    <string name="fab_menu">Создать</string>
+    <string name="import_title">Импорт</string>
+    <string name="import_body">Поддерживаются: Modrinth (.mrpack), сборки CurseForge (.zip), экземпляры MultiMC и Prism (.zip).</string>
+    <string name="import_choose">Выбрать файл</string>
+    <string name="msg_imported">Импортировано: «%1$s»</string>
+    <string name="msg_import_started">Импорт «%1$s»…</string>
+    <string name="msg_import_failed">Не удалось импортировать: %1$s</string>
+    <string name="msg_shortcut_created">Ярлык создан на рабочем столе</string>
+    <string name="msg_shortcut_failed">Не удалось создать ярлык</string>
+</resources>

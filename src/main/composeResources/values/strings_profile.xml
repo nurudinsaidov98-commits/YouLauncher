@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile_open">Open profile</string>
+    <string name="profile_menu_play_as">Play as</string>
+    <string name="profile_menu_accounts">Accounts</string>
+    <string name="profile_menu_no_accounts">No accounts yet. Add an offline account or sign in with Ely.by.</string>
+    <string name="profile_menu_add_account">Add account</string>
+    <string name="profile_change_banner">Change banner</string>
+    <string name="profile_change_avatar">Change avatar</string>
+    <string name="profile_avatar_skin">Ely.by skin head as avatar</string>
+    <string name="profile_copy_nick">Copy nickname</string>
+    <string name="profile_nick_copied">Nickname copied</string>
+    <string name="profile_stat_play">Played</string>
+    <string name="profile_stat_instances">Instances</string>
+    <string name="profile_stat_mods">Mods</string>
+    <string name="profile_hours">%1$s h</string>
+</resources>

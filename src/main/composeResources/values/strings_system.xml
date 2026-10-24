@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_notifications">Windows notifications</string>
+    <string name="settings_notifications_hint">When you are in another window: game crash, mod installation finished</string>
+    <string name="settings_sounds">Interface sounds</string>
+    <string name="settings_sounds_hint">Quiet short sounds on game start, success and error. Synthesized by the launcher</string>
+    <string name="settings_cache">Cache</string>
+    <string name="cache_size">Used: %1$s</string>
+    <string name="cache_clean">Clear cache</string>
+    <string name="cache_cleaned">Freed: %1$s</string>
+    <string name="cache_auto">Delete cache files older than %1$d days on start</string>
+    <string name="notify_crash_title">The game crashed</string>
+    <string name="notify_crash_body">Instance “%1$s”. Details are in the launcher log.</string>
+    <string name="notify_install_title">Mod installation finished</string>
+</resources>

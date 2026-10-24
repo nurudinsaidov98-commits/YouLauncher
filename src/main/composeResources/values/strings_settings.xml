@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_subtitle">Appearance, game, Java and folders</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_accent">Accent color</string>
+    <string name="settings_palette_style">Palette style</string>
+    <string name="settings_contrast">Contrast</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_amoled">Pure black in dark theme</string>
+    <string name="settings_amoled_hint">Saves power on OLED screens</string>
+
+    <string name="settings_interface">Interface</string>
+    <string name="settings_scale">Interface scale</string>
+    <string name="settings_font_size">Text size</string>
+    <string name="settings_font">Font</string>
+    <string name="settings_font_flex">Google Sans Flex</string>
+    <string name="settings_font_system">System</string>
+    <string name="settings_corners">Corner roundness</string>
+    <string name="settings_density">Density</string>
+    <string name="density_comfortable">Comfortable</string>
+    <string name="density_compact">Compact</string>
+    <string name="settings_motion">Animations</string>
+    <string name="settings_bounce">Springiness</string>
+    <string name="bounce_standard">Standard M3</string>
+    <string name="bounce_bouncy">Bouncy</string>
+    <string name="bounce_jelly">Jelly</string>
+    <string name="motion_full">Full</string>
+    <string name="motion_reduced">Reduced</string>
+    <string name="motion_off">Off</string>
+    <string name="settings_navigation">Navigation</string>
+    <string name="nav_side">Side rail</string>
+    <string name="nav_bottom">Bottom bar</string>
+
+    <string name="settings_game">Game</string>
+    <string name="settings_memory_global">Memory for new instances</string>
+    <string name="settings_memory_recommended">Recommended maximum for this computer: %1$s of %2$s</string>
+    <string name="settings_jvm_preset">JVM preset</string>
+    <string name="preset_none">None</string>
+    <string name="preset_aikar">G1GC (Aikar)</string>
+    <string name="preset_zgc">ZGC</string>
+    <string name="preset_fast">Fast start</string>
+    <string name="settings_jvm_custom">Extra JVM arguments</string>
+    <string name="settings_close_on_start">Close launcher when the game starts</string>
+    <string name="settings_console_on_start">Open console when the game starts</string>
+
+    <string name="settings_java">Java</string>
+    <string name="settings_java_auto_download">Download the right Java from Mojang automatically</string>
+    <string name="settings_java_global">Java for all instances</string>
+    <string name="settings_java_global_hint">Leave empty to pick Java automatically for each game version</string>
+    <string name="java_item">Java %1$s · %2$s</string>
+    <string name="java_auto_global">Automatically for each game version</string>
+    <string name="instance_java_auto_for">Automatically (needs Java %1$d)</string>
+    <string name="java_found">Java found</string>
+    <string name="java_refresh">Search again</string>
+    <string name="java_none_found">No Java found on this system. The launcher downloads the right one itself, or download it below.</string>
+    <string name="java_check">Check</string>
+    <string name="java_check_ok">Works: %1$s</string>
+    <string name="java_check_fail">Does not start: %1$s</string>
+    <string name="java_download_title">Download Java (Eclipse Temurin)</string>
+    <string name="java_download_body">Eclipse Temurin builds from adoptium.net, the archive is checked by sha256. Java 8 is needed up to 1.16, 17 up to 1.20.4, 21 up to 1.21.11, 25 for 26.x.</string>
+    <string name="java_download_major">Java %1$d</string>
+    <string name="java_downloaded">Java %1$s installed</string>
+    <string name="java_download_failed">Could not download Java %1$d: %2$s</string>
+    <string name="java_src_system">system</string>
+    <string name="java_src_custom">custom</string>
+
+    <string name="settings_folders">Folders</string>
+    <string name="settings_data_folder">Launcher data</string>
+    <string name="settings_cache_folder">Download cache</string>
+    <string name="settings_logs_folder">Logs</string>
+    <string name="settings_portable">Portable mode is on: data is stored next to YouLauncher.exe</string>
+
+    <string name="settings_network">Downloads</string>
+    <string name="settings_threads">Parallel downloads</string>
+    <string name="settings_speed_limit">Speed limit</string>
+    <string name="settings_speed_unlimited">Unlimited</string>
+    <string name="settings_speed_value">%1$s MB/s</string>
+
+    <string name="settings_about">About</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_licenses">Licenses</string>
+    <string name="settings_open_data">Open folder</string>
+
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+
+    <string name="contrast_reduced">Reduced</string>
+    <string name="contrast_standard">Standard</string>
+    <string name="contrast_medium">Medium</string>
+    <string name="contrast_high">High</string>
+
+    <string name="language_system">System</string>
+    <string name="language_ru">Русский</string>
+    <string name="language_en">English</string>
+
+    <string name="style_tonal_spot">Tonal spot</string>
+    <string name="style_neutral">Neutral</string>
+    <string name="style_vibrant">Vibrant</string>
+    <string name="style_expressive">Expressive</string>
+    <string name="style_rainbow">Rainbow</string>
+    <string name="style_fruit_salad">Fruit salad</string>
+    <string name="style_monochrome">Monochrome</string>
+    <string name="style_fidelity">Fidelity</string>
+    <string name="style_content">Content</string>
+    <string name="cf_key_title">CurseForge API key</string>
+    <string name="cf_key_body">CurseForge opens its official API only with a personal key. Get a free key on console.curseforge.com and paste it here. The key is checked and stored in Windows Credential Manager, never in files.</string>
+    <string name="cf_key_env">Using the key from the %1$s environment variable.</string>
+    <string name="cf_key_label">API key</string>
+    <string name="cf_key_stored">Key saved in Windows Credential Manager</string>
+    <string name="cf_key_saved">Key checked and saved. CurseForge is ready.</string>
+    <string name="cf_key_invalid">The key did not work: %1$s</string>
+    <string name="cf_key_save">Check and save</string>
+    <string name="cf_key_delete">Remove key</string>
+    <string name="cf_key_get">Get a key</string>
+    <string name="cf_key_show">Show key</string>
+    <string name="cf_key_hide">Hide key</string>
+    <string name="cf_key_builtin">CurseForge works with the key built into this YouLauncher build. You can enter your own key instead.</string>
+</resources>

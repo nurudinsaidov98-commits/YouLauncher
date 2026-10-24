@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile_open">Открыть профиль</string>
+    <string name="profile_menu_play_as">Играть за</string>
+    <string name="profile_menu_accounts">Аккаунты</string>
+    <string name="profile_menu_no_accounts">Аккаунтов пока нет. Добавьте офлайн-аккаунт или войдите через Ely.by.</string>
+    <string name="profile_menu_add_account">Добавить аккаунт</string>
+    <string name="profile_change_banner">Сменить баннер</string>
+    <string name="profile_change_avatar">Сменить аватар</string>
+    <string name="profile_avatar_skin">Голова скина Ely.by в аватаре</string>
+    <string name="profile_copy_nick">Скопировать ник</string>
+    <string name="profile_nick_copied">Ник скопирован</string>
+    <string name="profile_stat_play">В игре</string>
+    <string name="profile_stat_instances">Экземпляров</string>
+    <string name="profile_stat_mods">Модов</string>
+    <string name="profile_hours">%1$s ч</string>
+</resources>

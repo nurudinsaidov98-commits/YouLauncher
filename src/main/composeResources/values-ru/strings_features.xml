@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_heading">Главное в версии</string>
+    <string name="feature_classic">Классические версии</string>
+    <string name="feature_snapshot">Тестовая сборка</string>
+    <string name="feature_the_end">Край и дракон</string>
+    <string name="feature_jungle">Джунгли</string>
+    <string name="feature_trading">Торговля и изумруды</string>
+    <string name="feature_wither">Иссушитель</string>
+    <string name="feature_redstone">Компараторы и воронки</string>
+    <string name="feature_horses">Лошади</string>
+    <string name="feature_biomes">Десятки новых биомов</string>
+    <string name="feature_monuments">Подводные крепости</string>
+    <string name="feature_elytra">Элитры и щиты</string>
+    <string name="feature_frost">Белые медведи и магма</string>
+    <string name="feature_mansions">Лесные особняки и тотем</string>
+    <string name="feature_colors">Мир цвета: бетон и терракота</string>
+    <string name="feature_ocean">Подводный мир и трезубец</string>
+    <string name="feature_villages">Деревни и разбойники</string>
+    <string name="feature_bees">Пчёлы и соты</string>
+    <string name="feature_nether">Обновлённый Нижний мир</string>
+    <string name="feature_amethyst">Аметисты, медь и аксолотли</string>
+    <string name="feature_mountains">Огромные горы и пещеры</string>
+    <string name="feature_deep_dark">Глубокая тьма и хранитель</string>
+    <string name="feature_cherry">Вишнёвые рощи и археология</string>
+    <string name="feature_trials">Испытания, вихрь и булава</string>
+    <string name="feature_bundles">Мешочки</string>
+    <string name="feature_pale_garden">Бледный сад и скрипун</string>
+    <string name="feature_variants">Новые породы животных</string>
+    <string name="feature_happy_ghast">Счастливый гаст и полёты</string>
+    <string name="feature_copper">Медный голем</string>
+    <string name="feature_spears">Копья и наутилусы</string>
+    <string name="feature_dandelion">Золотой одуванчик и малыши мобов</string>
+    <string name="feature_sulfur_cube">Серный куб и серные пещеры</string>
+    <string name="feature_autumn_forest">Осенний лес и лагеря</string>
+</resources>

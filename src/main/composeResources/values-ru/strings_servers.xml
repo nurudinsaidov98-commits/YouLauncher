@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_servers">Серверы</string>
+    <string name="servers_hint">Тот же список, что в меню серверов игры. «Играть» запускает игру и сразу заходит на сервер.</string>
+    <string name="servers_refresh">Обновить</string>
+    <string name="servers_empty_title">Серверов пока нет</string>
+    <string name="servers_empty_body">Добавьте сервер по адресу: он появится и в игре.</string>
+    <string name="server_add">Добавить сервер</string>
+    <string name="server_add_confirm">Добавить</string>
+    <string name="server_name">Название</string>
+    <string name="server_address">Адрес</string>
+    <string name="server_remove">Удалить сервер</string>
+    <string name="server_pinging">Опрашиваем…</string>
+    <string name="server_offline">Не отвечает</string>
+    <string name="server_players">%1$d из %2$d</string>
+    <string name="server_ping_ms">%1$d мс</string>
+    <string name="server_added">Сервер «%1$s» добавлен</string>
+    <string name="server_save_failed">Не удалось сохранить список серверов: %1$s</string>
+</resources>
