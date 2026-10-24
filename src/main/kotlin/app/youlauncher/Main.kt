@@ -40,6 +40,16 @@ import java.awt.Dimension
 @OptIn(ExperimentalComposeUiApi::class)
 fun main(args: Array<String>) {
     System.setProperty("file.encoding", "UTF-8")
+    val launchArgs = app.youlauncher.ui.navigation.LaunchArgs.parse(args)
+    // Установщик и удаление (YouLauncher-Setup.exe, «Приложения» Windows): отдельное окно, данные лаунчера не создаются.
+    if (launchArgs.setup || launchArgs.uninstall) {
+        val appDir = app.youlauncher.core.AppDirs.appDirectory() ?: return
+        // Шрифт из файла и здесь: загрузка через ресурсы (12 копий по 3,9 МБ) задерживала окно установщика на секунды.
+        app.youlauncher.ui.theme.FontFiles.init(java.nio.file.Path.of(System.getProperty("java.io.tmpdir"), "YouLauncherSetupFonts"))
+        app.youlauncher.ui.theme.FontFiles.flex
+        app.youlauncher.ui.setup.runSetup(appDir, app.youlauncher.core.BuildInfo.version, uninstall = launchArgs.uninstall)
+        return
+    }
     val graph = AppGraph.create()
     Runtime.getRuntime().addShutdownHook(Thread { graph.shutdown() })
     val crashes = LauncherCrash(graph.dirs.logsDir, AppInfo.version)
@@ -50,7 +60,6 @@ fun main(args: Array<String>) {
     app.youlauncher.ui.theme.FontFiles.flex
     app.youlauncher.ui.theme.FontFiles.code
     // Ярлык экземпляра (--launch <id>) запускает игру сразу; --open открывает нужный экран.
-    val launchArgs = app.youlauncher.ui.navigation.LaunchArgs.parse(args)
     launchArgs.launchInstance?.let { id -> if (graph.instances.instances.value.any { it.id == id }) graph.launcher.launch(id) }
 
     application {

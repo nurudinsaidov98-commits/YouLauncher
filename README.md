@@ -97,13 +97,56 @@ The key feature of each Minecraft update is drawn as a composition of M3 shapes 
   <img src="docs/screens/en/palette-dark.png" width="49%" alt="Command palette">
 </div>
 
+### 💿 The installer is Material 3 too
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="docs/screens/setup/en/showcase-light.png">
+  <img src="docs/screens/setup/en/showcase-dark.png" width="100%" alt="YouLauncher installer: welcome, choosing a drive, done">
+</picture>
+
+Even installing YouLauncher looks like the launcher itself: a living background of M3 shapes and spinning gears, shapes that morph from step to step, springy transitions. **Welcome → What's inside → Pick a drive → Installing → Done.** Under a minute, no admin rights.
+
 ### 📥 Download
 
-1. Download **`YouLauncher-<version>-windows.zip`** from [Releases](../../releases/latest).
-2. Unzip it anywhere and run **`YouLauncher-App\YouLauncher.exe`**. Java is bundled, nothing else to install.
+<table>
+<tr>
+<th width="50%">💿 Installer &nbsp;<sup>recommended</sup></th>
+<th width="50%">📦 Portable</th>
+</tr>
+<tr>
+<td align="center" valign="top">
+<br>
+<code>YouLauncher-&lt;version&gt;-Setup.exe</code>
+<br><br>
+Run it, pick a drive and a folder, done.<br>Shortcuts and an entry in Windows <i>Apps</i> included.
+<br><br>
+<a href="../../releases/latest"><img src="https://img.shields.io/badge/Download-Installer-3a6a43?style=for-the-badge&logo=materialdesign&logoColor=white" alt="Download the installer"></a>
+<br><br>
+</td>
+<td align="center" valign="top">
+<br>
+<code>YouLauncher-&lt;version&gt;-windows.zip</code>
+<br><br>
+Unzip anywhere and run<br><code>YouLauncher-App\YouLauncher.exe</code>.
+<br><br>
+<a href="../../releases/latest"><img src="https://img.shields.io/badge/Download-Portable%20.zip-8a5a3a?style=for-the-badge&logo=files&logoColor=white" alt="Download the portable zip"></a>
+<br><br>
+</td>
+</tr>
+</table>
 
-Your data lives in `%APPDATA%\YouLauncher`. Want a portable copy? Put an empty `portable.txt` next to `YouLauncher.exe` and everything will be stored in a `data` folder beside it.
+| | 💿 Installer | 📦 Portable |
+|---|:---:|:---:|
+| How to start | Material 3 setup wizard | Unzip and run the `.exe` |
+| Choose drive and folder | ✅ with a free-space check | ✅ wherever you unzip it |
+| Desktop and Start menu shortcuts | ✅ | — |
+| Listed in Windows *Apps*, uninstall from there | ✅ | — (just delete the folder) |
+| Admin rights | not needed | not needed |
+| Java bundled | ✅ | ✅ |
+| Auto-update | ✅ | ✅ |
+| Where your data lives | `%APPDATA%\YouLauncher` | `%APPDATA%\YouLauncher`, or a `data` folder beside the `.exe` if you add an empty `portable.txt` |
 
+Uninstalling keeps your instances, worlds and settings unless you tick *Also remove my data*, so a reinstall brings everything back.
 <details>
 <summary><b>🛠️ Build from source</b></summary>
 
@@ -116,6 +159,7 @@ gradlew.bat run          :: run from sources
 gradlew.bat test         :: unit tests
 gradlew.bat exportApp    :: portable build in YouLauncher-App\YouLauncher.exe
 gradlew.bat exportZip    :: YouLauncher-<version>-windows.zip
+gradlew.bat packageSetup :: YouLauncher-<version>-Setup.exe (Material 3 installer)
 gradlew.bat packageMsi   :: MSI installer
 ```
 
@@ -195,13 +239,56 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
   <img src="docs/screens/palette-dark.png" width="49%" alt="Палитра команд">
 </div>
 
+### 💿 Установщик тоже в Material 3
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="docs/screens/setup/showcase-light.png">
+  <img src="docs/screens/setup/showcase-dark.png" width="100%" alt="Установщик YouLauncher: приветствие, выбор диска, готово">
+</picture>
+
+Даже установка выглядит как сам лаунчер: живой фон из фигур M3 и вращающихся шестерёнок, фигуры перетекают из шага в шаг, пружинные переходы. **Приветствие → Возможности → Выбор диска → Установка → Готово.** Меньше минуты, без прав администратора.
+
 ### 📥 Скачать
 
-1. Скачайте **`YouLauncher-<версия>-windows.zip`** в разделе [Releases](../../releases/latest).
-2. Распакуйте в любую папку и запустите **`YouLauncher-App\YouLauncher.exe`**. Java уже внутри, ничего ставить не нужно.
+<table>
+<tr>
+<th width="50%">💿 Установщик &nbsp;<sup>рекомендуем</sup></th>
+<th width="50%">📦 Портативная версия</th>
+</tr>
+<tr>
+<td align="center" valign="top">
+<br>
+<code>YouLauncher-&lt;версия&gt;-Setup.exe</code>
+<br><br>
+Запустите, выберите диск и папку — готово.<br>Ярлыки и запись в «Приложениях» Windows в комплекте.
+<br><br>
+<a href="../../releases/latest"><img src="https://img.shields.io/badge/%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D1%89%D0%B8%D0%BA-3a6a43?style=for-the-badge&logo=materialdesign&logoColor=white" alt="Скачать установщик"></a>
+<br><br>
+</td>
+<td align="center" valign="top">
+<br>
+<code>YouLauncher-&lt;версия&gt;-windows.zip</code>
+<br><br>
+Распакуйте в любую папку и запустите<br><code>YouLauncher-App\YouLauncher.exe</code>.
+<br><br>
+<a href="../../releases/latest"><img src="https://img.shields.io/badge/%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-%D0%90%D1%80%D1%85%D0%B8%D0%B2%20.zip-8a5a3a?style=for-the-badge&logo=files&logoColor=white" alt="Скачать архив"></a>
+<br><br>
+</td>
+</tr>
+</table>
 
-Данные хранятся в `%APPDATA%\YouLauncher`. Нужна портативная версия? Положите пустой файл `portable.txt` рядом с `YouLauncher.exe` — всё будет храниться в папке `data` рядом с программой.
+| | 💿 Установщик | 📦 Портативная |
+|---|:---:|:---:|
+| Как начать | Мастер установки в Material 3 | Распаковать и запустить `.exe` |
+| Выбор диска и папки | ✅ с проверкой свободного места | ✅ куда распакуете |
+| Ярлыки на рабочем столе и в «Пуске» | ✅ | — |
+| Есть в «Приложениях» Windows, удаление оттуда | ✅ | — (просто удалить папку) |
+| Права администратора | не нужны | не нужны |
+| Java внутри | ✅ | ✅ |
+| Автообновление | ✅ | ✅ |
+| Где хранятся данные | `%APPDATA%\YouLauncher` | `%APPDATA%\YouLauncher` или папка `data` рядом с `.exe`, если положить пустой `portable.txt` |
 
+При удалении экземпляры, миры и настройки остаются, если не отметить «Удалить и мои данные», — после переустановки всё вернётся.
 <details>
 <summary><b>🛠️ Сборка из исходников</b></summary>
 
@@ -214,6 +301,7 @@ gradlew.bat run          :: запуск из исходников
 gradlew.bat test         :: тесты
 gradlew.bat exportApp    :: портативная сборка в YouLauncher-App\YouLauncher.exe
 gradlew.bat exportZip    :: архив YouLauncher-<версия>-windows.zip
+gradlew.bat packageSetup :: YouLauncher-<версия>-Setup.exe (установщик в Material 3)
 gradlew.bat packageMsi   :: установщик MSI
 ```
 

@@ -178,6 +178,13 @@ class AppGraph(
                 kotlinx.coroutines.delay(30_000)
                 classCache.build()
             }
+            // Установленная копия после автообновления: новая версия в «Приложениях» Windows.
+            AppDirs.appDirectory()?.let { appDir ->
+                scope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    kotlinx.coroutines.delay(10_000)
+                    runCatching { app.youlauncher.data.system.InstallPlan.refreshVersion(app.youlauncher.data.system.WindowsRegistry, appDir, BuildInfo.version) }
+                }
+            }
             // Проверка обновлений при запуске: только сообщение, загрузка по кнопке в «О программе».
             if (updater.configured && sys.updateChannel != UpdateChannel.Off) scope.launch {
                 runCatching { updater.check(sys.updateChannel, BuildInfo.version) }.getOrNull()?.let { messenger.show(Res.string.update_available_msg, it.version) }

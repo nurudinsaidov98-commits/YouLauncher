@@ -155,3 +155,12 @@ tasks.register<JavaExec>("benchNavigation") {
     jvmArgs("-XX:+UseSerialGC", "-Xms64m", "-Xmx768m", "-XX:MetaspaceSize=128m", "-XX:ReservedCodeCacheSize=128m", "-Dskiko.gpu.resourceCacheLimit=100663296")
     (project.findProperty("benchJvm") as String?)?.split(' ')?.let { jvmArgs(it) }
 }
+
+tasks.register<JavaExec>("renderSetup") {
+    group = "youlauncher"
+    description = "Снимки шагов установщика и удаления в docs/screens/setup"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass = "app.youlauncher.tools.RenderSetupKt"
+    args(root.dir((project.findProperty("shotDir") as String?) ?: "docs/screens/setup").asFile.absolutePath)
+    (project.findProperty("shotLang") as String?)?.let { systemProperty("youlauncher.shot.lang", it) }
+}

@@ -11,7 +11,7 @@ plugins {
 
 group = "app.youlauncher"
 // Версию релиза можно передать из тега: -PappVersion=v1.2.0 (так делает GitHub Actions).
-version = (findProperty("appVersion") as String?)?.removePrefix("v")?.takeIf { it.isNotBlank() } ?: "1.1.0"
+version = (findProperty("appVersion") as String?)?.removePrefix("v")?.takeIf { it.isNotBlank() } ?: "1.2.0"
 
 // Каталог сборки при не-ASCII пути проекта переносится в settings.gradle.kts (см. комментарий там).
 
@@ -163,8 +163,15 @@ compose.desktop {
             vendor = "YouLauncher"
             copyright = "Unofficial launcher, not affiliated with Mojang or Microsoft"
             licenseFile = layout.buildDirectory.file("packaging/NOTICE.txt").get().asFile
-            // Встроенная Java внутри приложения: пользователю ничего ставить не нужно.
-            includeAllModules = true
+            // Встроенная Java внутри приложения: пользователю ничего ставить не нужно. Только нужные модули
+            // (раньше были все, включая компилятор и отладчик: на 60 МБ больше и дольше проверка антивирусом при запуске).
+            // Список от suggestRuntimeModules плюс то, что нужно по ходу работы: DNS для SRV-записей серверов,
+            // русская локаль, кодировки, сертификаты Windows, zip-файловая система, специальные возможности.
+            modules(
+                "java.instrument", "java.naming", "java.net.http", "jdk.management", "jdk.unsupported",
+                "jdk.naming.dns", "jdk.localedata", "jdk.charsets", "jdk.crypto.ec", "jdk.crypto.mscapi",
+                "jdk.zipfs", "jdk.accessibility",
+            )
             windows {
                 iconFile = layout.buildDirectory.file("packaging/youlauncher.ico").get().asFile
                 shortcut = true
@@ -230,4 +237,41 @@ tasks.register<Zip>("exportZip") {
     from(layout.projectDirectory.dir("YouLauncher-App")) { into("YouLauncher-App") }
     archiveFileName = "YouLauncher-${project.version}-windows.zip"
     destinationDirectory = layout.projectDirectory
+}
+
+// Установщик YouLauncher-<версия>-Setup.exe: самораспаковщик (packaging/setup/SetupStub.cs, компилятор C# из .NET Framework 4,
+// он есть в каждой Windows) плюс архив портативной сборки. Окно установщика рисует сама программа (YouLauncher.exe --setup).
+tasks.register("packageSetup") {
+    group = "distribution"
+    description = "Собирает установщик YouLauncher-<версия>-Setup.exe в стиле Material 3 (без прав администратора)"
+    dependsOn("exportZip")
+    onlyIf { System.getProperty("os.name").startsWith("Windows") }
+    val zip = layout.projectDirectory.file("YouLauncher-${project.version}-windows.zip")
+    val out = layout.projectDirectory.file("YouLauncher-${project.version}-Setup.exe")
+    val source = layout.projectDirectory.file("packaging/setup/SetupStub.cs")
+    val icon = layout.projectDirectory.file("packaging/youlauncher.ico")
+    val stub = layout.buildDirectory.file("setup/SetupStub.exe")
+    doLast {
+        val csc = File(System.getenv("WINDIR") ?: "C:/Windows", "Microsoft.NET/Framework64/v4.0.30319/csc.exe")
+        check(csc.exists()) { "C# compiler not found: $csc" }
+        val stubFile = stub.get().asFile.apply { parentFile.mkdirs() }
+        val p = ProcessBuilder(
+            csc.path, "/nologo", "/target:winexe", "/optimize+", "/out:${stubFile.path}", "/win32icon:${icon.asFile.path}",
+            "/r:System.IO.Compression.dll", "/r:System.IO.Compression.FileSystem.dll", "/r:System.Windows.Forms.dll", "/r:System.Drawing.dll",
+            source.asFile.path,
+        ).redirectErrorStream(true).start()
+        val log = p.inputStream.bufferedReader().readText()
+        check(p.waitFor() == 0) { "csc failed:\n$log" }
+        val payload = zip.asFile
+        val target = out.asFile
+        target.outputStream().buffered().use { o ->
+            stubFile.inputStream().use { it.copyTo(o) }
+            payload.inputStream().use { it.copyTo(o) }
+            val len = payload.length()
+            // Хвост: длина zip (8 байт, little-endian) и метка YLSETUP1.
+            o.write(ByteArray(8) { i -> (len ushr (8 * i)).toByte() })
+            o.write("YLSETUP1".toByteArray(Charsets.US_ASCII))
+        }
+        logger.lifecycle("Setup: ${target.name} (${target.length() / (1024 * 1024)} MB)")
+    }
 }
