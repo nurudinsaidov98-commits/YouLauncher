@@ -9,7 +9,8 @@
     <string name="update_checking">Проверяем…</string>
     <string name="update_latest">У вас последняя версия: %1$s</string>
     <string name="update_available">Доступна версия %1$s</string>
-    <string name="update_available_msg">Доступна новая версия YouLauncher %1$s: Настройки, «О программе»</string>
+    <string name="update_available_msg">Доступна новая версия YouLauncher %1$s</string>
+    <string name="update_open">Обновить</string>
     <string name="update_download">Скачать</string>
     <string name="update_downloading">Скачиваем %1$s и проверяем хеш…</string>
     <string name="update_ready">Версия %1$s скачана и проверена. YouLauncher закроется, обновится и запустится снова.</string>

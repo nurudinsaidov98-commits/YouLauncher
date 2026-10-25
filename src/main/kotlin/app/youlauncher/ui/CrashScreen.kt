@@ -67,6 +67,8 @@ fun CrashScreen(
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         if (canRetry) Button(onClick = onRetry, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.RestartAlt, stringResource(Res.string.crash_retry)) }
                         FilledTonalButton(onClick = { Platform.copy(report) }, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.ContentCopy, stringResource(Res.string.crash_copy)) }
+                        // Текст ошибки уже в буфере обмена: в форме на GitHub его остаётся только вставить.
+                        FilledTonalButton(onClick = { Platform.copy(report); app.youlauncher.ui.screens.settings.AppInfo.reportIssue() }, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.Forum, stringResource(Res.string.report_issue)) }
                         if (reportFile != null) {
                             FilledTonalButton(onClick = { Platform.openFolder(reportFile.parent) }, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.FolderOpen, stringResource(Res.string.crash_open)) }
                         }

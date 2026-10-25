@@ -30,6 +30,7 @@ import app.youlauncher.data.system.Updater
 import app.youlauncher.core.BuildInfo
 import app.youlauncher.core.settings.UpdateChannel
 import app.youlauncher.resources.update_available_msg
+import app.youlauncher.resources.update_open
 import app.youlauncher.data.system.SystemNotifier
 import app.youlauncher.core.repo.LaunchState
 import app.youlauncher.resources.Res
@@ -169,6 +170,11 @@ class AppGraph(
         scope.launch { updateDownloader.progress.collect { flow.value = it.fraction } }
     }
     val updater = Updater(http, BuildInfo.updateRepo, dirs.cacheDir) { updateDownloader }
+    val updates = app.youlauncher.data.system.UpdateCenter(updater, updaterProgress, scope, BuildInfo.version,
+        exit = { shutdown(); kotlin.system.exitProcess(0) }, openPage = { app.youlauncher.ui.Platform.openUrl(it) })
+
+    /** Открыть «О программе» с найденным обновлением; задаёт окно приложения, где есть навигация. */
+    @Volatile var openUpdates: (() -> Unit)? = null
     val instanceBackups = InstanceBackups(instances, dirs.backupsDir)
 
     init {
@@ -196,9 +202,11 @@ class AppGraph(
                     runCatching { app.youlauncher.data.system.InstallPlan.refreshVersion(app.youlauncher.data.system.WindowsRegistry, appDir, BuildInfo.version) }
                 }
             }
-            // Проверка обновлений при запуске: только сообщение, загрузка по кнопке в «О программе».
+            // Проверка обновлений при запуске: уведомление с кнопкой, которая ведёт прямо к найденному обновлению.
             if (updater.configured && sys.updateChannel != UpdateChannel.Off) scope.launch {
-                runCatching { updater.check(sys.updateChannel, BuildInfo.version) }.getOrNull()?.let { messenger.show(Res.string.update_available_msg, it.version) }
+                updates.check(sys.updateChannel)?.let { info ->
+                    messenger.show(app.youlauncher.ui.UiMessage(Res.string.update_available_msg, listOf(info.version), actionLabel = Res.string.update_open, action = { openUpdates?.invoke() }))
+                }
             }
             // Сбой игры, пока пользователь в другом окне: системное уведомление.
             scope.launch {

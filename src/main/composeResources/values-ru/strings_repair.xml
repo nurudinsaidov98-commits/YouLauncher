@@ -8,4 +8,5 @@
     <string name="diag_body">Отчёт для автора: система, настройки, экземпляры и журналы. Токены, пароли и имя пользователя Windows в него не попадают.</string>
     <string name="diag_save">Сохранить отчёт</string>
     <string name="diag_saved">Отчёт сохранён: %1$s</string>
+    <string name="report_issue">Сообщить об ошибке</string>
 </resources>

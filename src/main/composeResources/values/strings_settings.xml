@@ -117,4 +117,9 @@
     <string name="cf_key_show">Show key</string>
     <string name="cf_key_hide">Hide key</string>
     <string name="cf_key_builtin">CurseForge works with the key built into this YouLauncher build. You can enter your own key instead.</string>
+    <string name="accent_custom">Custom color</string>
+    <string name="accent_color_first">Color 1</string>
+    <string name="accent_color_second">Color 2</string>
+    <string name="accent_shimmer">Shimmer</string>
+    <string name="accent_shimmer_hint">The accent slowly flows into the second color and back</string>
 </resources>

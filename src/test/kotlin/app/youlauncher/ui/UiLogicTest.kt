@@ -1,5 +1,6 @@
 package app.youlauncher.ui
 
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.SpanStyle
 import app.youlauncher.core.model.LogLevel
 import app.youlauncher.core.model.LogLine
@@ -97,6 +98,47 @@ class UiLogicTest {
         assertEquals(MdBlock.Code("code line"), blocks[5])
         assertEquals(MdBlock.Image("https://example.org/a.png", "alt"), blocks[6])
         assertEquals(MdBlock.Rule, blocks[7])
+    }
+
+    @Test
+    fun `markdown tables become table blocks instead of raw pipes`() {
+        val md = """
+            | 💿 Installer | 📦 Portable |
+            |---|:---:|
+            | Run **Setup.exe** | Unzip and run |
+            | Shortcuts | — |
+
+            After the table.
+        """.trimIndent()
+        val blocks = MarkdownParser.parse(md)
+        val table = assertIs<MdBlock.Table>(blocks[0])
+        assertEquals(listOf("💿 Installer", "📦 Portable"), table.header)
+        assertEquals(listOf(listOf("Run **Setup.exe**", "Unzip and run"), listOf("Shortcuts", "—")), table.rows)
+        assertEquals(MdBlock.Paragraph("After the table."), blocks[1])
+    }
+
+    @Test
+    fun `accent shimmer blends along the short hue arc and returns`() {
+        val red = androidx.compose.ui.graphics.Color(0xFFD03030.toInt())
+        val blue = androidx.compose.ui.graphics.Color(0xFF3050D0.toInt())
+        assertEquals(0f, app.youlauncher.ui.theme.AccentShimmer.wave(0f), 1e-4f)
+        assertEquals(1f, app.youlauncher.ui.theme.AccentShimmer.wave(0.5f), 1e-4f)
+        assertEquals(0f, app.youlauncher.ui.theme.AccentShimmer.wave(1f), 1e-4f)
+        val hue = { c: androidx.compose.ui.graphics.Color -> com.materialkolor.hct.Hct.fromInt(c.toArgb()).hue }
+        assertEquals(hue(red), hue(app.youlauncher.ui.theme.AccentShimmer.blend(red, blue, 0f)), 1.0)
+        assertEquals(hue(blue), hue(app.youlauncher.ui.theme.AccentShimmer.blend(red, blue, 1f)), 1.0)
+        // Красный (~27°) и синий (~280°): короткая дуга идёт через пурпурный, а не через зелёный.
+        val mid = hue(app.youlauncher.ui.theme.AccentShimmer.blend(red, blue, 0.5f))
+        assertTrue(mid > 300 || mid < 30, "mid hue $mid")
+    }
+
+    @Test
+    fun `custom accent hsv round trip`() {
+        val c = androidx.compose.ui.graphics.Color(0xFF2E7D5B.toInt())
+        val hsv = app.youlauncher.ui.screens.settings.Hsv.of(c)
+        assertEquals(c.toArgb(), hsv.toColor().toArgb())
+        val other = app.youlauncher.ui.screens.settings.Hsv.of(app.youlauncher.ui.screens.settings.Hsv.companion(c))
+        assertEquals((hsv.hue + 120f) % 360f, other.hue, 1.5f)
     }
 
     @Test

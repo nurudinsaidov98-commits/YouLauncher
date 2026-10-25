@@ -311,6 +311,10 @@ fun DiagnosticsRow() {
         },
         shapes = ButtonDefaults.shapes(),
     ) { IconLabel(Symbols.BugReport, title) }
+    // Форма на GitHub с заполненными версией и Windows; отчёт выше можно приложить к ней.
+    androidx.compose.material3.FilledTonalButton(onClick = { AppInfo.reportIssue() }, shapes = ButtonDefaults.shapes()) {
+        IconLabel(Symbols.Forum, stringResource(Res.string.report_issue))
+    }
 }
 
 /** Экспорт и импорт настроек лаунчера в JSON (без путей этого компьютера и без секретов). */

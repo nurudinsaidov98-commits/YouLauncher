@@ -134,6 +134,11 @@ val LocalAppUi = staticCompositionLocalOf { AppUiState() }
 
 @Composable
 fun App(graph: AppGraph, navigator: Navigator, ui: AppUiState) {
+    // Кнопка «Обновить» в уведомлении о новой версии ведёт в «О программе», где обновление уже найдено.
+    androidx.compose.runtime.DisposableEffect(graph, navigator, ui) {
+        graph.openUpdates = { navigator.selectTop(TopLevel.Settings); ui.pendingAction = "settings:About" }
+        onDispose { graph.openUpdates = null }
+    }
     val settings by graph.settings.settings.collectAsState()
     val backStack by navigator.backStack.collectAsState()
     val instances by graph.instances.instances.collectAsState()
@@ -144,7 +149,13 @@ fun App(graph: AppGraph, navigator: Navigator, ui: AppUiState) {
         value = atmosphere.extractSeedFrom?.let { runCatching { WallpaperColors.extract(graph.images, it.path) }.getOrNull() }
     }
     AppLocale.Provide(settings.language) {
-        YouLauncherTheme(settings.theme, settings.ui, seedOverride = atmosphere.seedOverride ?: extracted) {
+        // Переливание акцента замирает, пока окно не в фокусе или идёт игра: не тратит ресурсы впустую.
+        val launches by graph.launcher.states.collectAsState()
+        val playing = launches.values.any { it is app.youlauncher.core.repo.LaunchState.Running || it is app.youlauncher.core.repo.LaunchState.Preparing }
+        val focused = androidx.compose.ui.platform.LocalWindowInfo.current.isWindowFocused
+        val seedOverride = atmosphere.seedOverride ?: extracted
+        val shimmer = app.youlauncher.ui.theme.rememberShimmerSeed(settings.theme, active = seedOverride == null && focused && !playing && settings.ui.motion != app.youlauncher.core.settings.MotionLevel.Off)
+        YouLauncherTheme(settings.theme, settings.ui, seedOverride = seedOverride ?: shimmer, animateColors = seedOverride != null || shimmer == null) {
             val scheme = MaterialTheme.colorScheme
             CompositionLocalProvider(
                 LocalAppGraph provides graph,

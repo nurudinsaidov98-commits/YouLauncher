@@ -53,7 +53,7 @@ Every animation is a physical spring from the M3 motion scheme. Pick how bouncy 
 Buttons change shape when pressed, loading indicators morph between M3 shapes, progress bars are wavy.
 
 **🎨 Dynamic color**<br>
-The whole palette is built from one seed color, from your wallpaper, or from the game version you pick.
+The whole palette is built from one seed color — a preset or any color from the palette picker, even shimmering between two — from your wallpaper, or from the game version you pick.
 
 </td>
 <td width="50%" valign="top">
@@ -100,7 +100,7 @@ The key feature of each Minecraft update is drawn as a composition of M3 shapes 
 ### 🧩 Instances: installed and catalog side by side
 
 <p align="center">
-  <img src="docs/screens/en/instance-mods-dark.png" width="100%" alt="Installed mods and the catalog side by side">
+  <img src="docs/screens/gif/drag-en.gif" width="100%" alt="Dragging a mod from the catalog to install it and back to remove it">
 </p>
 
 - **Installed | Catalog** — mods, resource packs and shaders: what you have on the left, the Modrinth or CurseForge catalog of the same type, filtered for the instance, on the right. Drag the divider to resize.
@@ -110,7 +110,7 @@ The key feature of each Minecraft update is drawn as a composition of M3 shapes 
 - **Mod load** — while you play, the built-in Java profiler shows which mods load the CPU and memory the most, plus average CPU, peak memory and GC pauses. Everything stays on your computer.
 
 <p align="center">
-  <img src="docs/screens/en/modload-dark.png" width="100%" alt="Mod load widget">
+  <img src="docs/screens/gif/tabs-en.gif" width="100%" alt="Pill tabs and the mod load widget">
 </p>
 
 ### 💿 The installer is Material 3 too
@@ -211,7 +211,7 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 Кнопки меняют форму при нажатии, индикаторы загрузки перетекают между формами M3, полосы прогресса волнистые.
 
 **🎨 Динамический цвет**<br>
-Вся палитра строится из одного цвета, из ваших обоев или из выбранной версии игры.
+Вся палитра строится из одного цвета — готового или любого из палитры, даже переливающегося между двумя, — из ваших обоев или из выбранной версии игры.
 
 </td>
 <td width="50%" valign="top">
@@ -258,7 +258,7 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 ### 🧩 Экземпляры: установленное и каталог рядом
 
 <p align="center">
-  <img src="docs/screens/instance-mods-dark.png" width="100%" alt="Установленные моды и каталог рядом">
+  <img src="docs/screens/gif/drag-ru.gif" width="100%" alt="Мод перетаскивается из каталога в установленное и обратно">
 </p>
 
 - **Установлено | Каталог** — моды, ресурспаки и шейдеры: слева то, что стоит, справа каталог Modrinth или CurseForge того же типа под версию экземпляра. Разделитель можно тянуть.
@@ -268,7 +268,7 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 - **Нагрузка модов** — во время игры встроенный профилировщик Java показывает, какие моды больше всего нагружают процессор и память, а ещё среднюю загрузку, пик памяти и паузы сборщика. Всё остаётся на вашем компьютере.
 
 <p align="center">
-  <img src="docs/screens/modload-dark.png" width="100%" alt="Виджет нагрузки модов">
+  <img src="docs/screens/gif/tabs-ru.gif" width="100%" alt="Вкладки-таблетки и виджет нагрузки модов">
 </p>
 
 ### 💿 Установщик тоже в Material 3

@@ -59,10 +59,11 @@ class UpdaterTest {
     }
 
     @Test
-    fun `script waits, copies and restarts without touching portable marker`() {
+    fun `script waits, mirrors the new build and restarts without touching data`() {
         val s = UpdateParsing.script(1234, Path.of("C:", "u", "YouLauncher-App"), Path.of("C:", "Apps", "YouLauncher"))
         assertTrue("Wait-Process -Id 1234" in s)
-        assertTrue("robocopy" in s && "/XF portable.txt" in s)
+        assertTrue("robocopy" in s && "/MIR" in s && "/XF portable.txt" in s, "старые файлы удаляются, маркер портативности остаётся")
+        assertTrue("/XD" in s && "YouLauncher\\data" in s, "игры рядом с программой не трогаются")
         assertTrue("YouLauncher.exe" in s)
         assertTrue(s.indexOf("Wait-Process") < s.indexOf("robocopy") && s.indexOf("robocopy") < s.indexOf("Start-Process"))
     }

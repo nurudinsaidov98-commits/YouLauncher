@@ -117,4 +117,9 @@
     <string name="cf_key_show">Показать ключ</string>
     <string name="cf_key_hide">Скрыть ключ</string>
     <string name="cf_key_builtin">CurseForge работает с ключом, встроенным в эту сборку YouLauncher. Можно указать свой ключ вместо него.</string>
+    <string name="accent_custom">Свой цвет</string>
+    <string name="accent_color_first">Цвет 1</string>
+    <string name="accent_color_second">Цвет 2</string>
+    <string name="accent_shimmer">Переливание</string>
+    <string name="accent_shimmer_hint">Акцент плавно перетекает во второй цвет и обратно</string>
 </resources>

@@ -8,4 +8,5 @@
     <string name="diag_body">A report for the author: system, settings, instances and logs. Tokens, passwords and your Windows user name are not included.</string>
     <string name="diag_save">Save report</string>
     <string name="diag_saved">Report saved: %1$s</string>
+    <string name="report_issue">Report a bug</string>
 </resources>

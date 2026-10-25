@@ -44,6 +44,8 @@ sealed interface MdBlock {
     data class Quote(val text: String) : MdBlock
     data class Code(val text: String) : MdBlock
     data class Image(val url: String, val alt: String) : MdBlock
+    /** Таблица: первая строка — шапка. */
+    data class Table(val header: List<String>, val rows: List<List<String>>) : MdBlock
     data object Rule : MdBlock
 }
 
@@ -92,6 +94,16 @@ object MarkdownParser {
                     val level = line.takeWhile { it == '#' }.length.coerceIn(1, 6)
                     blocks += MdBlock.Heading(level, line.drop(level).trim())
                 }
+                // Таблица GitHub: строка с «|», за ней разделитель вида |---|:---:|.
+                isTableRow(line) && i + 1 < lines.size && tableSeparator.matches(lines[i + 1].trim()) -> {
+                    flushParagraph(); flushList()
+                    val header = cells(line)
+                    val rows = mutableListOf<List<String>>()
+                    i += 2
+                    while (i < lines.size && isTableRow(lines[i].trim())) { rows += cells(lines[i].trim()); i++ }
+                    i--
+                    blocks += MdBlock.Table(header, rows)
+                }
                 line == "---" || line == "***" || line == "___" -> { flushParagraph(); flushList(); blocks += MdBlock.Rule }
                 imageLine.matches(line) -> {
                     flushParagraph(); flushList()
@@ -116,6 +128,12 @@ object MarkdownParser {
         flushParagraph(); flushList()
         return blocks
     }
+
+    private val tableSeparator = Regex("""^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?$""")
+    private fun isTableRow(line: String) = line.startsWith("|") && line.count { it == '|' } >= 2
+
+    /** Ячейки строки таблицы без крайних «|». */
+    fun cells(line: String): List<String> = line.trim().removePrefix("|").removeSuffix("|").split("|").map { it.trim() }
 
     private val inline = Regex("""(\*\*[^*]+\*\*|__[^_]+__|\*[^*]+\*|_[^_]+_|`[^`]+`|\[[^\]]+]\([^)\s]+\))""")
 
@@ -181,6 +199,28 @@ fun MarkdownText(markdown: String, modifier: Modifier = Modifier) {
                         val image = if (b.url.startsWith("https://")) rememberRemoteImage(b.url, 1200) else null
                         if (image != null) {
                             Image(image, b.alt, contentScale = ContentScale.FillWidth, modifier = Modifier.widthIn(max = 720.dp).clip(MaterialTheme.shapes.large))
+                        }
+                    }
+                    is MdBlock.Table -> Surface(
+                        shape = MaterialTheme.shapes.large,
+                        color = scheme.surfaceContainerLow,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, scheme.outlineVariant),
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Column {
+                            val columns = (listOf(b.header) + b.rows).maxOf { it.size }
+                            listOf(b.header).plus(b.rows).forEachIndexed { r, row ->
+                                if (r > 0) HorizontalDivider(color = scheme.outlineVariant)
+                                Row(Modifier.background(if (r == 0) scheme.surfaceContainerHigh else androidx.compose.ui.graphics.Color.Transparent).padding(horizontal = 12.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                    for (c in 0 until columns) {
+                                        Text(
+                                            MarkdownParser.inline(row.getOrElse(c) { "" }, link, code, open),
+                                            style = if (r == 0) MaterialTheme.typography.titleSmall else MaterialTheme.typography.bodyMedium,
+                                            modifier = Modifier.weight(1f),
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                     MdBlock.Rule -> HorizontalDivider()

@@ -9,7 +9,9 @@ import androidx.compose.material3.MotionScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -126,6 +128,8 @@ fun YouLauncherTheme(
     theme: ThemeSettings,
     ui: UiSettings,
     seedOverride: Color? = null,
+    /** false — цвета меняются без пружины: переливание само меняет seed маленькими шагами. */
+    animateColors: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val dark = isDarkTheme(theme.mode)
@@ -147,7 +151,7 @@ fun YouLauncherTheme(
             contrastLevel = theme.contrast.level,
             shapes = youlauncherShapes(ui.cornerScale),
             typography = youlauncherTypography(ui.font),
-            animate = ui.motion != MotionLevel.Off,
+            animate = animateColors && ui.motion != MotionLevel.Off,
         ) {
             // Свои цвета ролей поверх динамической схемы: меняют все элементы, которые берут эти роли.
             // Обёртка есть всегда: если бы она появлялась только со своими цветами, весь интерфейс
@@ -172,3 +176,50 @@ fun YouLauncherTheme(
 fun onScrimColor(): Color =
     if (LocalIsDark.current) androidx.compose.material3.MaterialTheme.colorScheme.onSurface
     else androidx.compose.material3.MaterialTheme.colorScheme.inverseOnSurface
+
+/**
+ * Переливание акцента: seed плавно перетекает в второй цвет и обратно. Смешивание идёт в HCT по короткой
+ * дуге оттенка, поэтому промежуточные цвета остаются насыщенными, а не сереют, как при смешивании RGB.
+ */
+object AccentShimmer {
+    /** Полный цикл туда и обратно. */
+    const val PERIOD_MS = 14_000L
+    /** Шаг обновления: вся схема пересчитывается на каждом шаге, поэтому не каждый кадр. */
+    const val STEP_MS = 120L
+
+    /** Фаза 0..1 цикла → доля второго цвета 0..1..0 с мягкими разворотами. */
+    fun wave(phase: Float): Float = (1f - kotlin.math.cos(phase * 2f * kotlin.math.PI.toFloat())) / 2f
+
+    fun blend(a: Color, b: Color, f: Float): Color {
+        val x = com.materialkolor.hct.Hct.fromInt(a.toArgb())
+        val y = com.materialkolor.hct.Hct.fromInt(b.toArgb())
+        var dh = y.hue - x.hue
+        if (dh > 180) dh -= 360
+        if (dh < -180) dh += 360
+        val hue = (x.hue + dh * f + 360) % 360
+        return Color(com.materialkolor.hct.Hct.from(hue, x.chroma + (y.chroma - x.chroma) * f, x.tone + (y.tone - x.tone) * f).toInt())
+    }
+}
+
+/**
+ * Текущий цвет переливания или null, если оно выключено. [active] = false замораживает цвет на месте
+ * (окно не в фокусе, идёт игра): интерфейс не пересчитывается впустую, а цвет не прыгает при возврате.
+ */
+@Composable
+fun rememberShimmerSeed(theme: ThemeSettings, active: Boolean): Color? {
+    val second = theme.shimmer ?: return null
+    val a = theme.seedColor()
+    val b = Color(second.toInt()).copy(alpha = 1f)
+    var phase by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableFloatStateOf(0f) }
+    androidx.compose.runtime.LaunchedEffect(active) {
+        if (!active) return@LaunchedEffect
+        var last = System.nanoTime()
+        while (true) {
+            kotlinx.coroutines.delay(AccentShimmer.STEP_MS)
+            val now = System.nanoTime()
+            phase = (phase + (now - last) / 1_000_000f / AccentShimmer.PERIOD_MS) % 1f
+            last = now
+        }
+    }
+    return remember(a, b, phase) { AccentShimmer.blend(a, b, AccentShimmer.wave(phase)) }
+}

@@ -273,8 +273,11 @@ private fun AppearanceSection(s: LauncherSettings, update: ((LauncherSettings) -
     )
     SettingLabel(stringResource(Res.string.settings_accent))
     SeedPicker(
-        selectedArgb = s.theme.seedColor().toSeedLong(),
-        onSelect = { argb -> update { it.copy(theme = it.theme.copy(seed = argb, colorsFromWallpaper = false)) } },
+        onSelect = { argb -> update { it.copy(theme = it.theme.copy(seed = argb, shimmer = null, colorsFromWallpaper = false)) } },
+        selectedArgb = if (s.theme.shimmer != null) -1 else s.theme.seedColor().toSeedLong(),
+        trailing = {
+            CustomAccentButton(s.theme) { seed, shimmer -> update { it.copy(theme = it.theme.copy(seed = seed, shimmer = shimmer, colorsFromWallpaper = false)) } }
+        },
     )
     SettingLabel(stringResource(Res.string.settings_palette_style))
     @OptIn(ExperimentalLayoutApi::class)
@@ -488,7 +491,7 @@ private fun AboutSection() {
 
 /** Выбор seed-цвета: выбранный образец морфит из круга в «печенье» M3 и поворачивается. */
 @Composable
-fun SeedPicker(selectedArgb: Long, onSelect: (Long) -> Unit) {
+fun SeedPicker(selectedArgb: Long, onSelect: (Long) -> Unit, trailing: @Composable () -> Unit = {}) {
     @OptIn(ExperimentalLayoutApi::class)
     FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         SeedColors.forEach { seed ->
@@ -512,5 +515,6 @@ fun SeedPicker(selectedArgb: Long, onSelect: (Long) -> Unit) {
                 }
             }
         }
+        trailing()
     }
 }

@@ -73,14 +73,15 @@ object UpdateParsing {
     }
 
     /**
-     * Сценарий замены файлов: ждёт выхода лаунчера, переносит новую сборку в папку приложения
-     * (данные пользователя лежат отдельно, в AppData или рядом с portable.txt, и не трогаются), запускает YouLauncher.
+     * Сценарий замены файлов: ждёт выхода лаунчера, зеркалит новую сборку в папку приложения (старые библиотеки
+     * и файлы прежней Java удаляются, иначе копились бы от версии к версии) и запускает YouLauncher. Данные
+     * не трогаются: portable.txt и папка data рядом с программой исключены из зеркалирования.
      */
     fun script(pid: Long, newApp: Path, appDir: Path): String = """
         ${'$'}ErrorActionPreference = 'Stop'
         Wait-Process -Id $pid -Timeout 60 -ErrorAction SilentlyContinue
         Start-Sleep -Milliseconds 500
-        robocopy "$newApp" "$appDir" /E /XF portable.txt /NFL /NDL /NJH /NJS /NP | Out-Null
+        robocopy "$newApp" "$appDir" /MIR /XF portable.txt /XD "${appDir.resolve("data")}" /NFL /NDL /NJH /NJS /NP | Out-Null
         Start-Process -FilePath "${appDir.resolve("YouLauncher.exe")}"
     """.trimIndent()
 

@@ -1,0 +1,55 @@
+name: 🐞 Bug report · Сообщить об ошибке
+description: Something doesn't work as expected · Что-то работает не так
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping make YouLauncher better! · Спасибо, что помогаете сделать YouLauncher лучше!
+        **Tip:** *Settings → About → Save report* collects a diagnostics archive without tokens, passwords or your Windows user name — attach it below.
+        **Совет:** *Настройки → О программе → Сохранить отчёт* соберёт архив для диагностики без токенов, паролей и имени пользователя Windows — приложите его ниже.
+  - type: input
+    id: version
+    attributes:
+      label: YouLauncher version · Версия YouLauncher
+      placeholder: "1.2.2"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Windows version · Версия Windows
+      placeholder: "Windows 11 23H2"
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where is the problem? · Где проблема?
+      options:
+        - Launching the game · Запуск игры
+        - Mods / modpacks / catalog · Моды, сборки, каталог
+        - Accounts / skins · Аккаунты и скины
+        - Installer / updates · Установщик и обновления
+        - Interface · Интерфейс
+        - Other · Другое
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? · Что произошло?
+      description: What you did, what you expected and what you got · Что делали, что ожидали и что получилось
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce · Как повторить
+      placeholder: |
+        1. …
+        2. …
+  - type: textarea
+    id: report
+    attributes:
+      label: Diagnostics report or crash text · Отчёт или текст ошибки
+      description: Drag the saved report here, or paste the error text from the crash screen · Перетащите сюда сохранённый отчёт или вставьте текст с экрана ошибки
+      render: text

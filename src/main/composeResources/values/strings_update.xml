@@ -9,7 +9,8 @@
     <string name="update_checking">Checking…</string>
     <string name="update_latest">You have the latest version: %1$s</string>
     <string name="update_available">Version %1$s is available</string>
-    <string name="update_available_msg">YouLauncher %1$s is available: Settings, “About”</string>
+    <string name="update_available_msg">A new YouLauncher version is available: %1$s</string>
+    <string name="update_open">Update</string>
     <string name="update_download">Download</string>
     <string name="update_downloading">Downloading %1$s and checking the hash…</string>
     <string name="update_ready">Version %1$s is downloaded and verified. YouLauncher will close, update and start again.</string>

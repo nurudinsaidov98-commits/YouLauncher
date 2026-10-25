@@ -1,0 +1,18 @@
+name: ✨ Feature request · Предложение
+description: An idea that would make YouLauncher better · Идея, которая сделает YouLauncher лучше
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like? · Что хотелось бы?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is it useful? · Чем это поможет?
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots or examples · Скриншоты или примеры

@@ -49,6 +49,8 @@ data class ThemeSettings(
     val presetId: String? = null,
     /** Свои цвета ролей схемы: ключ роли ("primary", "surfaceContainer"...) -> ARGB. */
     val colorOverrides: Map<String, Long> = emptyMap(),
+    /** Второй ARGB-цвет: акцент плавно переливается между seed и им. null — без переливания. */
+    val shimmer: Long? = null,
 )
 
 @Serializable
