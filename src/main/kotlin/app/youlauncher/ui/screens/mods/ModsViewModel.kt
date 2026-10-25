@@ -69,11 +69,18 @@ class ModsViewModel(
 
     init {
         val saved = restore?.state
-        if (saved != null) {
-            // Возврат со страницы мода: прежние поиск, фильтры и результаты без нового запроса.
+        val wanted = targetInstanceId?.let { graph.instances.get(it) }
+        if (saved != null && (wanted == null || wanted.id == saved.target?.id)) {
+            // Возврат со страницы мода: прежние источник, поиск, фильтры и результаты без нового запроса.
             _state.value = saved.copy(loading = false, loadingMore = false)
             if (saved.results.isEmpty()) search()
             else saved.target?.let { t -> scope.launch { _state.update { it.copy(installed = graph.modInstaller.installedProjectIds(t.id)) } } }
+        } else if (saved != null) {
+            // Каталог открыли для другого экземпляра: источник, поиск и фильтры прежние, результаты под новую цель.
+            _state.value = saved.copy(results = emptyList(), total = 0, loading = false, loadingMore = false)
+            scrollIndex = 0
+            scrollOffset = 0
+            selectTarget(wanted)
         } else {
             val target = targetInstanceId?.let { graph.instances.get(it) }
                 ?: graph.settings.settings.value.lastInstanceId?.let { graph.instances.get(it) }

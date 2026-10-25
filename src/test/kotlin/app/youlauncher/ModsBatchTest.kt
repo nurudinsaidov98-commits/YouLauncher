@@ -2,6 +2,7 @@ package app.youlauncher
 
 import app.youlauncher.core.AppDirs
 import app.youlauncher.core.repo.ModQuery
+import app.youlauncher.ui.screens.mods.CatalogSource
 import app.youlauncher.ui.screens.mods.EntryStatus
 import app.youlauncher.ui.screens.mods.ModsViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -54,6 +55,31 @@ class ModsBatchTest {
         assertEquals(7, back.scrollIndex)
         assertEquals(12, back.scrollOffset)
         assertTrue(!back.state.value.loading)
+    }
+
+    @Test
+    fun `catalog keeps CurseForge and the search when reopened from the menu or for another instance`() = runBlocking<Unit> {
+        val target = graph.instances.instances.value.first { it.isModded }
+        val other = graph.instances.instances.value.first { it.id != target.id }
+        val vm = ModsViewModel(graph, target.id, dispatcher = Dispatchers.Unconfined)
+        vm.setSource(CatalogSource.CurseForge)
+        vm.setText("swift")
+        until { !vm.state.value.loading && vm.state.value.query.text == "swift" }
+        val memory = vm.memory()
+        vm.clear()
+        // Вернулись через меню «Моды» (экран без экземпляра): всё прежнее, включая цель.
+        val fromMenu = ModsViewModel(graph, null, memory, Dispatchers.Unconfined)
+        assertEquals(CatalogSource.CurseForge, fromMenu.state.value.source)
+        assertEquals("swift", fromMenu.state.value.query.text)
+        assertEquals(target.id, fromMenu.state.value.target?.id)
+        fromMenu.clear()
+        // Открыли каталог из другого экземпляра: источник и поиск прежние, цель новая.
+        val forOther = ModsViewModel(graph, other.id, memory, Dispatchers.Unconfined)
+        assertEquals(CatalogSource.CurseForge, forOther.state.value.source)
+        assertEquals("swift", forOther.state.value.query.text)
+        assertEquals(other.id, forOther.state.value.target?.id)
+        assertEquals(0, forOther.scrollIndex)
+        forOther.clear()
     }
 
     @Test

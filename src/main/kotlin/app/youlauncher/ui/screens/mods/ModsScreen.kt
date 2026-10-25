@@ -139,8 +139,8 @@ fun ModsScreen(screen: Screen.Mods) {
     val graph = LocalAppGraph.current
     // Состояние каталога сохраняется, когда открывают страницу мода, и возвращается при выходе с неё.
     val ui = LocalAppUi.current
-    val vm = rememberViewModel(screen.instanceId) { ModsViewModel(graph, screen.instanceId, ui.modsMemory[screen.instanceId]) }
-    DisposableEffect(vm) { onDispose { ui.modsMemory[screen.instanceId] = vm.memory() } }
+    val vm = rememberViewModel(screen.instanceId) { ModsViewModel(graph, screen.instanceId, ui.modsMemory) }
+    DisposableEffect(vm) { onDispose { ui.modsMemory = vm.memory() } }
     val state by vm.state.collectAsState()
     val progress by vm.progress.collectAsState()
     val navigator = LocalNavigator.current

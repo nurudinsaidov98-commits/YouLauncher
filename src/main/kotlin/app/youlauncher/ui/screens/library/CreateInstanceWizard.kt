@@ -121,6 +121,7 @@ import app.youlauncher.ui.Platform
 import app.youlauncher.ui.background.rememberAmbientTime
 import app.youlauncher.ui.components.ChoiceOption
 import app.youlauncher.ui.components.ConnectedChoice
+import app.youlauncher.ui.components.ExpressiveScrollbar
 import app.youlauncher.ui.components.Formats
 import app.youlauncher.ui.components.IconLabel
 import app.youlauncher.ui.components.InstanceBadge
@@ -402,7 +403,9 @@ private fun VersionStep(model: WizardModel, versions: List<GameVersion>?, onChan
                 WizardModel.filterVersions(versions, model.versionFilter, model.versionQuery)
             }
             val listState = rememberLazyListState()
-            LazyColumn(state = listState, modifier = Modifier.fillMaxWidth().weight(1f, fill = false), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            // Список версий длинный: справа ползунок M3 с пузырём номера версии при перетаскивании.
+            Box(Modifier.fillMaxWidth().weight(1f, fill = false)) {
+            LazyColumn(state = listState, modifier = Modifier.fillMaxWidth().padding(end = 26.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 items(shown, key = { it.id }) { v ->
                     val selected = v.id == model.version
                     ListItem(
@@ -415,6 +418,10 @@ private fun VersionStep(model: WizardModel, versions: List<GameVersion>?, onChan
                             .selectable(selected, role = Role.RadioButton) { onChange(model.withVersion(v.id)) },
                     )
                 }
+            }
+            Box(Modifier.matchParentSize(), contentAlignment = Alignment.CenterEnd) {
+                ExpressiveScrollbar(listState, label = { shown.getOrNull(it)?.id })
+            }
             }
         }
     }
@@ -454,7 +461,9 @@ private fun LoaderStep(model: WizardModel, loaderVersions: List<LoaderVersion>?,
                 loaderVersions.isEmpty() -> Text(stringResource(Res.string.wizard_loader_none), color = MaterialTheme.colorScheme.error)
                 else -> {
                     val shown = loaderVersions.filter { model.showUnstable || it.stable }
-                    LazyColumn(Modifier.fillMaxWidth().weight(1f, fill = false), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    val loaderList = rememberLazyListState()
+                    Box(Modifier.fillMaxWidth().weight(1f, fill = false)) {
+                    LazyColumn(state = loaderList, modifier = Modifier.fillMaxWidth().padding(end = 26.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                         items(shown, key = { it.version }) { lv ->
                             val selected = lv.version == model.loaderVersion
                             ListItem(
@@ -473,6 +482,10 @@ private fun LoaderStep(model: WizardModel, loaderVersions: List<LoaderVersion>?,
                                 },
                             )
                         }
+                    }
+                    Box(Modifier.matchParentSize(), contentAlignment = Alignment.CenterEnd) {
+                        ExpressiveScrollbar(loaderList, label = { shown.getOrNull(it)?.version })
+                    }
                     }
                 }
             }
