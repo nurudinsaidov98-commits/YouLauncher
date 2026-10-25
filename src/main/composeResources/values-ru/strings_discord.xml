@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="discord_home">На главной</string>
+    <string name="discord_library">В библиотеке</string>
+    <string name="discord_library_count">Экземпляров: %1$d</string>
+    <string name="discord_instance">Смотрит «%1$s»</string>
+    <string name="discord_instance_hidden">Смотрит экземпляр</string>
+    <string name="discord_mods">Смотрит моды</string>
+    <string name="discord_mods_for">Для «%1$s»</string>
+    <string name="discord_settings">В настройках</string>
+    <string name="discord_launcher">В лаунчере</string>
+    <string name="discord_preparing">Запускает «%1$s»</string>
+    <string name="discord_preparing_hidden">Запускает Minecraft</string>
+    <string name="discord_playing">Играет в «%1$s»</string>
+    <string name="discord_playing_vanilla">Играет в Minecraft %1$s</string>
+    <string name="discord_state_loader">%1$s · Minecraft %2$s</string>
+    <string name="discord_state_vanilla">Ванильная · Minecraft %1$s</string>
+    <string name="discord_large_text">YouLauncher %1$s · лаунчер Minecraft в Material 3</string>
+    <string name="discord_button">Скачать YouLauncher</string>
+    <string name="settings_discord">Показывать активность в Discord</string>
+    <string name="settings_discord_connected">Подключено: в профиле Discord видно, во что вы играете и что делаете в лаунчере</string>
+    <string name="settings_discord_waiting">Discord не запущен — лаунчер подключится, как только он появится</string>
+    <string name="settings_discord_names">Показывать названия экземпляров и сборок</string>
+    <string name="settings_discord_names_hint">Если выключить, видно только версию Minecraft и загрузчик</string>
+</resources>

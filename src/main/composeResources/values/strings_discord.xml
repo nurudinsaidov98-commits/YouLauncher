@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="discord_home">On the home screen</string>
+    <string name="discord_library">In the library</string>
+    <string name="discord_library_count">Instances: %1$d</string>
+    <string name="discord_instance">Looking at “%1$s”</string>
+    <string name="discord_instance_hidden">Looking at an instance</string>
+    <string name="discord_mods">Browsing mods</string>
+    <string name="discord_mods_for">For “%1$s”</string>
+    <string name="discord_settings">In settings</string>
+    <string name="discord_launcher">In the launcher</string>
+    <string name="discord_preparing">Launching “%1$s”</string>
+    <string name="discord_preparing_hidden">Launching Minecraft</string>
+    <string name="discord_playing">Playing “%1$s”</string>
+    <string name="discord_playing_vanilla">Playing Minecraft %1$s</string>
+    <string name="discord_state_loader">%1$s · Minecraft %2$s</string>
+    <string name="discord_state_vanilla">Vanilla · Minecraft %1$s</string>
+    <string name="discord_large_text">YouLauncher %1$s · Material 3 Minecraft launcher</string>
+    <string name="discord_button">Get YouLauncher</string>
+    <string name="settings_discord">Show activity in Discord</string>
+    <string name="settings_discord_connected">Connected: your Discord profile shows what you play and do in the launcher</string>
+    <string name="settings_discord_waiting">Discord is not running; the launcher connects as soon as it starts</string>
+    <string name="settings_discord_names">Show instance and modpack names</string>
+    <string name="settings_discord_names_hint">Off: only the Minecraft version and loader are visible</string>
+</resources>

@@ -14,6 +14,7 @@ data class LauncherSettings(
     val java: JavaSettings = JavaSettings(),
     val network: NetworkSettings = NetworkSettings(),
     val system: SystemSettings = SystemSettings(),
+    val discord: DiscordSettings = DiscordSettings(),
     val activeAccountId: String? = null,
     val lastInstanceId: String? = null,
     val onboardingDone: Boolean = false,
@@ -179,6 +180,14 @@ data class ProxySettings(
 
 @Serializable
 enum class UpdateChannel { Stable, Beta, Off }
+
+/** Активность в профиле Discord (Rich Presence). */
+@Serializable
+data class DiscordSettings(
+    val enabled: Boolean = true,
+    /** Названия экземпляров и сборок; без них видно только версию игры и загрузчик. */
+    val showNames: Boolean = true,
+)
 
 @Serializable
 data class SystemSettings(

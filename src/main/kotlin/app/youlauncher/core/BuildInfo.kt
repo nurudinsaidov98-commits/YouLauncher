@@ -16,5 +16,8 @@ object BuildInfo {
     /** ID приложения Azure для входа через Microsoft (общедоступный клиент, не секрет); null — вход выключен. */
     val microsoftClientId: String? get() = props.getProperty("msClientId")?.takeIf { it.isNotBlank() }
 
+    /** Приложение Discord для активности в профиле (публичный ID, не секрет). */
+    val discordAppId: String get() = props.getProperty("discordAppId")?.takeIf { it.isNotBlank() } ?: "1563954573545177099"
+
     fun property(name: String): String? = props.getProperty(name)
 }

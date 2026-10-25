@@ -223,6 +223,12 @@ class AppGraph(
             }
         }
     }
+    /** Активность в профиле Discord: экран лаунчера и запущенная игра. */
+    val discord = app.youlauncher.data.discord.DiscordPresence(
+        scope, BuildInfo.discordAppId,
+        kotlinx.coroutines.flow.MutableStateFlow(settings.settings.value.discord).also { flow -> scope.launch { settings.settings.collect { flow.value = it.discord } } },
+        launcher, instances,
+    ).also { if (!demo) it.start() }
     private val backupScheduler = BackupScheduler(scope, instances, launcher, instanceBackups).also { if (!demo) it.start() }
 
     fun shutdown() {

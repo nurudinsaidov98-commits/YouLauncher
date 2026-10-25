@@ -24,6 +24,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -355,5 +356,25 @@ fun SettingsTransfer(update: ((LauncherSettings) -> LauncherSettings) -> Unit) {
             },
             shapes = ButtonDefaults.shapes(),
         ) { IconLabel(Symbols.Upload, importTitle) }
+    }
+}
+
+/** Активность в профиле Discord: переключатель, состояние связи и названия экземпляров. */
+@Composable
+fun DiscordRows(s: LauncherSettings, update: ((LauncherSettings) -> LauncherSettings) -> Unit) {
+    val graph = LocalAppGraph.current
+    val connected by graph.discord.connected.collectAsState()
+    SwitchRow(
+        stringResource(Res.string.settings_discord), s.discord.enabled,
+        { on -> update { it.copy(discord = it.discord.copy(enabled = on)) } },
+        subtitle = if (!s.discord.enabled) null else stringResource(if (connected) Res.string.settings_discord_connected else Res.string.settings_discord_waiting),
+        icon = Symbols.Forum,
+    )
+    if (s.discord.enabled) {
+        SwitchRow(
+            stringResource(Res.string.settings_discord_names), s.discord.showNames,
+            { on -> update { it.copy(discord = it.discord.copy(showNames = on)) } },
+            subtitle = stringResource(Res.string.settings_discord_names_hint), icon = Symbols.Badge,
+        )
     }
 }

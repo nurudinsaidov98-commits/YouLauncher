@@ -141,6 +141,18 @@ fun App(graph: AppGraph, navigator: Navigator, ui: AppUiState) {
     }
     val settings by graph.settings.settings.collectAsState()
     val backStack by navigator.backStack.collectAsState()
+    // Экран для активности в Discord: что пользователь сейчас смотрит в лаунчере.
+    androidx.compose.runtime.LaunchedEffect(backStack.last()) {
+        graph.discord.screen.value = when (val s = backStack.last()) {
+            Screen.Home -> app.youlauncher.data.discord.PresenceScreen.Home
+            Screen.Library -> app.youlauncher.data.discord.PresenceScreen.Library
+            is Screen.Instance -> app.youlauncher.data.discord.PresenceScreen.Instance(s.id)
+            is Screen.Mods -> app.youlauncher.data.discord.PresenceScreen.Mods(s.instanceId)
+            is Screen.ModProject -> app.youlauncher.data.discord.PresenceScreen.Mods(s.instanceId)
+            Screen.Settings -> app.youlauncher.data.discord.PresenceScreen.Settings
+            else -> app.youlauncher.data.discord.PresenceScreen.Other
+        }
+    }
     val instances by graph.instances.instances.collectAsState()
     val atmosphere = remember(settings.background, settings.theme.colorsFromWallpaper, backStack.last(), instances, ui.previewVersion, settings.lastInstanceId) {
         AtmosphereResolver.resolve(settings.background, settings.theme.colorsFromWallpaper, backStack.last(), instances, ui.previewVersion, settings.lastInstanceId)

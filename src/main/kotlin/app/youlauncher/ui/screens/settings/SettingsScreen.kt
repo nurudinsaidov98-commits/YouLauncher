@@ -409,6 +409,7 @@ private fun GameSection(s: LauncherSettings, update: ((LauncherSettings) -> Laun
     TextFieldRow(stringResource(Res.string.settings_jvm_custom), s.game.jvmArgs, { v -> update { it.copy(game = it.game.copy(jvmArgs = v)) } })
     SwitchRow(stringResource(Res.string.settings_close_on_start), s.game.closeLauncherOnStart, { on -> update { it.copy(game = it.game.copy(closeLauncherOnStart = on)) } }, icon = Symbols.ExitToApp)
     SwitchRow(stringResource(Res.string.settings_console_on_start), s.game.showConsoleOnStart, { on -> update { it.copy(game = it.game.copy(showConsoleOnStart = on)) } }, icon = Symbols.Terminal)
+    DiscordRows(s, update)
 }
 
 @Composable
