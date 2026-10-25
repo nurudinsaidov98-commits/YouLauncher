@@ -116,7 +116,7 @@ class InstanceBackups(
 }
 
 object BackupLogic {
-    private val skipped = listOf(".minecraft/logs/", ".minecraft/crash-reports/", ".minecraft/.fabric/", ".minecraft/.cache/")
+    private val skipped = listOf(".minecraft/logs/", ".minecraft/crash-reports/", ".minecraft/.fabric/", ".minecraft/.cache/", ".minecraft/.youlauncher-removed/", ".minecraft/youlauncher-jfr/")
 
     /** Что входит в копию: всё, кроме журналов, отчётов о сбоях, кэшей загрузчиков и файлов блокировки мира. */
     fun include(relative: String): Boolean = skipped.none { relative.startsWith(it) } && !relative.endsWith("session.lock")

@@ -46,6 +46,7 @@
     <string name="action_delete">Delete</string>
     <string name="action_copy">Copy</string>
     <string name="action_retry">Retry</string>
+    <string name="action_undo">Undo</string>
     <string name="action_open_folder">Open folder</string>
     <string name="action_install">Install</string>
     <string name="action_installed">Installed</string>

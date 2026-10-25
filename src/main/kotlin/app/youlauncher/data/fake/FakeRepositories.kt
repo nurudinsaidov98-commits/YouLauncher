@@ -122,6 +122,7 @@ class FakeContentRepository : InstanceContentRepository {
         projectId = id,
         source = "modrinth",
         updateAvailable = if (rnd.nextFloat() < 0.2f) "${2 + rnd.nextInt(3)}.0.0" else null,
+        addedAt = System.currentTimeMillis() - rnd.nextInt(60) * 86_400_000L - rnd.nextInt(86_400_000),
     )
 
     private fun ensure(id: String, kind: ContentKind) {
@@ -174,6 +175,22 @@ class FakeContentRepository : InstanceContentRepository {
 
     override suspend fun remove(instanceId: String, kind: ContentKind, fileName: String) {
         store.update { it + (key(instanceId, kind) to it[key(instanceId, kind)].orEmpty().filterNot { f -> f.fileName == fileName }) }
+    }
+
+    private val stashed = HashMap<String, ContentFile>()
+
+    override suspend fun stash(instanceId: String, kind: ContentKind, fileName: String): Boolean {
+        val k = key(instanceId, kind)
+        val file = store.value[k]?.firstOrNull { it.fileName == fileName } ?: return false
+        stashed["$k/$fileName"] = file
+        remove(instanceId, kind, fileName)
+        return true
+    }
+
+    override suspend fun restore(instanceId: String, kind: ContentKind, fileName: String) {
+        val k = key(instanceId, kind)
+        val file = stashed.remove("$k/$fileName") ?: return
+        store.update { it + (k to (it[k].orEmpty() + file).sortedBy { f -> f.title.lowercase() }) }
     }
 
     override suspend fun addFiles(instanceId: String, kind: ContentKind, files: List<Path>) {

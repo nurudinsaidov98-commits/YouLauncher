@@ -46,6 +46,7 @@
     <string name="action_delete">Удалить</string>
     <string name="action_copy">Копировать</string>
     <string name="action_retry">Повторить</string>
+    <string name="action_undo">Отменить</string>
     <string name="action_open_folder">Открыть папку</string>
     <string name="action_install">Установить</string>
     <string name="action_installed">Установлено</string>

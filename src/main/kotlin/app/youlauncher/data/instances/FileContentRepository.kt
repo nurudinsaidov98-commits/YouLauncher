@@ -144,6 +144,7 @@ class FileContentRepository(
                 projectId = entry?.projectId,
                 source = entry?.source?.name?.lowercase() ?: "local",
                 updateAvailable = entry?.update,
+                addedAt = runCatching { java.nio.file.Files.getLastModifiedTime(p).toMillis() }.getOrDefault(0),
             )
         }.sortedBy { it.title.lowercase() }
     }
@@ -200,6 +201,54 @@ class FileContentRepository(
         bump(instanceId)
     }
 
+    /** Отложенные файлы: вне папок игры, чтобы загрузчик модов их не подхватил. Запись индекса хранится до возврата. */
+    private fun stashDir(id: String, kind: ContentKind) = gameDir(id).resolve(STASH_DIR).resolve(kind.folder)
+    private val stashed = java.util.concurrent.ConcurrentHashMap<String, app.youlauncher.data.mods.IndexedFile>()
+
+    override suspend fun stash(instanceId: String, kind: ContentKind, fileName: String): Boolean = withContext(Dispatchers.IO) {
+        purgeStash(instanceId)
+        val source = folder(instanceId, kind).resolve(fileName)
+        if (!source.isRegularFile()) return@withContext false
+        // Папка с временем отложения в имени: по нему потом видно, что пора в корзину.
+        val dir = stashDir(instanceId, kind).resolve(System.currentTimeMillis().toString())
+        Files.createDirectories(dir)
+        Files.move(source, dir.resolve(fileName), StandardCopyOption.REPLACE_EXISTING)
+        val base = fileName.removeSuffix(".disabled")
+        index?.find(instanceId, kind, base)?.let { stashed["$instanceId/${kind.name}/$fileName"] = it }
+        index?.removeFile(instanceId, kind, base)
+        bump(instanceId)
+        true
+    }
+
+    override suspend fun restore(instanceId: String, kind: ContentKind, fileName: String) = withContext(Dispatchers.IO) {
+        val held = stashDir(instanceId, kind).takeIf { it.isDirectory() }?.listDirectoryEntries()
+            ?.sortedByDescending { it.name.toLongOrNull() ?: 0 }?.map { it.resolve(fileName) }?.firstOrNull { it.isRegularFile() }
+        if (held != null) {
+            runCatching { Files.deleteIfExists(held.parent) }
+            val dir = folder(instanceId, kind)
+            Files.createDirectories(dir)
+            Files.move(held, dir.resolve(fileName), StandardCopyOption.REPLACE_EXISTING)
+            stashed.remove("$instanceId/${kind.name}/$fileName")?.let { index?.put(instanceId, it) }
+        }
+        bump(instanceId)
+    }
+
+    /** Отложенное дольше [STASH_TTL_MS] уходит в корзину Windows: вернуть его уже не предлагают. */
+    fun purgeStash(instanceId: String, now: Long = System.currentTimeMillis()) {
+        val root = gameDir(instanceId).resolve(STASH_DIR)
+        if (!root.isDirectory()) return
+        runCatching {
+            for (kindDir in root.listDirectoryEntries().filter { it.isDirectory() }) {
+                for (batch in kindDir.listDirectoryEntries().filter { it.isDirectory() }) {
+                    val at = batch.name.toLongOrNull() ?: 0
+                    if (now - at <= STASH_TTL_MS) continue
+                    batch.listDirectoryEntries().forEach { trash(it) }
+                    runCatching { Files.deleteIfExists(batch) }
+                }
+            }
+        }
+    }
+
     override suspend fun addFiles(instanceId: String, kind: ContentKind, files: List<Path>) = withContext(Dispatchers.IO) {
         val dir = folder(instanceId, kind)
         Files.createDirectories(dir)
@@ -242,5 +291,11 @@ class FileContentRepository(
                 java.awt.Desktop.getDesktop().moveToTrash(f)
         }.getOrDefault(false)
         if (!ok && f.exists()) f.deleteRecursively()
+    }
+
+    companion object {
+        const val STASH_DIR = ".youlauncher-removed"
+        /** Сколько удалённое можно вернуть кнопкой «Отменить»; потом файл уходит в корзину Windows. */
+        const val STASH_TTL_MS = 10 * 60 * 1000L
     }
 }

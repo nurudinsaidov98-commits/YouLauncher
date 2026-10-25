@@ -38,6 +38,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import app.youlauncher.ui.UiMessage
+import app.youlauncher.resources.action_undo
 import java.nio.file.Path
 
 class InstanceViewModel(
@@ -73,6 +75,8 @@ class InstanceViewModel(
     // После объявления полей: с Dispatchers.Main.immediate корутина может выполниться сразу, ещё в конструкторе.
     init {
         scope.launch(Dispatchers.IO) { runCatching { graph.modInstaller.checkUpdates(id) } }
+        // Удалённое больше десяти минут назад уходит в корзину Windows.
+        scope.launch(Dispatchers.IO) { runCatching { (graph.content as? app.youlauncher.data.instances.FileContentRepository)?.purgeStash(id) } }
         scope.launch { findLoaderUpdate() }
     }
 
@@ -196,9 +200,16 @@ class InstanceViewModel(
         graph.content.setEnabled(id, kind, file.fileName, enabled)
     }
 
+    /** Удаление с возвратом: файл откладывается, в сообщении кнопка «Отменить»; окончательно — позже, в корзину Windows. */
     fun remove(kind: ContentKind, file: ContentFile) = scope.launch {
-        graph.content.remove(id, kind, file.fileName)
-        graph.messenger.show(Res.string.msg_removed, file.title)
+        if (graph.content.stash(id, kind, file.fileName)) {
+            // Отмена в общей области приложения: сообщение может пережить этот экран.
+            graph.messenger.show(UiMessage(Res.string.msg_removed, listOf(file.title), actionLabel = Res.string.action_undo, action = {
+                graph.scope.launch { graph.content.restore(id, kind, file.fileName) }
+            }))
+        } else {
+            graph.messenger.show(Res.string.msg_removed, file.title)
+        }
     }
 
     fun addFiles(kind: ContentKind, files: List<Path>) = scope.launch {

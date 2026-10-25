@@ -1,5 +1,18 @@
 package app.youlauncher.ui.screens.instance
 
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import app.youlauncher.core.repo.ModSort
+import app.youlauncher.resources.content_sort
+import app.youlauncher.resources.content_sort_enabled
+import app.youlauncher.resources.content_sort_name
+import app.youlauncher.resources.content_sort_newest
+import app.youlauncher.resources.content_sort_size
+import app.youlauncher.resources.content_sort_updates
+import app.youlauncher.ui.screens.mods.label
+import org.jetbrains.compose.resources.StringResource
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -149,10 +162,23 @@ fun ContentTab(inst: Instance, vm: InstanceViewModel, kind: ContentKind?) {
     BoxWithConstraints(Modifier.fillMaxSize().padding(start = 20.dp, end = 20.dp, top = 8.dp)) {
         if (maxWidth >= SPLIT_MIN_WIDTH) {
             val total = constraints.maxWidth.toFloat()
-            Row(Modifier.fillMaxSize()) {
-                Box(Modifier.weight(ui.contentSplit).fillMaxHeight()) { InstalledPane(inst, vm, kind) }
-                PaneDivider(onDrag = { px -> ui.contentSplit = (ui.contentSplit + px / total).coerceIn(0.3f, 0.7f) })
-                Box(Modifier.weight(1f - ui.contentSplit).fillMaxHeight()) { CatalogPane(inst, vm, kind) }
+            // Мод можно перетащить мышью: из установленного в каталог — удалить, из каталога в установленное — поставить.
+            val drag = remember { ContentDrag() }
+            CompositionLocalProvider(LocalContentDrag provides drag) {
+                Box(Modifier.fillMaxSize().onGloballyPositioned { drag.origin = it.positionInRoot() }) {
+                    Row(Modifier.fillMaxSize()) {
+                        Box(Modifier.weight(ui.contentSplit).fillMaxHeight().onGloballyPositioned { drag.installedBounds = it.boundsInRoot() }) {
+                            InstalledPane(inst, vm, kind)
+                            DropZone(visible = drag.payload is DragPayload.Catalog, over = drag.overTarget, remove = false)
+                        }
+                        PaneDivider(onDrag = { px -> ui.contentSplit = (ui.contentSplit + px / total).coerceIn(0.3f, 0.7f) })
+                        Box(Modifier.weight(1f - ui.contentSplit).fillMaxHeight().onGloballyPositioned { drag.catalogBounds = it.boundsInRoot() }) {
+                            CatalogPane(inst, vm, kind)
+                            DropZone(visible = drag.payload is DragPayload.Installed, over = drag.overTarget, remove = true)
+                        }
+                    }
+                    DragGhost(drag)
+                }
             }
         } else {
             var catalog by remember(kind) { mutableStateOf(false) }
@@ -240,8 +266,11 @@ private fun PaneDivider(onDrag: (Float) -> Unit) {
 @Composable
 private fun InstalledPane(inst: Instance, vm: InstanceViewModel, kind: ContentKind) {
     val files by vm.content(kind).collectAsState()
+    val ui = LocalAppUi.current
     var query by remember { mutableStateOf("") }
-    val shown = files.filter { query.isBlank() || it.title.contains(query, true) || it.fileName.contains(query, true) }
+    val shown = remember(files, query, ui.installedSort) {
+        ui.installedSort.sort(files.filter { query.isBlank() || it.title.contains(query, true) || it.fileName.contains(query, true) })
+    }
     val addLabel = stringResource(Res.string.content_add_files)
     val extensions = if (kind == ContentKind.Mods) listOf("jar") else listOf("zip")
 
@@ -264,6 +293,8 @@ private fun InstalledPane(inst: Instance, vm: InstanceViewModel, kind: ContentKi
                 modifier = Modifier.weight(1f),
             )
             if (kind == ContentKind.Mods) ModSetsButton(vm, files)
+            // Сортировщик во внутреннем углу у разделителя.
+            SortButton(InstalledSort.entries, ui.installedSort, { stringResource(it.label) }, { ui.installedSort = it })
         }
         if (files.isEmpty()) {
             EmptyState(
@@ -283,7 +314,7 @@ private fun InstalledPane(inst: Instance, vm: InstanceViewModel, kind: ContentKi
                         fadeInSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
                         placementSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
                         fadeOutSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
-                    ).staggered(index, file.fileName))
+                    ).staggered(index, file.fileName).dragSource({ DragPayload.Installed(file.fileName, file.title) { vm.remove(kind, file) } }, file.fileName))
                 }
             }
         }
@@ -330,16 +361,20 @@ private fun CatalogPane(inst: Instance, instanceVm: InstanceViewModel, kind: Con
                 showIcons = false,
             )
         }
-        OutlinedTextField(
-            value = state.query.text,
-            onValueChange = vm::setText,
-            placeholder = { Text(stringResource(Res.string.mods_search, state.source.name)) },
-            leadingIcon = { Icon(Symbols.Search, null) },
-            trailingIcon = if (state.query.text.isNotEmpty()) ({ TIconButton(Symbols.Close, stringResource(Res.string.action_clear), { vm.setText("") }) }) else null,
-            singleLine = true,
-            shape = RoundedCornerShape(50),
-            modifier = Modifier.fillMaxWidth(),
-        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            // Сортировщик каталога — во внутреннем углу у разделителя, зеркально левой панели.
+            SortButton(ModSort.entries, state.query.sort, { stringResource(it.label()) }, vm::setSort)
+            OutlinedTextField(
+                value = state.query.text,
+                onValueChange = vm::setText,
+                placeholder = { Text(stringResource(Res.string.mods_search, state.source.name)) },
+                leadingIcon = { Icon(Symbols.Search, null) },
+                trailingIcon = if (state.query.text.isNotEmpty()) ({ TIconButton(Symbols.Close, stringResource(Res.string.action_clear), { vm.setText("") }) }) else null,
+                singleLine = true,
+                shape = RoundedCornerShape(50),
+                modifier = Modifier.weight(1f),
+            )
+        }
         when {
             !vm.catalog.available -> EmptyState(Illustration.Offline, stringResource(Res.string.curseforge_title), stringResource(Res.string.curseforge_body), artSize = 120.dp) {
                 OutlinedButton(onClick = { vm.setSource(CatalogSource.Modrinth) }, shapes = ButtonDefaults.shapes()) { Text(stringResource(Res.string.curseforge_use_modrinth)) }
@@ -366,7 +401,10 @@ private fun CatalogPane(inst: Instance, instanceVm: InstanceViewModel, kind: Con
                                 checking = project.id in checking,
                                 onInstall = { vm.install(project) },
                                 onOpen = { navigator.navigate(Screen.ModProject(project.id, state.source.name, inst.id)) },
-                                modifier = Modifier.staggered(index % 20, project.id),
+                                modifier = Modifier.staggered(index % 20, project.id).let { m ->
+                                    if (project.id in state.installed) m
+                                    else m.dragSource({ DragPayload.Catalog(project.id, project.title, project.iconUrl) { vm.install(project) } }, project.id)
+                                },
                             )
                         }
                         if (state.loadingMore) item { Box(Modifier.fillMaxWidth().padding(12.dp), contentAlignment = Alignment.Center) { LoadingIndicator() } }
@@ -482,5 +520,50 @@ private fun ModSetsButton(vm: InstanceViewModel, files: List<ContentFile>) {
             onDismiss = { naming = false },
             validate = { if (it.isBlank()) "" else null },
         )
+    }
+}
+
+/** Порядок установленного: по названию, новые, тяжёлые, включённые или с обновлениями сверху. */
+enum class InstalledSort(val label: StringResource) {
+    Name(Res.string.content_sort_name),
+    Newest(Res.string.content_sort_newest),
+    Size(Res.string.content_sort_size),
+    Enabled(Res.string.content_sort_enabled),
+    Updates(Res.string.content_sort_updates);
+
+    fun sort(files: List<ContentFile>): List<ContentFile> = when (this) {
+        Name -> files.sortedBy { it.title.lowercase() }
+        Newest -> files.sortedByDescending { it.addedAt }
+        Size -> files.sortedByDescending { it.sizeBytes }
+        Enabled -> files.sortedWith(compareByDescending<ContentFile> { it.enabled }.thenBy { it.title.lowercase() })
+        Updates -> files.sortedWith(compareByDescending<ContentFile> { it.updateAvailable != null }.thenBy { it.title.lowercase() })
+    }
+}
+
+/** Сортировщик-таблетка: текущий порядок на кнопке, остальные в меню. */
+@Composable
+private fun <T> SortButton(options: List<T>, selected: T, label: @Composable (T) -> String, onSelect: (T) -> Unit) {
+    var open by remember { mutableStateOf(false) }
+    Box {
+        FilledTonalButton(onClick = { open = true }, shapes = ButtonDefaults.shapes(), contentPadding = PaddingValues(horizontal = 16.dp)) {
+            Icon(Symbols.Sort, null, Modifier.size(18.dp))
+            Spacer(Modifier.width(6.dp))
+            Text(label(selected), maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.widthIn(max = 180.dp))
+        }
+        DropdownMenu(expanded = open, onDismissRequest = { open = false }, shape = MaterialTheme.shapes.large) {
+            Text(
+                stringResource(Res.string.content_sort),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            )
+            options.forEach { o ->
+                DropdownMenuItem(
+                    text = { Text(label(o)) },
+                    trailingIcon = if (o == selected) ({ Icon(Symbols.Check, null) }) else null,
+                    onClick = { onSelect(o); open = false },
+                )
+            }
+        }
     }
 }

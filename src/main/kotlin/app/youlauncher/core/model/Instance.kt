@@ -95,6 +95,8 @@ data class ContentFile(
     val projectId: String? = null,
     val source: String? = null,
     val updateAvailable: String? = null,
+    /** Когда файл появился в папке (время изменения файла): для сортировки «сначала новые». */
+    val addedAt: Long = 0,
 )
 
 data class World(

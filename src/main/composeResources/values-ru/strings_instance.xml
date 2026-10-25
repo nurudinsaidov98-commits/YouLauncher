@@ -110,4 +110,14 @@
     <string name="loader_update_available">Доступна новая версия загрузчика: %1$s</string>
     <string name="loader_update">Обновить загрузчик</string>
     <string name="loader_updated">Загрузчик обновлён до %1$s. Он установится при следующем запуске.</string>
+    <string name="content_sort">Сортировка</string>
+    <string name="content_sort_name">По названию</string>
+    <string name="content_sort_newest">Сначала новые</string>
+    <string name="content_sort_size">Сначала тяжёлые</string>
+    <string name="content_sort_enabled">Сначала включённые</string>
+    <string name="content_sort_updates">Сначала с обновлениями</string>
+    <string name="drop_remove">Отпустите, чтобы удалить</string>
+    <string name="drop_remove_hint">Перетащите сюда, чтобы удалить</string>
+    <string name="drop_install">Отпустите, чтобы установить</string>
+    <string name="drop_install_hint">Перетащите сюда, чтобы установить</string>
 </resources>

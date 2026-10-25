@@ -49,6 +49,15 @@ interface InstanceContentRepository {
     fun screenshots(instanceId: String): Flow<List<Screenshot>>
     suspend fun setEnabled(instanceId: String, kind: ContentKind, fileName: String, enabled: Boolean)
     suspend fun remove(instanceId: String, kind: ContentKind, fileName: String)
+    /**
+     * Убрать файл с возможностью вернуть его через [restore]: файл откладывается в сторону и окончательно
+     * уходит в корзину позже. Возвращает false, если вернуть нельзя (тогда это обычное удаление).
+     */
+    suspend fun stash(instanceId: String, kind: ContentKind, fileName: String): Boolean {
+        remove(instanceId, kind, fileName)
+        return false
+    }
+    suspend fun restore(instanceId: String, kind: ContentKind, fileName: String) {}
     suspend fun addFiles(instanceId: String, kind: ContentKind, files: List<java.nio.file.Path>)
     suspend fun refresh(instanceId: String)
     suspend fun deleteWorld(instanceId: String, folder: String)

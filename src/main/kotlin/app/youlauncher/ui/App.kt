@@ -108,6 +108,9 @@ class AppUiState {
     /** Доля ширины левой панели «Установлено» во вкладках контента; меняется перетаскиванием разделителя. */
     var contentSplit by mutableStateOf(0.5f)
 
+    /** Порядок списка «Установлено» во вкладках контента. */
+    var installedSort by mutableStateOf(app.youlauncher.ui.screens.instance.InstalledSort.Name)
+
     /** Версия, выбранная в мастере создания: фон показывает её атмосферу. */
     var previewVersion by mutableStateOf<String?>(null)
 
