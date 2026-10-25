@@ -68,6 +68,8 @@ data class Instance(
     val playLog: Map<String, Int> = emptyMap(),
     val backupSchedule: BackupSchedule = BackupSchedule.Off,
     val lastBackupAt: Long? = null,
+    /** Собирать во время игры, какие моды нагружают процессор и память (JFR, только на этом компьютере). */
+    val profileMods: Boolean = true,
 ) {
     val isModded: Boolean get() = loader != LoaderType.Vanilla
 }

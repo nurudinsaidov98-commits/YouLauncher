@@ -1,11 +1,63 @@
 package app.youlauncher.ui.screens.instance
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.toShape
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.input.pointer.pointerInput
+import app.youlauncher.core.model.ModProject
+import app.youlauncher.core.model.ProjectType
+import app.youlauncher.core.repo.InstallProgress
+import app.youlauncher.resources.action_retry
+import app.youlauncher.resources.content_catalog
+import app.youlauncher.resources.content_catalog_for
+import app.youlauncher.resources.content_empty_shaders
+import app.youlauncher.resources.content_installed
+import app.youlauncher.resources.content_resize
+import app.youlauncher.resources.curseforge_body
+import app.youlauncher.resources.curseforge_title
+import app.youlauncher.resources.curseforge_use_modrinth
+import app.youlauncher.resources.mods_error_body
+import app.youlauncher.resources.mods_error_title
+import app.youlauncher.resources.mods_no_results_body
+import app.youlauncher.resources.mods_no_results_title
+import app.youlauncher.resources.mods_search
+import app.youlauncher.ui.LocalAppGraph
+import app.youlauncher.ui.LocalAppUi
+import app.youlauncher.ui.rememberViewModel
+import app.youlauncher.ui.components.ChoiceOption
+import app.youlauncher.ui.components.ConnectedChoice
+import app.youlauncher.ui.components.ExpressiveScrollbar
+import app.youlauncher.ui.components.compactNumber
+import app.youlauncher.ui.screens.mods.CatalogSource
+import app.youlauncher.ui.screens.mods.InstallButton
+import app.youlauncher.ui.screens.mods.InstallSheetHost
+import app.youlauncher.ui.screens.mods.ModsViewModel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -46,7 +98,6 @@ import app.youlauncher.resources.Res
 import app.youlauncher.resources.action_clear
 import app.youlauncher.resources.action_remove
 import app.youlauncher.resources.content_add_files
-import app.youlauncher.resources.content_browse
 import app.youlauncher.resources.content_empty_mods
 import app.youlauncher.resources.content_empty_packs
 import app.youlauncher.resources.content_empty_title
@@ -78,7 +129,11 @@ import app.youlauncher.ui.navigation.LocalNavigator
 import app.youlauncher.ui.navigation.Screen
 import org.jetbrains.compose.resources.stringResource
 
-/** Моды, ресурспаки, шейдеры: переключатели, обновления, удаление, добавление файлов. */
+/**
+ * Моды, ресурспаки, шейдеры. В широком окне две панели: слева установленное (переключатели, обновления,
+ * удаление, свои файлы), справа каталог этого же типа под версию экземпляра; между ними разделитель,
+ * который можно тянуть. В узком окне панели переключаются кнопками.
+ */
 @Composable
 fun ContentTab(inst: Instance, vm: InstanceViewModel, kind: ContentKind?) {
     val navigator = LocalNavigator.current
@@ -90,13 +145,113 @@ fun ContentTab(inst: Instance, vm: InstanceViewModel, kind: ContentKind?) {
         }
         return
     }
+    val ui = LocalAppUi.current
+    BoxWithConstraints(Modifier.fillMaxSize().padding(start = 20.dp, end = 20.dp, top = 8.dp)) {
+        if (maxWidth >= SPLIT_MIN_WIDTH) {
+            val total = constraints.maxWidth.toFloat()
+            Row(Modifier.fillMaxSize()) {
+                Box(Modifier.weight(ui.contentSplit).fillMaxHeight()) { InstalledPane(inst, vm, kind) }
+                PaneDivider(onDrag = { px -> ui.contentSplit = (ui.contentSplit + px / total).coerceIn(0.3f, 0.7f) })
+                Box(Modifier.weight(1f - ui.contentSplit).fillMaxHeight()) { CatalogPane(inst, vm, kind) }
+            }
+        } else {
+            var catalog by remember(kind) { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                ConnectedChoice(
+                    options = listOf(ChoiceOption(false, stringResource(Res.string.content_installed), Symbols.Inventory2), ChoiceOption(true, stringResource(Res.string.content_catalog), Symbols.TravelExplore)),
+                    selected = catalog,
+                    onSelect = { catalog = it },
+                )
+                if (catalog) CatalogPane(inst, vm, kind) else InstalledPane(inst, vm, kind)
+            }
+        }
+    }
+}
+
+/** Ширина, начиная с которой установленное и каталог помещаются рядом. */
+private val SPLIT_MIN_WIDTH = 900.dp
+
+/** Заголовок панели: значок в форме M3, название и счётчик или подпись. */
+@Composable
+private fun PaneHeader(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, badge: String?, subtitle: String? = null, trailing: @Composable () -> Unit = {}) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+        Surface(shape = androidx.compose.material3.MaterialShapes.Cookie9Sided.toShape(), color = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier.size(44.dp)) {
+            Box(contentAlignment = Alignment.Center) { Icon(icon, null, tint = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.size(22.dp)) }
+        }
+        Column(Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(title, style = MaterialTheme.typography.titleLargeEmphasized, maxLines = 1)
+                if (badge != null) {
+                    Surface(shape = RoundedCornerShape(50), color = MaterialTheme.colorScheme.secondaryContainer) {
+                        Text(badge, style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(horizontal = 10.dp, vertical = 2.dp))
+                    }
+                }
+            }
+            if (subtitle != null) Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+        trailing()
+    }
+}
+
+/**
+ * Разделитель панелей: тонкая линия во всю высоту и ручка-таблетка посередине. При наведении и
+ * перетаскивании ручка на пружине вытягивается и окрашивается в основной цвет; курсор показывает,
+ * что ширину можно менять.
+ */
+@Composable
+private fun PaneDivider(onDrag: (Float) -> Unit) {
+    val interaction = remember { MutableInteractionSource() }
+    val hovered by interaction.collectIsHoveredAsState()
+    var dragging by remember { mutableStateOf(false) }
+    val active = hovered || dragging
+    val spatial = MaterialTheme.motionScheme.fastSpatialSpec<androidx.compose.ui.unit.Dp>()
+    val handleHeight by animateDpAsState(if (dragging) 88.dp else if (hovered) 72.dp else 56.dp, spatial, label = "handleH")
+    val handleWidth by animateDpAsState(if (dragging) 12.dp else if (hovered) 10.dp else 6.dp, spatial, label = "handleW")
+    val handleColor by animateColorAsState(if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline, MaterialTheme.motionScheme.fastEffectsSpec(), label = "handleC")
+    val lineColor by animateColorAsState(if (active) MaterialTheme.colorScheme.primary.copy(alpha = 0.45f) else MaterialTheme.colorScheme.outlineVariant, MaterialTheme.motionScheme.fastEffectsSpec(), label = "lineC")
+    val description = stringResource(Res.string.content_resize)
+    Box(
+        Modifier
+            .width(28.dp)
+            .fillMaxHeight()
+            .hoverable(interaction)
+            .pointerHoverIcon(PointerIcon(java.awt.Cursor(java.awt.Cursor.E_RESIZE_CURSOR)))
+            .semantics { contentDescription = description }
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures(
+                    onDragStart = { dragging = true },
+                    onDragEnd = { dragging = false },
+                    onDragCancel = { dragging = false },
+                ) { change, delta -> change.consume(); onDrag(delta) }
+            },
+        contentAlignment = Alignment.Center,
+    ) {
+        // Линия с разрывом вокруг ручки: ручка читается чётко на любом фоне.
+        Column(Modifier.fillMaxHeight().padding(vertical = 12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Box(Modifier.weight(1f).width(2.dp).background(lineColor, RoundedCornerShape(50)))
+            Spacer(Modifier.height(handleHeight + 20.dp))
+            Box(Modifier.weight(1f).width(2.dp).background(lineColor, RoundedCornerShape(50)))
+        }
+        Box(Modifier.size(handleWidth, handleHeight).background(handleColor, RoundedCornerShape(50)))
+    }
+}
+
+/** Левая панель: что уже стоит в экземпляре. */
+@Composable
+private fun InstalledPane(inst: Instance, vm: InstanceViewModel, kind: ContentKind) {
     val files by vm.content(kind).collectAsState()
     var query by remember { mutableStateOf("") }
     val shown = files.filter { query.isBlank() || it.title.contains(query, true) || it.fileName.contains(query, true) }
     val addLabel = stringResource(Res.string.content_add_files)
     val extensions = if (kind == ContentKind.Mods) listOf("jar") else listOf("zip")
 
-    Column(Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        PaneHeader(Symbols.Inventory2, stringResource(Res.string.content_installed), files.size.toString()) {
+            if (files.any { it.updateAvailable != null }) {
+                TIconButton(Symbols.Update, stringResource(Res.string.content_update_all), { vm.updateAll(kind) })
+            }
+            TIconButton(Symbols.FileOpen, addLabel, { vm.addFiles(kind, Platform.chooseFiles(addLabel, extensions, multiple = true)) })
+        }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
             OutlinedTextField(
                 value = query,
@@ -105,25 +260,21 @@ fun ContentTab(inst: Instance, vm: InstanceViewModel, kind: ContentKind?) {
                 leadingIcon = { Icon(Symbols.Search, null) },
                 trailingIcon = if (query.isNotEmpty()) ({ TIconButton(Symbols.Close, stringResource(Res.string.action_clear), { query = "" }) }) else null,
                 singleLine = true,
-                shape = MaterialTheme.shapes.extraLarge,
+                shape = RoundedCornerShape(50),
                 modifier = Modifier.weight(1f),
             )
             if (kind == ContentKind.Mods) ModSetsButton(vm, files)
-            if (files.any { it.updateAvailable != null }) {
-                FilledTonalButton(onClick = { vm.updateAll(kind) }, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.Update, stringResource(Res.string.content_update_all)) }
-            }
-            OutlinedButton(onClick = { vm.addFiles(kind, Platform.chooseFiles(addLabel, extensions, multiple = true)) }, shapes = ButtonDefaults.shapes()) {
-                IconLabel(Symbols.FileOpen, addLabel)
-            }
-            Button(onClick = { navigator.navigate(Screen.Mods(inst.id)) }, shapes = ButtonDefaults.shapes()) {
-                IconLabel(Symbols.TravelExplore, stringResource(Res.string.content_browse))
-            }
         }
         if (files.isEmpty()) {
             EmptyState(
                 Illustration.Mods,
                 stringResource(Res.string.content_empty_title),
-                stringResource(if (kind == ContentKind.Mods) Res.string.content_empty_mods else Res.string.content_empty_packs),
+                stringResource(when (kind) {
+                    ContentKind.Mods -> Res.string.content_empty_mods
+                    ContentKind.ShaderPacks -> Res.string.content_empty_shaders
+                    else -> Res.string.content_empty_packs
+                }),
+                artSize = 140.dp,
             )
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
@@ -139,10 +290,120 @@ fun ContentTab(inst: Instance, vm: InstanceViewModel, kind: ContentKind?) {
     }
 }
 
+private fun ContentKind.projectType(): ProjectType = when (this) {
+    ContentKind.Mods -> ProjectType.Mod
+    ContentKind.ResourcePacks -> ProjectType.ResourcePack
+    ContentKind.ShaderPacks -> ProjectType.Shader
+    ContentKind.DataPacks -> ProjectType.DataPack
+}
+
+/**
+ * Правая панель: каталог Modrinth или CurseForge только этого типа и только подходящее экземпляру.
+ * Поиск, источник и прокрутка запоминаются на экземпляр и тип: после страницы мода всё на месте.
+ */
+@Composable
+private fun CatalogPane(inst: Instance, instanceVm: InstanceViewModel, kind: ContentKind) {
+    val graph = LocalAppGraph.current
+    val ui = LocalAppUi.current
+    val navigator = LocalNavigator.current
+    val key = inst.id to kind
+    val vm = rememberViewModel(inst.id, kind) { ModsViewModel(graph, inst.id, ui.contentCatalogs[key], type = kind.projectType()) }
+    DisposableEffect(vm) { onDispose { ui.contentCatalogs[key] = vm.memory() } }
+    val state by vm.state.collectAsState()
+    val progress by vm.progress.collectAsState()
+    val checking by vm.checking.collectAsState()
+    // Слева что-то удалили или добавили: отметки «установлено» справа обновляются.
+    val files by instanceVm.content(kind).collectAsState()
+    LaunchedEffect(files.map { it.fileName }) { vm.refreshInstalled() }
+
+    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        PaneHeader(
+            Symbols.TravelExplore,
+            stringResource(Res.string.content_catalog),
+            badge = null,
+            subtitle = stringResource(Res.string.content_catalog_for, listOfNotNull(inst.gameVersion, inst.loader.title.takeIf { kind == ContentKind.Mods }).joinToString(" · ")),
+        ) {
+            ConnectedChoice(
+                options = CatalogSource.entries.map { ChoiceOption(it, it.name) },
+                selected = state.source,
+                onSelect = vm::setSource,
+                showIcons = false,
+            )
+        }
+        OutlinedTextField(
+            value = state.query.text,
+            onValueChange = vm::setText,
+            placeholder = { Text(stringResource(Res.string.mods_search, state.source.name)) },
+            leadingIcon = { Icon(Symbols.Search, null) },
+            trailingIcon = if (state.query.text.isNotEmpty()) ({ TIconButton(Symbols.Close, stringResource(Res.string.action_clear), { vm.setText("") }) }) else null,
+            singleLine = true,
+            shape = RoundedCornerShape(50),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        when {
+            !vm.catalog.available -> EmptyState(Illustration.Offline, stringResource(Res.string.curseforge_title), stringResource(Res.string.curseforge_body), artSize = 120.dp) {
+                OutlinedButton(onClick = { vm.setSource(CatalogSource.Modrinth) }, shapes = ButtonDefaults.shapes()) { Text(stringResource(Res.string.curseforge_use_modrinth)) }
+            }
+            state.loading && state.results.isEmpty() -> Box(Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) { LoadingIndicator(Modifier.size(56.dp)) }
+            state.error != null -> EmptyState(Illustration.Offline, stringResource(Res.string.mods_error_title), stringResource(Res.string.mods_error_body), artSize = 120.dp) {
+                Button(onClick = { vm.search() }, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.Refresh, stringResource(Res.string.action_retry)) }
+            }
+            state.results.isEmpty() -> EmptyState(Illustration.Search, stringResource(Res.string.mods_no_results_title), stringResource(Res.string.mods_no_results_body), artSize = 120.dp)
+            else -> {
+                val listState = rememberLazyListState(vm.scrollIndex, vm.scrollOffset)
+                LaunchedEffect(listState) {
+                    snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }.collect { (i, o) -> vm.scrollIndex = i; vm.scrollOffset = o }
+                }
+                val nearEnd by remember { derivedStateOf { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index?.let { it >= state.results.size - 3 } == true } }
+                LaunchedEffect(nearEnd, state.results.size) { if (nearEnd) vm.loadMore() }
+                Box(Modifier.weight(1f)) {
+                    LazyColumn(state = listState, modifier = Modifier.padding(end = 24.dp), verticalArrangement = Arrangement.spacedBy(6.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+                        itemsIndexed(state.results, key = { _, p -> p.id }) { index, project ->
+                            CatalogRow(
+                                project,
+                                installed = project.id in state.installed,
+                                progress = progress[project.id],
+                                checking = project.id in checking,
+                                onInstall = { vm.install(project) },
+                                onOpen = { navigator.navigate(Screen.ModProject(project.id, state.source.name, inst.id)) },
+                                modifier = Modifier.staggered(index % 20, project.id),
+                            )
+                        }
+                        if (state.loadingMore) item { Box(Modifier.fillMaxWidth().padding(12.dp), contentAlignment = Alignment.Center) { LoadingIndicator() } }
+                    }
+                    Box(Modifier.matchParentSize(), contentAlignment = Alignment.CenterEnd) {
+                        ExpressiveScrollbar(listState, label = { state.results.getOrNull(it)?.title })
+                    }
+                }
+            }
+        }
+    }
+    InstallSheetHost(vm)
+}
+
+/** Строка каталога в панели: компактнее карточки большого каталога, кнопка установки справа. */
+@Composable
+private fun CatalogRow(project: ModProject, installed: Boolean, progress: InstallProgress?, checking: Boolean, onInstall: () -> Unit, onOpen: () -> Unit, modifier: Modifier) {
+    Surface(onClick = onOpen, shape = RoundedCornerShape(36.dp), color = MaterialTheme.colorScheme.surfaceContainerLow, modifier = modifier.fillMaxWidth()) {
+        Row(Modifier.padding(horizontal = 14.dp, vertical = 10.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            ProjectIcon(project.title, project.iconUrl, size = 48.dp)
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(project.title, style = MaterialTheme.typography.titleMediumEmphasized, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(project.summary, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Icon(Symbols.Download, null, Modifier.size(14.dp), tint = MaterialTheme.colorScheme.primary)
+                    Text(compactNumber(project.downloads), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+            InstallButton(installed, progress, checking, onInstall)
+        }
+    }
+}
+
 @Composable
 private fun ContentRow(file: ContentFile, onToggle: (Boolean) -> Unit, onRemove: () -> Unit, modifier: Modifier) {
     val enabledLabel = stringResource(Res.string.content_enabled)
-    Surface(shape = MaterialTheme.shapes.large, color = MaterialTheme.colorScheme.surfaceContainerLow, modifier = modifier.fillMaxWidth()) {
+    Surface(shape = RoundedCornerShape(36.dp), color = MaterialTheme.colorScheme.surfaceContainerLow, modifier = modifier.fillMaxWidth()) {
         ListItem(
             leadingContent = { ProjectIcon(file.title, null, size = 44.dp) },
             headlineContent = {

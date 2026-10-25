@@ -26,7 +26,7 @@ enum class TopLevel(val label: StringResource, val icon: () -> ImageVector, val 
     Settings(Res.string.nav_settings, { Symbols.Settings }, { Symbols.SettingsFilled }),
 }
 
-enum class InstanceTab { Overview, Mods, ResourcePacks, Worlds, Servers, Screenshots, Settings, Log }
+enum class InstanceTab { Overview, Mods, ResourcePacks, ShaderPacks, Worlds, Servers, Screenshots, Settings, Log }
 
 @Immutable
 sealed interface Screen {

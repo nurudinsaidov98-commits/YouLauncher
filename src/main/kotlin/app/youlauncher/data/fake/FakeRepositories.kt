@@ -402,7 +402,9 @@ class FakeModInstaller(private val scope: CoroutineScope, private val content: F
         return Result.success(listOf(project.id))
     }
 
-    override suspend fun installedProjectIds(instanceId: String): Set<String> = installed.value[instanceId].orEmpty()
+    // Установленное: поставленное в демо плюс файлы экземпляра, у которых известен проект.
+    override suspend fun installedProjectIds(instanceId: String): Set<String> =
+        installed.value[instanceId].orEmpty() + ContentKind.entries.flatMap { k -> content.content(instanceId, k).first().mapNotNull { it.projectId } }
 
     /** Демо: моды поочерёдно получают «обновится», «подходит», «несовместим», файлы без проекта неизвестны. */
     override suspend fun compatibility(instanceId: String, gameVersion: String, loader: LoaderType): List<ModCompat> {

@@ -123,8 +123,10 @@ class AppGraph(
     private val injector = AuthlibInjector(http, dirs.toolsDir, {
         Downloader(http, DownloaderConfig(retries = settings.settings.value.network.retries, allowedHosts = INJECTOR_HOSTS))
     })
+    /** Статистика нагрузки модов по сессиям (JFR во время игры). */
+    val modProfiler = app.youlauncher.data.profile.ModProfiler(dirs.root.resolve("profiles"))
     val launcher: LaunchService = if (demo) FakeLaunchService(scope, instances, log)
-        else GameLauncher(scope, dirs, instances, content, accounts, settings, gameInstaller, java, log, loaderInstaller, loaderVersions, injector)
+        else GameLauncher(scope, dirs, instances, content, accounts, settings, gameInstaller, java, log, loaderInstaller, loaderVersions, injector, profiler = modProfiler)
     private val modrinthCatalog = ModrinthCatalog(http)
     val modrinth: ModCatalog = if (demo) FakeModCatalog("Modrinth") else modrinthCatalog
     val curseForgeKey = CurseForgeKey(secrets)
@@ -170,6 +172,8 @@ class AppGraph(
             priority = Thread.MIN_PRIORITY
             start()
         }
+        // Демо: виджет нагрузки модов с примерными данными.
+        if (demo) scope.launch { runCatching { app.youlauncher.data.fake.FakeProfiles.seed(modProfiler, instances, content) } }
         if (!demo) {
             val sys = settings.settings.value.system
             if (sys.autoCleanCache) scope.launch { runCatching { cacheCleaner.clean(sys.cacheMaxAgeDays) } }

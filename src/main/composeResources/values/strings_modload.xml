@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="modload_title">Mod load</string>
+    <string name="modload_cpu">CPU</string>
+    <string name="modload_memory">Memory</string>
+    <string name="modload_sessions">Sessions counted: %1$d · %2$s played</string>
+    <string name="modload_avg_cpu">CPU average %1$s</string>
+    <string name="modload_peak_heap">Peak memory %1$s</string>
+    <string name="modload_gc">GC pauses %1$s</string>
+    <string name="modload_game">Minecraft and Java</string>
+    <string name="modload_rate">%1$s/s</string>
+    <string name="modload_seconds">%1$s s</string>
+    <string name="modload_empty">Play this instance and the launcher will show which mods load the CPU and memory the most. Requires Java 11 or newer.</string>
+    <string name="modload_disabled">Statistics collection is off for this instance.</string>
+    <string name="modload_enable">Turn on</string>
+    <string name="modload_note">Collected while you play, only on this computer. Mod code injected into the game with Mixin may partly count as Minecraft.</string>
+    <string name="modload_no_alloc">Per-mod memory allocation is shown on Java 16 and newer.</string>
+    <string name="modload_clear">Reset statistics</string>
+    <string name="instance_profile_mods">Mod load statistics</string>
+    <string name="instance_profile_mods_hint">While playing, record which mods load the CPU and memory. Uses the built-in Java profiler, barely affects FPS.</string>
+</resources>

@@ -39,6 +39,8 @@ data class LaunchSpec(
     val loggingArgument: String? = null,
     /** -javaagent:...=ely.by для authlib-injector. */
     val javaAgent: String? = null,
+    /** Запись JFR для статистики нагрузки модов (см. ModProfiler). */
+    val profilerArgs: List<String> = emptyList(),
     val wrapperCommand: String = "",
     val launcherName: String = "YouLauncher",
     val launcherVersion: String = app.youlauncher.core.BuildInfo.version,
@@ -134,6 +136,7 @@ object LaunchCommandBuilder {
         cmd += "-Dlog4j2.formatMsgNoLookups=true"
         spec.loggingArgument?.let { cmd += it }
         spec.javaAgent?.let { cmd += it }
+        cmd += spec.profilerArgs
         cmd += VersionResolver.jvmArguments(version, env, values)
         cmd += version.mainClass ?: error("Нет mainClass")
         val game = VersionResolver.gameArguments(version, env, values).toMutableList()

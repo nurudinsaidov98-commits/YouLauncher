@@ -171,6 +171,8 @@ compose.desktop {
                 "java.instrument", "java.naming", "java.net.http", "jdk.management", "jdk.unsupported",
                 "jdk.naming.dns", "jdk.localedata", "jdk.charsets", "jdk.crypto.ec", "jdk.crypto.mscapi",
                 "jdk.zipfs", "jdk.accessibility",
+                // Чтение записи JFR после игры: статистика нагрузки модов.
+                "jdk.jfr",
             )
             windows {
                 iconFile = layout.buildDirectory.file("packaging/youlauncher.ico").get().asFile

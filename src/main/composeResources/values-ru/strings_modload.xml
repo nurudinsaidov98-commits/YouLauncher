@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="modload_title">Нагрузка модов</string>
+    <string name="modload_cpu">Процессор</string>
+    <string name="modload_memory">Память</string>
+    <string name="modload_sessions">Сессий учтено: %1$d · %2$s в игре</string>
+    <string name="modload_avg_cpu">ЦП в среднем %1$s</string>
+    <string name="modload_peak_heap">Пик памяти %1$s</string>
+    <string name="modload_gc">Паузы сборки мусора %1$s</string>
+    <string name="modload_game">Minecraft и Java</string>
+    <string name="modload_rate">%1$s/с</string>
+    <string name="modload_seconds">%1$s с</string>
+    <string name="modload_empty">Сыграйте в этом экземпляре: лаунчер посмотрит, какие моды больше всего нагружают процессор и память. Нужна Java 11 или новее.</string>
+    <string name="modload_disabled">Сбор статистики выключен для этого экземпляра.</string>
+    <string name="modload_enable">Включить</string>
+    <string name="modload_note">Собирается во время игры только на этом компьютере. Код модов, встроенный в игру через Mixin, частично засчитывается Minecraft.</string>
+    <string name="modload_no_alloc">Выделение памяти по модам видно на Java 16 и новее.</string>
+    <string name="modload_clear">Сбросить статистику</string>
+    <string name="instance_profile_mods">Статистика нагрузки модов</string>
+    <string name="instance_profile_mods_hint">Во время игры записывать, какие моды нагружают процессор и память. Встроенный профилировщик Java, на FPS почти не влияет.</string>
+</resources>

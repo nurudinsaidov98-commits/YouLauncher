@@ -3,6 +3,7 @@
     <string name="tab_overview">Overview</string>
     <string name="tab_mods">Mods</string>
     <string name="tab_resourcepacks">Resource packs</string>
+    <string name="tab_shaderpacks">Shaders</string>
     <string name="tab_shaders">Shaders</string>
     <string name="tab_worlds">Worlds</string>
     <string name="tab_screenshots">Screenshots</string>
@@ -31,6 +32,11 @@
     <string name="content_empty_title">Nothing here yet</string>
     <string name="content_empty_mods">Install mods from the catalog or add .jar files.</string>
     <string name="content_empty_packs">Add resource packs from the catalog or as .zip files.</string>
+    <string name="content_empty_shaders">Add shaders from the catalog or .zip files. Shaders need the Iris or OptiFine mod.</string>
+    <string name="content_installed">Installed</string>
+    <string name="content_catalog">Catalog</string>
+    <string name="content_catalog_for">Compatible with %1$s</string>
+    <string name="content_resize">Drag to resize the panels</string>
     <string name="content_vanilla_mods">Mods need a loader. Change the loader in the instance settings.</string>
     <string name="msg_removed">Removed “%1$s”</string>
     <string name="msg_files_added">Files added: %1$d</string>

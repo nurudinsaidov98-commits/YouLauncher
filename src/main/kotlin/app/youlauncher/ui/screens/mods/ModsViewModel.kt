@@ -57,6 +57,8 @@ class ModsViewModel(
     targetInstanceId: String?,
     restore: ModsMemory? = null,
     dispatcher: CoroutineDispatcher = Dispatchers.Main.immediate,
+    /** Тип контента при первом открытии: каталог внутри вкладки экземпляра показывает только свой тип. */
+    type: ProjectType = ProjectType.Mod,
 ) : ViewModel(dispatcher) {
     private val _state = MutableStateFlow(ModsState())
     val state: StateFlow<ModsState> = _state.asStateFlow()
@@ -82,6 +84,7 @@ class ModsViewModel(
             scrollOffset = 0
             selectTarget(wanted)
         } else {
+            if (type != ProjectType.Mod) _state.update { it.copy(query = it.query.copy(type = type)) }
             val target = targetInstanceId?.let { graph.instances.get(it) }
                 ?: graph.settings.settings.value.lastInstanceId?.let { graph.instances.get(it) }
                 ?: graph.instances.instances.value.firstOrNull { it.isModded }
@@ -99,6 +102,12 @@ class ModsViewModel(
         _state.update { it.copy(target = instance) }
         scope.launch { _state.update { it.copy(installed = instance?.let { i -> graph.modInstaller.installedProjectIds(i.id) }.orEmpty()) } }
         search()
+    }
+
+    /** Отметки «установлено» заново: содержимое экземпляра поменялось (удалили или добавили файлы). */
+    fun refreshInstalled() {
+        val t = _state.value.target ?: return
+        scope.launch { _state.update { it.copy(installed = graph.modInstaller.installedProjectIds(t.id)) } }
     }
 
     fun setSource(source: CatalogSource) {

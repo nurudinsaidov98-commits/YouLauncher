@@ -49,6 +49,9 @@ import app.youlauncher.resources.instance_java_auto_for
 import app.youlauncher.resources.version_section
 import app.youlauncher.resources.instance_look
 import app.youlauncher.resources.backup_section
+import app.youlauncher.resources.instance_profile_mods
+import app.youlauncher.resources.instance_profile_mods_hint
+import app.youlauncher.resources.modload_title
 import app.youlauncher.data.java.JavaChecks
 import app.youlauncher.ui.screens.settings.JavaPicker
 import app.youlauncher.resources.wizard_icon
@@ -131,6 +134,17 @@ SettingsSection(stringResource(Res.string.backup_section), icon = Symbols.Backup
         }
 
         item { AtmosphereSection(inst, vm) }
+
+        if (inst.isModded) item {
+            SettingsSection(stringResource(Res.string.modload_title), icon = Symbols.Monitoring) {
+                SwitchRow(
+                    stringResource(Res.string.instance_profile_mods),
+                    inst.profileMods,
+                    { on -> vm.update { it.copy(profileMods = on) } },
+                    subtitle = stringResource(Res.string.instance_profile_mods_hint),
+                )
+            }
+        }
 
         item {
 SettingsSection(stringResource(Res.string.settings_memory), icon = Symbols.Memory) {

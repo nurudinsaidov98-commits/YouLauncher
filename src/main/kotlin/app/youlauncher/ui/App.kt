@@ -102,6 +102,12 @@ class AppUiState {
      */
     var modsMemory: app.youlauncher.ui.screens.mods.ModsMemory? = null
 
+    /** Каталоги во вкладках экземпляра (моды, ресурспаки, шейдеры): свой на каждый экземпляр и тип, тоже переживают страницу мода. */
+    val contentCatalogs = HashMap<Pair<String, app.youlauncher.core.repo.ContentKind>, app.youlauncher.ui.screens.mods.ModsMemory>()
+
+    /** Доля ширины левой панели «Установлено» во вкладках контента; меняется перетаскиванием разделителя. */
+    var contentSplit by mutableStateOf(0.5f)
+
     /** Версия, выбранная в мастере создания: фон показывает её атмосферу. */
     var previewVersion by mutableStateOf<String?>(null)
 

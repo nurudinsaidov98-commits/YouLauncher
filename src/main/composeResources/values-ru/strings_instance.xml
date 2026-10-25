@@ -3,6 +3,7 @@
     <string name="tab_overview">Обзор</string>
     <string name="tab_mods">Моды</string>
     <string name="tab_resourcepacks">Ресурспаки</string>
+    <string name="tab_shaderpacks">Шейдеры</string>
     <string name="tab_shaders">Шейдеры</string>
     <string name="tab_worlds">Миры</string>
     <string name="tab_screenshots">Скриншоты</string>
@@ -31,6 +32,11 @@
     <string name="content_empty_title">Здесь пока пусто</string>
     <string name="content_empty_mods">Установите моды из каталога или добавьте файлы .jar.</string>
     <string name="content_empty_packs">Добавьте ресурспаки из каталога или файлы .zip.</string>
+    <string name="content_empty_shaders">Добавьте шейдеры из каталога или файлы .zip. Для шейдеров нужен мод Iris или OptiFine.</string>
+    <string name="content_installed">Установлено</string>
+    <string name="content_catalog">Каталог</string>
+    <string name="content_catalog_for">Подходит для %1$s</string>
+    <string name="content_resize">Перетащите, чтобы изменить ширину панелей</string>
     <string name="content_vanilla_mods">Для модов нужен загрузчик. Смените его в настройках экземпляра.</string>
     <string name="msg_removed">Удалено: «%1$s»</string>
     <string name="msg_files_added">Добавлено файлов: %1$d</string>

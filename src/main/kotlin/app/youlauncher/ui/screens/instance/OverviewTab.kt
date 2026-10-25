@@ -68,7 +68,8 @@ fun OverviewTab(inst: Instance, vm: InstanceViewModel) {
             val values = (29 downTo 0).map { inst.playLog[today.minusDays(it.toLong()).toString()] ?: 0 }
             BarChart(values, Modifier.fillMaxWidth().height(120.dp))
         }
-        Card(stringResource(Res.string.instance_info), Modifier.staggered(5)) {
+        if (inst.isModded) ModLoadCard(inst, vm, Modifier.staggered(5))
+        Card(stringResource(Res.string.instance_info), Modifier.staggered(6)) {
             val maxMb = inst.java.maxMemoryMb ?: settings.game.maxMemoryMb
             val minMb = inst.java.minMemoryMb ?: settings.game.minMemoryMb
             InfoRow(Symbols.Coffee, stringResource(Res.string.instance_java), inst.java.javaPath ?: stringResource(Res.string.instance_java_auto))

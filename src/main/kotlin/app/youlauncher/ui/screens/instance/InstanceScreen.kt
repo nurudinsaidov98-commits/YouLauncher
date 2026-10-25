@@ -22,9 +22,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -65,6 +63,7 @@ import app.youlauncher.resources.tab_log
 import app.youlauncher.resources.tab_mods
 import app.youlauncher.resources.tab_overview
 import app.youlauncher.resources.tab_resourcepacks
+import app.youlauncher.resources.tab_shaderpacks
 import app.youlauncher.resources.tab_screenshots
 import app.youlauncher.resources.tab_settings
 import app.youlauncher.resources.tab_worlds
@@ -75,6 +74,7 @@ import app.youlauncher.ui.background.rememberAmbientTime
 import app.youlauncher.ui.components.EmptyState
 import app.youlauncher.ui.components.IconLabel
 import app.youlauncher.ui.components.Illustration
+import app.youlauncher.ui.components.PillTabs
 import app.youlauncher.ui.components.InstanceBadge
 import app.youlauncher.ui.components.InstanceCover
 import app.youlauncher.ui.components.LaunchStatus
@@ -96,6 +96,7 @@ fun InstanceTab.label(): StringResource = when (this) {
     InstanceTab.Overview -> Res.string.tab_overview
     InstanceTab.Mods -> Res.string.tab_mods
     InstanceTab.ResourcePacks -> Res.string.tab_resourcepacks
+    InstanceTab.ShaderPacks -> Res.string.tab_shaderpacks
     InstanceTab.Worlds -> Res.string.tab_worlds
     InstanceTab.Servers -> Res.string.tab_servers
     InstanceTab.Screenshots -> Res.string.tab_screenshots
@@ -107,6 +108,7 @@ fun InstanceTab.icon() = when (this) {
     InstanceTab.Overview -> Symbols.Dashboard
     InstanceTab.Mods -> Symbols.Extension
     InstanceTab.ResourcePacks -> Symbols.Texture
+    InstanceTab.ShaderPacks -> Symbols.Gradient
     InstanceTab.Worlds -> Symbols.Public
     InstanceTab.Servers -> Symbols.Dns
     InstanceTab.Screenshots -> Symbols.PhotoLibrary
@@ -130,21 +132,14 @@ fun InstanceScreen(screen: Screen.Instance) {
 
     Column(Modifier.fillMaxSize()) {
         InstanceHeader(inst, launch, vm)
-        PrimaryScrollableTabRow(
-            selectedTabIndex = screen.tab.ordinal,
-            edgePadding = 24.dp,
-            containerColor = Color.Transparent,
-            divider = {},
-        ) {
-            InstanceTab.entries.forEach { tab ->
-                Tab(
-                    selected = tab == screen.tab,
-                    onClick = { navigator.replace(screen.copy(tab = tab)) },
-                    text = { Text(stringResource(tab.label())) },
-                    icon = { Icon(tab.icon(), contentDescription = null) },
-                )
-            }
-        }
+        PillTabs(
+            items = InstanceTab.entries,
+            selected = screen.tab,
+            onSelect = { navigator.replace(screen.copy(tab = it)) },
+            label = { stringResource(it.label()) },
+            icon = { it.icon() },
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+        )
         val effectsIn = MaterialTheme.motionScheme.defaultEffectsSpec<Float>()
         val effectsOut = MaterialTheme.motionScheme.fastEffectsSpec<Float>()
         AnimatedContent(
@@ -157,6 +152,7 @@ fun InstanceScreen(screen: Screen.Instance) {
                 InstanceTab.Overview -> OverviewTab(inst, vm)
                 InstanceTab.Mods -> ContentTab(inst, vm, if (inst.loader == LoaderType.Vanilla) null else ContentKind.Mods)
                 InstanceTab.ResourcePacks -> ContentTab(inst, vm, ContentKind.ResourcePacks)
+                InstanceTab.ShaderPacks -> ContentTab(inst, vm, ContentKind.ShaderPacks)
                 InstanceTab.Worlds -> WorldsTab(vm)
                 InstanceTab.Servers -> ServersTab(inst.id)
                 InstanceTab.Screenshots -> ScreenshotsTab(inst, vm)

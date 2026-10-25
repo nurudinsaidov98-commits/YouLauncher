@@ -16,6 +16,7 @@ import app.youlauncher.core.mojang.RuleEnv
 import app.youlauncher.core.mojang.Rules
 import app.youlauncher.core.offlineUuid
 import app.youlauncher.core.repo.AccountRepository
+import app.youlauncher.core.repo.ContentKind
 import app.youlauncher.core.repo.InstanceContentRepository
 import app.youlauncher.core.repo.InstanceRepository
 import app.youlauncher.core.repo.LaunchService
@@ -27,6 +28,8 @@ import app.youlauncher.data.java.JavaInstall
 import app.youlauncher.data.java.JavaManager
 import app.youlauncher.data.java.JavaVersions
 import app.youlauncher.data.log.InMemoryLogBus
+import app.youlauncher.data.profile.ModJar
+import app.youlauncher.data.profile.ModProfiler
 import app.youlauncher.data.mojang.GameInstaller
 import app.youlauncher.data.loaders.LoaderInstaller
 import app.youlauncher.data.accounts.AuthlibInjector
@@ -38,6 +41,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -73,6 +77,7 @@ class GameLauncher(
     private val loaderVersions: LoaderVersionRepository,
     private val injector: AuthlibInjector,
     private val launcherVersion: String = app.youlauncher.core.BuildInfo.version,
+    private val profiler: ModProfiler? = null,
 ) : LaunchService {
     private val state = MutableStateFlow<Map<String, LaunchState>>(emptyMap())
     override val states: StateFlow<Map<String, LaunchState>> = state.asStateFlow()
@@ -165,6 +170,14 @@ class GameLauncher(
             set(id, LaunchState.Preparing(LaunchStage.Preparing, null, "authlib-injector"))
             AuthlibInjector.javaAgent(injector.ensure()).also { info(id, "authlib-injector: ${it.substringAfter(':').substringBeforeLast('=')}") }
         } else null
+        // Статистика модов: запись JFR во время игры (Java 11+), разбор после выхода.
+        val customJvm = listOfNotNull(s.game.jvmArgs.takeIf { it.isNotBlank() }, instance.java.jvmArgs).joinToString(" ")
+        // Без файла настроек JVM не запустилась бы: если подготовить запись не вышло, игра идёт без неё.
+        val profilerArgs = profiler?.takeIf { instance.profileMods && instance.isModded }?.let { p ->
+            p.jvmArgs(javaInstall.major, customJvm)?.takeIf {
+                runCatching { p.prepare(gameDir) }.onFailure { info(id, "Статистика модов не включена: ${it.message}", LogLevel.Warn) }.isSuccess
+            }
+        }
         val spec = LaunchSpec(
             version = installed.resolved.json,
             versionName = instance.gameVersion,
@@ -181,7 +194,7 @@ class GameLauncher(
             minMemoryMb = instance.java.minMemoryMb ?: s.game.minMemoryMb,
             maxMemoryMb = instance.java.maxMemoryMb ?: s.game.maxMemoryMb,
             preset = s.game.jvmPreset,
-            customJvmArgs = listOfNotNull(s.game.jvmArgs.takeIf { it.isNotBlank() }, instance.java.jvmArgs).joinToString(" "),
+            customJvmArgs = customJvm,
             width = if (fullscreen) null else width,
             height = if (fullscreen) null else height,
             fullscreen = fullscreen,
@@ -191,6 +204,7 @@ class GameLauncher(
             launcherVersion = launcherVersion,
             osVersion = osVersion,
             javaAgent = javaAgent,
+            profilerArgs = profilerArgs.orEmpty(),
         )
         val command = LaunchCommandBuilder.build(spec)
         info(id, "Команда: " + LaunchCommandBuilder.masked(command, account.accessToken), LogLevel.Debug)
@@ -226,6 +240,7 @@ class GameLauncher(
         }
         runHook(instance.java.postExitCommand ?: s.game.postExitCommand, instance, gameDir, "после выхода")
         runCatching { content.refresh(id) }
+        if (profilerArgs != null) collectProfile(instance, gameDir, javaInstall.major)
 
         val stoppedByUser = state.value[id] is LaunchState.Idle
         if (exit == 0 || stoppedByUser) {
@@ -236,6 +251,20 @@ class GameLauncher(
             val summary = summarize(report)
             info(id, "Игра завершилась с ошибкой, код $exit. Отчёт: $report", LogLevel.Error)
             set(id, LaunchState.Crashed(exit, report.toString(), summary))
+        }
+    }
+
+    /** Разбор записи в фоне: игра уже закрыта, лаунчер не ждёт, пока считается статистика. */
+    private fun collectProfile(instance: Instance, gameDir: Path, javaMajor: Int) {
+        val p = profiler ?: return
+        scope.launch(Dispatchers.IO) {
+            runCatching {
+                val mods = content.content(instance.id, ContentKind.Mods).first().filter { it.enabled }
+                    .map { ModJar(gameDir.resolve(ContentKind.Mods.folder).resolve(it.fileName), it.title) }
+                p.finish(instance.id, gameDir, javaMajor, mods)
+            }.onSuccess { s ->
+                if (s != null) info(instance.id, "Нагрузка модов за сессию собрана: ${s.cpuSamples} замеров, ${s.mods.size} модов")
+            }.onFailure { info(instance.id, "Не удалось разобрать статистику модов: ${it.message}", LogLevel.Warn) }
         }
     }
 
