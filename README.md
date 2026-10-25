@@ -97,6 +97,22 @@ The key feature of each Minecraft update is drawn as a composition of M3 shapes 
   <img src="docs/screens/en/palette-dark.png" width="49%" alt="Command palette">
 </div>
 
+### 🧩 Instances: installed and catalog side by side
+
+<p align="center">
+  <img src="docs/screens/en/instance-mods-dark.png" width="100%" alt="Installed mods and the catalog side by side">
+</p>
+
+- **Installed | Catalog** — mods, resource packs and shaders: what you have on the left, the Modrinth or CurseForge catalog of the same type, filtered for the instance, on the right. Drag the divider to resize.
+- **Drag and drop** — drag a mod onto the catalog to remove it (with *Undo*), drag a catalog project onto the installed list to install it.
+- **Sorters right at the divider** — newest, largest, enabled or with updates first; the catalog by relevance, downloads, follows or date.
+- **Pill tabs** in M3 Expressive with a springy indicator, and a separate **Shaders** tab.
+- **Mod load** — while you play, the built-in Java profiler shows which mods load the CPU and memory the most, plus average CPU, peak memory and GC pauses. Everything stays on your computer.
+
+<p align="center">
+  <img src="docs/screens/en/modload-dark.png" width="100%" alt="Mod load widget">
+</p>
+
 ### 💿 The installer is Material 3 too
 
 <picture>
@@ -238,6 +254,22 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
   <img src="docs/screens/home-live-waves-light.png" width="49%" alt="Светлая тема">
   <img src="docs/screens/palette-dark.png" width="49%" alt="Палитра команд">
 </div>
+
+### 🧩 Экземпляры: установленное и каталог рядом
+
+<p align="center">
+  <img src="docs/screens/instance-mods-dark.png" width="100%" alt="Установленные моды и каталог рядом">
+</p>
+
+- **Установлено | Каталог** — моды, ресурспаки и шейдеры: слева то, что стоит, справа каталог Modrinth или CurseForge того же типа под версию экземпляра. Разделитель можно тянуть.
+- **Перетаскивание** — мод в каталог — удалить (с кнопкой «Отменить»), проект из каталога в установленное — поставить.
+- **Сортировщики прямо у разделителя** — сначала новые, тяжёлые, включённые или с обновлениями; каталог по релевантности, загрузкам, подписчикам, дате.
+- **Вкладки-таблетки** M3 Expressive с пружинным индикатором и отдельная вкладка **«Шейдеры»**.
+- **Нагрузка модов** — во время игры встроенный профилировщик Java показывает, какие моды больше всего нагружают процессор и память, а ещё среднюю загрузку, пик памяти и паузы сборщика. Всё остаётся на вашем компьютере.
+
+<p align="center">
+  <img src="docs/screens/modload-dark.png" width="100%" alt="Виджет нагрузки модов">
+</p>
 
 ### 💿 Установщик тоже в Material 3
 

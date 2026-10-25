@@ -77,7 +77,7 @@ fun OverviewTab(inst: Instance, vm: InstanceViewModel) {
                 Symbols.Memory, stringResource(Res.string.instance_memory),
                 "${stringResource(Res.string.memory_gb, Formats.decimal(minMb / 1024.0))} – ${stringResource(Res.string.memory_gb, Formats.decimal(maxMb / 1024.0))}",
             )
-            InfoRow(Symbols.Folder, stringResource(Res.string.instance_folder), vm.gameDir.toString(), onClick = { Platform.openFolder(vm.gameDir) })
+            InfoRow(Symbols.Folder, stringResource(Res.string.instance_folder), graph.displayPath(vm.gameDir), onClick = { Platform.openFolder(vm.gameDir) })
             if (inst.tags.isNotEmpty()) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Icon(Symbols.Sell, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))

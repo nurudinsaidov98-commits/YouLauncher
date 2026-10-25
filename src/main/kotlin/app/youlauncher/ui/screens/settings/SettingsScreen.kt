@@ -441,7 +441,7 @@ private fun FolderRow(label: String, path: java.nio.file.Path) {
         Icon(Symbols.Folder, null, tint = MaterialTheme.colorScheme.primary)
         Column(Modifier.weight(1f)) {
             Text(label, style = MaterialTheme.typography.bodyLarge)
-            Text(path.toString(), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(LocalAppGraph.current.displayPath(path), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         FilledTonalButton(onClick = { Platform.openFolder(path) }, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.FolderOpen, stringResource(Res.string.settings_open_data)) }
     }

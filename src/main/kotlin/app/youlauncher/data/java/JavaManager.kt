@@ -36,6 +36,15 @@ data class JavaInstall(
     val component: String? = null,
 )
 
+private val demoInstalls: List<JavaInstall> = listOf(
+    Triple(25, "25.0.1", listOf("Eclipse Adoptium", "jdk-25.0.1.8-hotspot")) to JavaSource.Temurin,
+    Triple(21, "21.0.9", listOf("Eclipse Adoptium", "jdk-21.0.9.10-hotspot")) to JavaSource.Temurin,
+    Triple(17, "17.0.16", listOf("Microsoft", "jdk-17.0.16.8-hotspot")) to JavaSource.Microsoft,
+).map { (v, source) ->
+    val home = Path.of("C:/Program Files", *v.third.toTypedArray())
+    JavaInstall(home.resolve("bin").resolve("javaw.exe"), home, v.first, v.second, v.third.first(), source)
+}
+
 /** Разбор версии из файла release: JAVA_VERSION="1.8.0_412" или "21.0.7". */
 object JavaVersions {
     fun major(version: String): Int {
@@ -53,7 +62,13 @@ object JavaVersions {
  * Java для игры: рантаймы из реестра Mojang (piston-meta, компонент из version JSON, проверка SHA-1
  * каждого файла) и найденные в системе установки. Ручной выбор пути в настройках важнее всего.
  */
-class JavaManager(private val api: MojangApi, private val dirs: AppDirs, private val downloaderFactory: () -> Downloader) {
+class JavaManager(
+    private val api: MojangApi,
+    private val dirs: AppDirs,
+    private val downloaderFactory: () -> Downloader,
+    /** Демо и скриншоты: выдуманные установки Java вместо найденных на этом компьютере (в путях было бы имя пользователя). */
+    private val demo: Boolean = false,
+) {
     private val exeName = if (RuleEnv.currentOsName() == "windows") "javaw.exe" else "java"
 
     fun platformKey(): String {
@@ -103,6 +118,7 @@ class JavaManager(private val api: MojangApi, private val dirs: AppDirs, private
 
     /** Поиск Java в системе: JAVA_HOME, PATH, типичные папки производителей и наши рантаймы. */
     suspend fun detect(extra: List<String> = emptyList()): List<JavaInstall> = withContext(Dispatchers.IO) {
+        if (demo) return@withContext demoInstalls
         val homes = mutableSetOf<Path>()
         System.getenv("JAVA_HOME")?.let { homes.add(Path.of(it)) }
         System.getenv("PATH")?.split(java.io.File.pathSeparator)?.forEach { p ->

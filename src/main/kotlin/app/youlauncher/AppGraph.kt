@@ -93,12 +93,16 @@ class AppGraph(
 
     // Демо-режим (скриншоты, тесты интерфейса): выдуманные экземпляры и имитация запуска.
     val demo: Boolean = System.getProperty("youlauncher.demo") == "true"
+
+    /** Путь для показа на экране: в демо и на скриншотах вместо настоящей папки (в ней имя пользователя) — условная. */
+    fun displayPath(path: java.nio.file.Path): String =
+        if (demo) path.toString().replace(dirs.root.toString(), DEMO_ROOT) else path.toString()
     val mojang = MojangApi(http, dirs)
     private val downloaderFactory = {
         val n = settings.settings.value.network
         Downloader(http, DownloaderConfig(parallelism = n.maxConcurrentDownloads, retries = n.retries, speedLimit = n.speedLimitKbps * 1024L, allowedHosts = GAME_HOSTS))
     }
-    val java = JavaManager(mojang, dirs, downloaderFactory)
+    val java = JavaManager(mojang, dirs, downloaderFactory, demo = demo)
     // Temurin качается с GitHub-релизов Adoptium (ссылки отдаёт api.adoptium.net), хеш sha256 из API.
     val adoptium = AdoptiumInstaller(http, dirs, java, {
         val n = settings.settings.value.network
@@ -217,6 +221,7 @@ class AppGraph(
     }
 
     companion object {
+        const val DEMO_ROOT = "C:\\Users\\Player\\AppData\\Roaming\\YouLauncher"
         fun create(dirs: AppDirs = AppDirs.default().ensure()): AppGraph =
             AppGraph(dirs, CoroutineScope(SupervisorJob() + Dispatchers.Default))
     }
