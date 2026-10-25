@@ -40,6 +40,17 @@
 
 **YouLauncher** is a Minecraft: Java Edition launcher for Windows with a **complete Material 3 Expressive integration**. Not a theme on top of an old interface: every button, card, menu, indicator and transition is a native M3 Expressive component that springs, morphs and reacts to you. Colors are generated dynamically from a single seed, from your wallpaper or from the version you are about to play, and you can recolor every single element.
 
+### 🆕 New in 1.2.2
+
+<p align="center">
+  <img src="docs/screens/en/accent-picker-dark.png" width="100%" alt="Custom accent color picker with shimmer">
+</p>
+
+- 🎨 **Your own accent color** — the palette button at the end of the accent row opens a picker; turn on **Shimmer** and the whole theme slowly flows between two colors.
+- 📦 **Modpacks in one click** — *Install* in the Modpacks tab creates a ready instance with all mods.
+- 💾 **Games stay on the drive you choose** — the installer keeps instances and Minecraft files next to the program.
+- 🔔 **Update right from the notice**, 🐞 **Report a bug** with versions filled in, 🎚️ scrollbars everywhere.
+
 ### ✨ Material 3 Expressive, all the way
 
 <table>
@@ -197,6 +208,17 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 ### Лаунчер, который ощущается как современное Android-приложение
 
 **YouLauncher** — лаунчер Minecraft: Java Edition для Windows с **полной интеграцией Material 3 Expressive**. Это не тема поверх старого интерфейса: каждая кнопка, карточка, меню, индикатор и переход — родной компонент M3 Expressive, который пружинит, меняет форму и откликается на каждое действие. Цвета строятся динамически из одного цвета, из ваших обоев или из версии игры, а перекрасить можно любой элемент.
+
+### 🆕 Что нового в 1.2.2
+
+<p align="center">
+  <img src="docs/screens/accent-picker-dark.png" width="100%" alt="Свой цвет акцента с переливанием">
+</p>
+
+- 🎨 **Свой цвет акцента** — кнопка-мольберт в конце ряда цветов открывает палитру; включите **«Переливание»**, и вся тема будет плавно перетекать между двумя цветами.
+- 📦 **Сборки одной кнопкой** — «Установить» во вкладке «Сборки» создаёт готовый экземпляр со всеми модами.
+- 💾 **Игры остаются на выбранном диске** — установщик хранит экземпляры и файлы Minecraft рядом с программой.
+- 🔔 **Обновление прямо из уведомления**, 🐞 **«Сообщить об ошибке»** с заполненными версиями, 🎚️ ползунки прокрутки везде.
 
 ### ✨ Material 3 Expressive от и до
 
