@@ -53,4 +53,10 @@
     <string name="uninstall_removing">Удаляем…</string>
     <string name="uninstall_done_title">YouLauncher удалён</string>
     <string name="uninstall_done_body">Спасибо, что пользовались! Папка программы исчезнет через пару секунд после закрытия этого окна.</string>
+    <string name="setup_data_here">Хранить игры и данные в этой папке</string>
+    <string name="setup_data_here_hint">Экземпляры, миры и файлы Minecraft будут в %1$s</string>
+    <string name="setup_data_appdata_hint">Экземпляры, миры и файлы Minecraft будут в %1$s на системном диске</string>
+    <string name="setup_data_move_hint">Прежние экземпляры перенесутся сюда из %1$s</string>
+    <string name="setup_moving_title">Переносим ваши игры</string>
+    <string name="setup_moving_body">Экземпляры, миры и настройки переезжают на выбранный диск.</string>
 </resources>

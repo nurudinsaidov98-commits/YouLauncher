@@ -73,4 +73,7 @@
     <string name="project_beta">beta</string>
     <string name="project_alpha">alpha</string>
     <string name="curseforge_enter_key">Enter key</string>
+    <string name="msg_modpack_started">Installing the modpack “%1$s”…</string>
+    <string name="msg_modpack_done">Modpack installed: instance “%1$s” is in the library</string>
+    <string name="msg_modpack_failed">Couldn’t install the modpack: %1$s</string>
 </resources>

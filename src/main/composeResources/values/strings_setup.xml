@@ -53,4 +53,10 @@
     <string name="uninstall_removing">Removing…</string>
     <string name="uninstall_done_title">YouLauncher is uninstalled</string>
     <string name="uninstall_done_body">Thanks for playing! The program folder disappears a couple of seconds after you close this window.</string>
+    <string name="setup_data_here">Keep games and data in this folder</string>
+    <string name="setup_data_here_hint">Instances, worlds and Minecraft files will be in %1$s</string>
+    <string name="setup_data_appdata_hint">Instances, worlds and Minecraft files will be in %1$s on the system drive</string>
+    <string name="setup_data_move_hint">Your existing instances will be moved here from %1$s</string>
+    <string name="setup_moving_title">Moving your games</string>
+    <string name="setup_moving_body">Instances, worlds and settings are moving to the chosen drive.</string>
 </resources>

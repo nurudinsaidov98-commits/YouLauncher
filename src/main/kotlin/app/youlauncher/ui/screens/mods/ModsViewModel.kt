@@ -19,6 +19,10 @@ import app.youlauncher.resources.mods_install_failed
 import app.youlauncher.resources.mods_installed_msg
 import app.youlauncher.resources.mods_installed_with_deps
 import app.youlauncher.resources.mods_need_instance
+import app.youlauncher.resources.msg_modpack_done
+import app.youlauncher.resources.msg_modpack_failed
+import app.youlauncher.resources.msg_modpack_started
+import kotlinx.coroutines.flow.stateIn
 import app.youlauncher.ui.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -62,7 +66,9 @@ class ModsViewModel(
 ) : ViewModel(dispatcher) {
     private val _state = MutableStateFlow(ModsState())
     val state: StateFlow<ModsState> = _state.asStateFlow()
-    val progress: StateFlow<Map<String, InstallProgress>> = graph.modInstaller.progress
+    /** Прогресс установки модов и сборок вместе: кнопки «Установить» показывают и то и другое. */
+    val progress: StateFlow<Map<String, InstallProgress>> = kotlinx.coroutines.flow.combine(graph.modInstaller.progress, graph.modpackInstaller.progress) { a, b -> a + b }
+        .stateIn(scope, kotlinx.coroutines.flow.SharingStarted.Eagerly, emptyMap())
     private var searchJob: Job? = null
 
     // Позиция списка: запоминается вместе с поиском, чтобы после страницы мода вернуться на то же место.
@@ -197,6 +203,24 @@ class ModsViewModel(
     /** Проекты, для которых сейчас собирается список зависимостей (кнопка показывает индикатор). */
     val checking: StateFlow<Set<String>> = _checking.asStateFlow()
 
+    /**
+     * Сборка ставится сразу в новый экземпляр: файл сборки скачивается и импортируется. Работает в общей
+     * области приложения — установка не прерывается, если уйти с экрана.
+     */
+    private fun installModpack(project: ModProject, version: ModVersion?) {
+        if (graph.modpackInstaller.progress.value[project.id]?.let { !it.done && it.error == null } == true) return
+        val cat = catalog
+        graph.messenger.show(Res.string.msg_modpack_started, project.title)
+        graph.scope.launch {
+            runCatching { graph.modpackInstaller.install(cat, project, version) }
+                .onSuccess { inst ->
+                    _state.update { it.copy(installed = it.installed + project.id) }
+                    graph.messenger.show(Res.string.msg_modpack_done, inst.name)
+                }
+                .onFailure { graph.messenger.show(Res.string.msg_modpack_failed, it.message ?: it::class.simpleName.orEmpty(), error = true) }
+        }
+    }
+
     private fun requireTarget(): Instance? = _state.value.target ?: run {
         graph.messenger.show(Res.string.mods_need_instance, error = true)
         null
@@ -207,6 +231,7 @@ class ModsViewModel(
      * открывается окно с подтверждением, иначе мод ставится сразу.
      */
     fun install(project: ModProject, version: ModVersion? = null) {
+        if (project.type == ProjectType.Modpack) return installModpack(project, version)
         val target = requireTarget() ?: return
         if (project.id in _checking.value) return
         _checking.update { it + project.id }

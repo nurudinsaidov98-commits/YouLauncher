@@ -109,6 +109,8 @@ class SetupModel(
     val required: Long = InstallPlan.sizeOf(source),
     defaultLocation: Path = InstallPlan.defaultLocation(),
     private val check: (Path) -> LocationProblem? = { InstallPlan.check(it, source, required) },
+    /** Папка данных на системном диске (%APPDATA%\YouLauncher); в снимках — условная. */
+    val appData: Path = InstallPlan.appDataDir(),
 ) {
     var step by mutableStateOf(SetupStep.Welcome)
     var forward by mutableStateOf(true)
@@ -121,8 +123,26 @@ class SetupModel(
     var progress by mutableFloatStateOf(0f)
     var currentFile by mutableStateOf("")
     var error by mutableStateOf<String?>(null)
+    /** Идёт перенос прежних данных (второй этап установки). */
+    var moving by mutableStateOf(false)
 
     val target: Path? get() = runCatching { Path.of(location.trim()) }.getOrNull()
+
+    /** Игры и данные рядом с программой: по умолчанию да на не системном диске, пока пользователь не выбрал сам. */
+    var dataHere by mutableStateOf(target?.let { InstallPlan.suggestLocalData(it) } ?: false)
+    private var dataHereTouched = false
+    /** Прежние данные на системном диске: при хранении рядом с программой они переносятся. */
+    val oldData: Path? = appData.takeIf { InstallPlan.hasData(it) }
+
+    fun chooseDataHere(value: Boolean) {
+        dataHereTouched = true
+        dataHere = value
+    }
+
+    /** Папку сменили: подсказка по месту данных пересчитывается, если пользователь её ещё не трогал. */
+    fun onLocationChanged() {
+        if (!dataHereTouched) target?.let { dataHere = InstallPlan.suggestLocalData(it) }
+    }
 
     fun go(next: SetupStep) {
         forward = next.ordinal > step.ordinal
@@ -144,6 +164,14 @@ class SetupModel(
                 val exe = dir.resolve("${InstallPlan.APP_NAME}.exe")
                 if (desktop) shortcuts.folder(ShortcutPlace.Desktop)?.let { shortcuts.create(it, InstallPlan.APP_NAME, exe) }
                 if (startMenu) shortcuts.folder(ShortcutPlace.StartMenu)?.let { shortcuts.create(it, InstallPlan.APP_NAME, exe) }
+                // Игры рядом с программой: лаунчер увидит portable.txt и будет хранить всё в папке data.
+                InstallPlan.setLocalData(dir, dataHere)
+                val old = oldData
+                if (dataHere && old != null && !InstallPlan.hasData(InstallPlan.localDataDir(dir))) {
+                    moving = true
+                    progress = 0f
+                    InstallPlan.moveData(old, InstallPlan.localDataDir(dir)) { p, f -> progress = p; currentFile = f }
+                }
                 InstallPlan.register(registry, dir, version, InstallPlan.sizeOf(dir))
             }
         }.onFailure { e ->
@@ -213,7 +241,7 @@ private fun SetupFrame(
 fun SetupScreen(model: SetupModel, exit: () -> Unit, minimize: () -> Unit, dragHandle: @Composable (Modifier) -> Unit = {}) {
     val scope = rememberCoroutineScope()
     val busy = model.step == SetupStep.Installing
-    LaunchedEffect(model.location) { delay(250); model.recheck() }
+    LaunchedEffect(model.location) { model.onLocationChanged(); delay(250); model.recheck() }
     SetupFrame(model.step.ordinal, dragHandle, busy, closeEnabled = !busy, onClose = exit, minimize = minimize) {
         Column(Modifier.fillMaxSize().padding(start = 56.dp, end = 32.dp, top = 56.dp, bottom = 28.dp)) {
             val spatial = MaterialTheme.motionScheme.defaultSpatialSpec<androidx.compose.ui.unit.IntOffset>()
@@ -430,9 +458,17 @@ private fun LocationStep(model: SetupModel) {
             color = if (problem != null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.appear(4),
         )
-        Spacer(Modifier.height(12.dp))
-        CheckRow(stringResource(Res.string.setup_desktop_shortcut), model.desktop, { model.desktop = it }, Modifier.appear(5))
-        CheckRow(stringResource(Res.string.setup_start_menu), model.startMenu, { model.startMenu = it }, Modifier.appear(6))
+        Spacer(Modifier.height(6.dp))
+        // Где будут игры: без этой галочки гигабайты экземпляров оказывались на диске C при любом выбранном диске.
+        val dataHint = when {
+            !model.dataHere -> stringResource(Res.string.setup_data_appdata_hint, model.appData.toString())
+            model.oldData != null && model.target?.let { InstallPlan.hasData(InstallPlan.localDataDir(it)) } != true ->
+                stringResource(Res.string.setup_data_move_hint, model.oldData.toString())
+            else -> stringResource(Res.string.setup_data_here_hint, model.target?.let { InstallPlan.localDataDir(it).toString() }.orEmpty())
+        }
+        CheckRow(stringResource(Res.string.setup_data_here), model.dataHere, model::chooseDataHere, Modifier.appear(5), hint = dataHint)
+        CheckRow(stringResource(Res.string.setup_desktop_shortcut), model.desktop, { model.desktop = it }, Modifier.appear(6))
+        CheckRow(stringResource(Res.string.setup_start_menu), model.startMenu, { model.startMenu = it }, Modifier.appear(7))
     }
 }
 
@@ -453,13 +489,16 @@ private fun chooseFolder(title: String, start: Path?): Path? {
 }
 
 @Composable
-private fun CheckRow(label: String, checked: Boolean, onChange: (Boolean) -> Unit, modifier: Modifier = Modifier) {
+private fun CheckRow(label: String, checked: Boolean, onChange: (Boolean) -> Unit, modifier: Modifier = Modifier, hint: String? = null) {
     Row(
         modifier.clip(MaterialTheme.shapes.large).toggleable(checked, role = Role.Checkbox, onValueChange = onChange).padding(end = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(checked = checked, onCheckedChange = null, modifier = Modifier.padding(10.dp))
-        Text(label, style = MaterialTheme.typography.bodyLarge)
+        Column {
+            Text(label, style = MaterialTheme.typography.bodyLarge)
+            if (hint != null) Text(hint, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.MiddleEllipsis)
+        }
     }
 }
 
@@ -470,9 +509,9 @@ private fun InstallingStep(model: SetupModel) {
     Column(Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
         LoadingIndicator(Modifier.size(72.dp).appear(0))
         Spacer(Modifier.height(20.dp))
-        Text(stringResource(Res.string.setup_installing_title), style = MaterialTheme.typography.displaySmallEmphasized, modifier = Modifier.appear(1))
+        Text(stringResource(if (model.moving) Res.string.setup_moving_title else Res.string.setup_installing_title), style = MaterialTheme.typography.displaySmallEmphasized, modifier = Modifier.appear(1))
         Spacer(Modifier.height(6.dp))
-        Text(stringResource(Res.string.setup_installing_body), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.appear(2))
+        Text(stringResource(if (model.moving) Res.string.setup_moving_body else Res.string.setup_installing_body), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.appear(2))
         Spacer(Modifier.height(28.dp))
         LinearWavyProgressIndicator(progress = { shown }, modifier = Modifier.fillMaxWidth().appear(3))
         Spacer(Modifier.height(10.dp))
@@ -530,13 +569,15 @@ fun UninstallScreen(
     minimize: () -> Unit,
     dragHandle: @Composable (Modifier) -> Unit = {},
     startStage: Int = 0,
-    dataDir: Path = Path.of(System.getenv("APPDATA") ?: System.getProperty("user.home"), InstallPlan.APP_NAME),
+    // Игры рядом с программой (portable.txt) — данные в её папке data, иначе в %APPDATA%.
+    dataDir: Path = if (java.nio.file.Files.exists(appDir.resolve(InstallPlan.PORTABLE_MARKER))) InstallPlan.localDataDir(appDir) else InstallPlan.appDataDir(),
 ) {
     val scope = rememberCoroutineScope()
     var stage by remember { mutableStateOf(startStage) }
     var removeData by remember { mutableStateOf(false) }
     // После удаления папка программы стирается отдельным процессом, когда окно закроется.
-    val finish = { if (stage == 2) InstallPlan.scheduleRemoval(appDir); exit() }
+    // Данные внутри папки программы остаются, если их не просили удалить.
+    val finish = { if (stage == 2) InstallPlan.scheduleRemoval(appDir, keepData = !removeData); exit() }
     SetupFrame(stage * 2, dragHandle, busy = stage == 1, closeEnabled = stage != 1, onClose = finish, minimize = minimize) {
         val fadeInSpec = MaterialTheme.motionScheme.defaultEffectsSpec<Float>()
         val scaleSpec = MaterialTheme.motionScheme.defaultSpatialSpec<Float>()

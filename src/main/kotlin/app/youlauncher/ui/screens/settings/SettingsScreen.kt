@@ -145,6 +145,7 @@ import app.youlauncher.ui.LocalAppUi
 import androidx.compose.runtime.LaunchedEffect
 import app.youlauncher.ui.Platform
 import app.youlauncher.ui.brand.YouLauncherLogo
+import app.youlauncher.ui.components.ExpressiveScrollbar
 import app.youlauncher.ui.components.ChoiceOption
 import app.youlauncher.ui.components.ConnectedChoice
 import app.youlauncher.ui.components.Formats
@@ -228,8 +229,11 @@ fun SettingsScreen() {
                 )
             }
         }
+        // Ползунок для быстрого перехода по разделам: в пузыре название раздела.
+        val sectionTitles = pages.map { stringResource(it.title) }
+        Box(Modifier.fillMaxSize()) {
         MaxWidth(1100.dp) {
-            LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(Gaps.section), contentPadding = PaddingValues(bottom = 48.dp)) {
+            LazyColumn(state = listState, modifier = Modifier.padding(end = 24.dp), verticalArrangement = Arrangement.spacedBy(Gaps.section), contentPadding = PaddingValues(bottom = 48.dp)) {
                 itemsIndexed(pages) { _, page ->
                     SettingsSection(stringResource(page.title), icon = page.icon()) {
                         when (page) {
@@ -247,6 +251,10 @@ fun SettingsScreen() {
                     }
                 }
             }
+        }
+        Box(Modifier.matchParentSize(), contentAlignment = Alignment.CenterEnd) {
+            ExpressiveScrollbar(listState, label = { sectionTitles.getOrNull(it) })
+        }
         }
     }
 }

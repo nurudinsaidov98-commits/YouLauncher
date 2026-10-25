@@ -118,4 +118,29 @@ class InstallerTest {
         }
         assertEquals(BackdropLayout.base[3], BackdropLayout.placement(3, 0, 15))
     }
+    @Test
+    fun `games are kept next to the program on another drive and old data is moved there`() {
+        val sys = Path.of("C:/")
+        assertTrue(InstallPlan.suggestLocalData(Path.of("D:/Games/YouLauncher"), sys), "другой диск — игры рядом с программой")
+        assertFalse(InstallPlan.suggestLocalData(Path.of("C:/Users/Player/AppData/Local/Programs/YouLauncher"), sys))
+        val target = Files.createTempDirectory("install")
+        InstallPlan.setLocalData(target, true)
+        assertTrue(target.resolve(InstallPlan.PORTABLE_MARKER).exists())
+        assertTrue(InstallPlan.suggestLocalData(target, Path.of(target.root.toString())), "так уже было — так и остаётся")
+        InstallPlan.setLocalData(target, false)
+        assertFalse(target.resolve(InstallPlan.PORTABLE_MARKER).exists())
+
+        val old = Files.createTempDirectory("appdata")
+        Files.createDirectories(old.resolve("instances/survival/.minecraft/saves/World"))
+        Files.writeString(old.resolve("instances/survival/.minecraft/saves/World/level.dat"), "мир")
+        Files.writeString(old.resolve("settings.json"), "{}")
+        val data = InstallPlan.localDataDir(target)
+        assertTrue(InstallPlan.moveData(old, data))
+        assertEquals("мир", Files.readString(data.resolve("instances/survival/.minecraft/saves/World/level.dat")))
+        assertFalse(old.exists(), "прежняя папка убрана после переноса")
+        // В непустую папку данные не переносятся: ничего не перезаписать.
+        val another = Files.createTempDirectory("appdata2").also { Files.writeString(it.resolve("settings.json"), "{\"x\":1}") }
+        assertFalse(InstallPlan.moveData(another, data))
+        assertTrue(another.resolve("settings.json").exists())
+    }
 }

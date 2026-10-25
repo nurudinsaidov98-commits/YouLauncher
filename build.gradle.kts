@@ -11,7 +11,7 @@ plugins {
 
 group = "app.youlauncher"
 // Версию релиза можно передать из тега: -PappVersion=v1.2.0 (так делает GitHub Actions).
-version = (findProperty("appVersion") as String?)?.removePrefix("v")?.takeIf { it.isNotBlank() } ?: "1.2.1"
+version = (findProperty("appVersion") as String?)?.removePrefix("v")?.takeIf { it.isNotBlank() } ?: "1.2.2"
 
 // Каталог сборки при не-ASCII пути проекта переносится в settings.gradle.kts (см. комментарий там).
 

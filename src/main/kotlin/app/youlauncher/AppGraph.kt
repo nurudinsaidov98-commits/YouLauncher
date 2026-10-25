@@ -149,6 +149,9 @@ class AppGraph(
         Downloader(http, DownloaderConfig(parallelism = n.maxConcurrentDownloads, retries = n.retries, speedLimit = n.speedLimitKbps * 1024L, allowedHosts = PACK_HOSTS))
     }
     val packImporter = PackImporter(instances, content, contentIndex, { curseForgeLive.catalog() }, packDownloader)
+    /** Сборки из каталога одной кнопкой «Установить». */
+    val modpackInstaller: app.youlauncher.data.packs.ModpackInstaller = if (demo) app.youlauncher.data.packs.FakeModpackInstaller(instances)
+        else app.youlauncher.data.packs.CatalogModpackInstaller(instances, packImporter, packDownloader, dirs.cacheDir)
     val packExporter = PackExporter(instances, contentIndex)
     val modSets = ModSetStore(instances::gameDir)
     val notifier = SystemNotifier({ settings.settings.value.ui.notifications }) {

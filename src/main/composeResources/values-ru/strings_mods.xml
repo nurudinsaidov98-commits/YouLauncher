@@ -73,4 +73,7 @@
     <string name="project_beta">бета</string>
     <string name="project_alpha">альфа</string>
     <string name="curseforge_enter_key">Ввести ключ</string>
+    <string name="msg_modpack_started">Устанавливаем сборку «%1$s»…</string>
+    <string name="msg_modpack_done">Сборка установлена: экземпляр «%1$s» в библиотеке</string>
+    <string name="msg_modpack_failed">Не удалось установить сборку: %1$s</string>
 </resources>

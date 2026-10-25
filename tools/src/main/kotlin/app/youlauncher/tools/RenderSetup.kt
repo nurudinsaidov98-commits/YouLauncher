@@ -40,7 +40,8 @@ fun main(args: Array<String>) {
     // Демо-диски и пути: в снимках для README не должно быть дисков и имени пользователя этого компьютера.
     val gb = 1024L * 1024 * 1024
     val demoDrives = listOf(DriveInfo(Path.of("C:\\"), 476 * gb, 212 * gb), DriveInfo(Path.of("D:\\"), 931 * gb, 604 * gb))
-    val demoLocation = Path.of("C:\\Users\\Player\\AppData\\Local\\Programs\\YouLauncher")
+    // На снимке выбран диск D: так видна галочка «Хранить игры и данные в этой папке».
+    val demoLocation = Path.of("D:/YouLauncher")
     val demoData = Path.of("C:\\Users\\Player\\AppData\\Roaming\\YouLauncher")
     val shots = SetupStep.entries.map { it.name.lowercase() to it } + listOf("uninstall" to null, "uninstall-done" to null)
     for (mode in listOf(ThemeMode.Dark, ThemeMode.Light)) {
@@ -50,7 +51,7 @@ fun main(args: Array<String>) {
                     YouLauncherTheme(ThemeSettings(mode = mode), UiSettings()) {
                         if (step == null) UninstallScreen(source, {}, {}, startStage = if (name == "uninstall-done") 2 else 0, dataDir = demoData)
                         else {
-                            val model = remember { SetupModel(source, "1.2.0", noRegistry, noShortcuts, demoDrives, 238L * 1024 * 1024, demoLocation, check = { null }).apply { this.step = step; progress = 0.62f; currentFile = "skiko-windows-x64.dll" } }
+                            val model = remember { SetupModel(source, "1.2.2", noRegistry, noShortcuts, demoDrives, 238L * 1024 * 1024, demoLocation, check = { null }, appData = Path.of("C:/Users/Player/AppData/Roaming/YouLauncher")).apply { this.step = step; progress = 0.62f; currentFile = "skiko-windows-x64.dll" } }
                             SetupScreen(model, {}, {})
                         }
                     }

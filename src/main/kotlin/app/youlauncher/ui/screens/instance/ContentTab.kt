@@ -308,7 +308,9 @@ private fun InstalledPane(inst: Instance, vm: InstanceViewModel, kind: ContentKi
                 artSize = 140.dp,
             )
         } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+            val installedList = rememberLazyListState()
+            Box(Modifier.fillMaxSize()) {
+            LazyColumn(state = installedList, modifier = Modifier.padding(end = 24.dp), verticalArrangement = Arrangement.spacedBy(6.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
                 itemsIndexed(shown, key = { _, f -> f.fileName }) { index, file ->
                     ContentRow(file, onToggle = { vm.setEnabled(kind, file, it) }, onRemove = { vm.remove(kind, file) }, modifier = Modifier.animateItem(
                         fadeInSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
@@ -316,6 +318,10 @@ private fun InstalledPane(inst: Instance, vm: InstanceViewModel, kind: ContentKi
                         fadeOutSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
                     ).staggered(index, file.fileName).dragSource({ DragPayload.Installed(file.fileName, file.title) { vm.remove(kind, file) } }, file.fileName))
                 }
+            }
+            Box(Modifier.matchParentSize(), contentAlignment = Alignment.CenterEnd) {
+                ExpressiveScrollbar(installedList, label = { shown.getOrNull(it)?.title })
+            }
             }
         }
     }

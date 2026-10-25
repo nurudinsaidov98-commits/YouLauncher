@@ -44,6 +44,7 @@ interface ShortcutMaker {
  */
 object InstallPlan {
     const val APP_NAME = "YouLauncher"
+    const val PORTABLE_MARKER = "portable.txt"
     /** Мелкие диски (флешки, карты памяти) в выборе не показываются. */
     private const val MIN_DRIVE_BYTES = 2L * 1024 * 1024 * 1024
     const val UNINSTALL_KEY = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\YouLauncher"
@@ -81,6 +82,59 @@ object InstallPlan {
         if (t.exists() && Files.isDirectory(t) && !isOurs(t) && Files.list(t).use { it.findAny().isPresent }) return LocationProblem.NotEmpty
         if (!canWrite(t)) return LocationProblem.NotWritable
         return null
+    }
+
+    /** Данные лаунчера по умолчанию: %APPDATA%\YouLauncher на системном диске. */
+    fun appDataDir(env: (String) -> String? = System::getenv): Path {
+        val roaming = env("APPDATA") ?: (System.getProperty("user.home") + "\\AppData\\Roaming")
+        return Path.of(roaming, APP_NAME)
+    }
+
+    /** Папка данных при хранении рядом с программой (как в портативной сборке: файл portable.txt). */
+    fun localDataDir(target: Path): Path = target.resolve("data")
+
+    /**
+     * Хранить ли игры рядом с программой по умолчанию: да, если так уже было в этой папке или если выбран
+     * не системный диск — тогда гигабайты экземпляров не оказываются на диске C.
+     */
+    fun suggestLocalData(target: Path, systemDrive: Path = defaultLocation().root): Boolean =
+        target.resolve(PORTABLE_MARKER).exists() || (target.root != null && !target.root.toString().equals(systemDrive.toString(), ignoreCase = true))
+
+    /** Прежние данные, которые стоит перенести: в папке есть экземпляры или настройки. */
+    fun hasData(dir: Path): Boolean = dir.exists() && Files.list(dir).use { it.findAny().isPresent }
+
+    fun setLocalData(target: Path, enabled: Boolean) {
+        val marker = target.resolve(PORTABLE_MARKER)
+        if (enabled) {
+            Files.createDirectories(target)
+            if (!marker.exists()) Files.writeString(marker, "Данные YouLauncher хранятся в папке data рядом с программой.\n")
+        } else {
+            Files.deleteIfExists(marker)
+        }
+    }
+
+    /**
+     * Перенос данных на новое место с прогрессом. На том же диске — мгновенное перемещение, на другом —
+     * копирование, и только после полного успеха удаляется исходная папка. В непустую папку не переносит.
+     */
+    fun moveData(from: Path, to: Path, onProgress: (Float, String) -> Unit = { _, _ -> }): Boolean {
+        if (!hasData(from) || hasData(to)) return false
+        Files.createDirectories(to.parent)
+        Files.deleteIfExists(to)
+        runCatching { Files.move(from, to, StandardCopyOption.ATOMIC_MOVE); onProgress(1f, ""); return true }
+        val files = Files.walk(from).use { s -> s.filter { Files.isRegularFile(it) }.toList() }
+        val total = files.sumOf { Files.size(it) }.coerceAtLeast(1)
+        var done = 0L
+        for (f in files) {
+            val out = to.resolve(from.relativize(f).toString())
+            Files.createDirectories(out.parent)
+            Files.copy(f, out, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES)
+            done += Files.size(f)
+            onProgress(done.toFloat() / total, f.name)
+        }
+        deleteTree(from)
+        onProgress(1f, "")
+        return true
     }
 
     /** В папке уже стоит YouLauncher (обновление поверх). */
@@ -190,10 +244,17 @@ object InstallPlan {
         userData?.let { runCatching { deleteTree(it) } }
     }
 
-    /** Отдельный процесс ждёт выхода программы и удаляет папку установки. */
-    fun scheduleRemoval(dir: Path): Boolean = runCatching {
+    /**
+     * Отдельный процесс ждёт выхода программы и удаляет папку установки. [keepData]: игры хранились рядом
+     * с программой и их просили оставить — папка data остаётся, остальное удаляется.
+     */
+    fun scheduleRemoval(dir: Path, keepData: Boolean = false): Boolean = runCatching {
         if (!System.getProperty("os.name").startsWith("Windows")) return false
-        val script = "ping 127.0.0.1 -n 4 > nul & rmdir /s /q \"$dir\""
+        val script = if (keepData && localDataDir(dir).exists()) {
+            "ping 127.0.0.1 -n 4 > nul & (for /d %d in (\"$dir\\*\") do @if /i not \"%~nxd\"==\"data\" rmdir /s /q \"%d\") & del /f /q \"$dir\\*.*\""
+        } else {
+            "ping 127.0.0.1 -n 4 > nul & rmdir /s /q \"$dir\""
+        }
         ProcessBuilder("cmd.exe", "/c", script).directory(File(System.getProperty("java.io.tmpdir"))).start()
         true
     }.getOrDefault(false)

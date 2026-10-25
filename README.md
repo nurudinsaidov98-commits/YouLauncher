@@ -83,7 +83,7 @@ The key feature of each Minecraft update is drawn as a composition of M3 shapes 
 - **Any version** — releases, snapshots and old versions, downloaded only from official Mojang servers and verified with SHA-1.
 - **Mod loaders** — Fabric, Quilt, Forge and NeoForge, with version choice and one-click loader updates.
 - **Mods, resource packs, shaders and modpacks** from **Modrinth** and **CurseForge**: a dependency window before installing, multi-select with one *Install all* dialog, update checks, mod sets.
-- **Modpacks** — import `.mrpack`, CurseForge and MultiMC/Prism; export to `.mrpack` and Prism.
+- **Modpacks** — install any modpack from the catalog with one click as a new instance; import `.mrpack`, CurseForge and MultiMC/Prism; export to `.mrpack` and Prism.
 - **Accounts** — offline, **Ely.by** (skins, two-factor sign-in) and **Microsoft** (official servers and Realms; the password is entered only on the Microsoft website). Tokens are stored in Windows Credential Manager, the password is never saved.
 - **Instances** — change the game version with a mod compatibility check, repair files, scheduled backups, servers from `servers.dat` with ping, screenshots and worlds.
 - **Java** — picked automatically for every version, downloaded from Mojang or Eclipse Temurin.
@@ -154,7 +154,7 @@ Unzip anywhere and run<br><code>YouLauncher-App\YouLauncher.exe</code>.
 | | 💿 Installer | 📦 Portable |
 |---|:---:|:---:|
 | How to start | Material 3 setup wizard | Unzip and run the `.exe` |
-| Choose drive and folder | ✅ with a free-space check | ✅ wherever you unzip it |
+| Choose drive and folder | ✅ with a free-space check; games and data stay on the chosen drive | ✅ wherever you unzip it |
 | Desktop and Start menu shortcuts | ✅ | — |
 | Listed in Windows *Apps*, uninstall from there | ✅ | — (just delete the folder) |
 | Admin rights | not needed | not needed |
@@ -241,7 +241,7 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 - **Любая версия** — релизы, снапшоты и старые версии, только с официальных серверов Mojang, с проверкой SHA-1.
 - **Загрузчики модов** — Fabric, Quilt, Forge и NeoForge, выбор версии и обновление загрузчика в один клик.
 - **Моды, ресурспаки, шейдеры и сборки** из **Modrinth** и **CurseForge**: окно зависимостей перед установкой, выбор нескольких модов галочками и одно окно «Установить всё», проверка обновлений, наборы модов.
-- **Сборки** — импорт `.mrpack`, CurseForge и MultiMC/Prism; экспорт в `.mrpack` и Prism.
+- **Сборки** — любая сборка из каталога ставится одной кнопкой в новый экземпляр; импорт `.mrpack`, CurseForge и MultiMC/Prism; экспорт в `.mrpack` и Prism.
 - **Аккаунты** — офлайн, **Ely.by** (скины, двухфакторная защита) и **Microsoft** (официальные серверы и Realms; пароль вводится только на сайте Microsoft). Токены хранятся в диспетчере учётных данных Windows, пароль не сохраняется.
 - **Экземпляры** — смена версии игры с проверкой модов, починка файлов, резервные копии по расписанию, серверы из `servers.dat` с пингом, скриншоты и миры.
 - **Java** — подбирается под каждую версию автоматически, скачивается с серверов Mojang или Eclipse Temurin.
@@ -312,7 +312,7 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 | | 💿 Установщик | 📦 Портативная |
 |---|:---:|:---:|
 | Как начать | Мастер установки в Material 3 | Распаковать и запустить `.exe` |
-| Выбор диска и папки | ✅ с проверкой свободного места | ✅ куда распакуете |
+| Выбор диска и папки | ✅ с проверкой свободного места; игры и данные остаются на выбранном диске | ✅ куда распакуете |
 | Ярлыки на рабочем столе и в «Пуске» | ✅ | — |
 | Есть в «Приложениях» Windows, удаление оттуда | ✅ | — (просто удалить папку) |
 | Права администратора | не нужны | не нужны |

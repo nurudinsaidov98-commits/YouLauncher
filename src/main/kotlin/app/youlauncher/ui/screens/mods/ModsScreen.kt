@@ -56,6 +56,7 @@ import app.youlauncher.core.model.ProjectType
 import app.youlauncher.core.repo.InstallProgress
 import app.youlauncher.core.repo.ModSort
 import app.youlauncher.resources.Res
+import app.youlauncher.ui.components.ExpressiveScrollbar
 import app.youlauncher.ui.components.TIconButton
 import app.youlauncher.resources.action_clear
 import app.youlauncher.resources.action_install
@@ -289,7 +290,8 @@ private fun Results(state: ModsState, progress: Map<String, InstallProgress>, vm
             Box {
             Column {
                 Text(pluralStringResource(Res.plurals.count_results, state.total, state.total), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(top = 8.dp, bottom = 96.dp)) {
+                Box(Modifier.fillMaxSize()) {
+                LazyColumn(state = listState, modifier = Modifier.padding(end = 26.dp), verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(top = 8.dp, bottom = 96.dp)) {
                     itemsIndexed(state.results, key = { _, p -> p.id }) { index, project ->
                         ProjectCard(
                             project,
@@ -311,6 +313,11 @@ private fun Results(state: ModsState, progress: Map<String, InstallProgress>, vm
                         }
                     }
                 }
+                // Ползунок M3 для быстрой прокрутки длинного каталога: в пузыре название проекта.
+                Box(Modifier.matchParentSize(), contentAlignment = Alignment.CenterEnd) {
+                    ExpressiveScrollbar(listState, label = { state.results.getOrNull(it)?.title })
+                }
+                }
             }
             SelectionBar(vm, Modifier.align(Alignment.BottomCenter).padding(bottom = 20.dp))
             }
@@ -324,7 +331,10 @@ fun InstallButton(installed: Boolean, progress: InstallProgress?, checking: Bool
     when {
         checking -> Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) { LoadingIndicator(Modifier.size(40.dp)) }
         installing -> Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-            androidx.compose.material3.CircularWavyProgressIndicator(progress = { progress?.progress ?: 0f }, modifier = Modifier.size(40.dp))
+            // Без доли (сборка импортируется и докачивает моды) — индикатор M3 без процентов.
+            val p = progress?.progress
+            if (p == null) LoadingIndicator(Modifier.size(40.dp))
+            else androidx.compose.material3.CircularWavyProgressIndicator(progress = { p }, modifier = Modifier.size(40.dp))
         }
         installed -> FilledTonalButton(onClick = onInstall, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.CheckCircleFilled, stringResource(Res.string.action_installed)) }
         else -> Button(onClick = onInstall, shapes = ButtonDefaults.shapes()) { IconLabel(Symbols.Download, stringResource(Res.string.action_install)) }
@@ -354,7 +364,7 @@ private fun ProjectCard(
         modifier = modifier.fillMaxWidth(),
     ) {
         Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
-            if (!installed) {
+            if (!installed && project.type != ProjectType.Modpack) {
                 val label = stringResource(Res.string.select_project)
                 Checkbox(checked = selected, onCheckedChange = { onToggleSelect() }, modifier = Modifier.semantics { contentDescription = label })
             }
