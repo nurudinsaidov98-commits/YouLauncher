@@ -181,7 +181,9 @@ private fun ColorPickerDialog(role: ColorRole, initial: Color, custom: Boolean, 
     var tone by remember { mutableFloatStateOf(start.tone.toFloat()) }
     var exact by remember { mutableStateOf<Color?>(initial) }
     val color = exact ?: Color(Hct.from(hue.toDouble(), chroma.toDouble(), tone.toDouble()).toInt())
-    var hexText by remember(color) { mutableStateOf(ColorPickerLogic.hex(color)) }
+    // Код в поле не перезаписывается, пока задаёт тот же цвет (иначе при вводе без «#» прыгал бы курсор).
+    var hexText by remember { mutableStateOf(ColorPickerLogic.hex(color)) }
+    androidx.compose.runtime.LaunchedEffect(color) { if (ColorPickerLogic.parseHex(hexText) != color) hexText = ColorPickerLogic.hex(color) }
     fun pick(c: Color) {
         val h = Hct.fromInt(c.toArgb())
         hue = h.hue.toFloat(); chroma = h.chroma.toFloat(); tone = h.tone.toFloat()

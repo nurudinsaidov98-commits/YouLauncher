@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="horizon_mods_title">Моды Horizon</string>
+    <string name="horizon_mods_subtitle">Из реестра Horizon: каждую публикацию проверяют ревьюеры, каждый файл сверяется по размеру и SHA-256. Java-моды в Horizon не работают</string>
+    <string name="horizon_mods_search">Поиск в реестре Horizon</string>
+    <string name="horizon_kind_all">Все</string>
+    <string name="horizon_kind_mod">Моды</string>
+    <string name="horizon_kind_resourcepack">Ресурспаки</string>
+    <string name="horizon_kind_shader">Шейдеры</string>
+    <string name="horizon_install">Установить</string>
+    <string name="horizon_update">Обновить до %1$s</string>
+    <string name="horizon_remove">Удалить</string>
+    <string name="horizon_installed">установлен %1$s</string>
+    <string name="horizon_official">От Horizon</string>
+    <string name="horizon_by">автор %1$s</string>
+    <string name="horizon_no_version">Нет версии для Minecraft %1$s</string>
+    <string name="horizon_restart_hint">Моды загружаются при старте игры: изменения вступят в силу при следующем запуске.</string>
+    <string name="horizon_load_failed">Реестр Horizon недоступен: %1$s</string>
+    <string name="horizon_retry">Повторить</string>
+    <string name="horizon_empty">Ничего не найдено</string>
+    <string name="horizon_installed_msg">«%1$s» установлен</string>
+    <string name="horizon_removed_msg">«%1$s» удалён</string>
+    <string name="horizon_failed_msg">«%1$s»: %2$s</string>
+    <string name="horizon_revoked">Снят с реестра и выключен: %1$s</string>
+    <string name="horizon_cap_game_read">Читает игру</string>
+    <string name="horizon_cap_hud">Рисует на HUD</string>
+    <string name="horizon_cap_chat">Пишет в чат</string>
+    <string name="horizon_cap_render">Рисует поверх мира</string>
+    <string name="horizon_cap_recipes">Читает рецепты</string>
+    <string name="horizon_cap_ui">Свои экраны</string>
+    <string name="horizon_cap_storage">Хранит свои данные</string>
+    <string name="horizon_cap_input">Читает клавиши и мышь</string>
+</resources>

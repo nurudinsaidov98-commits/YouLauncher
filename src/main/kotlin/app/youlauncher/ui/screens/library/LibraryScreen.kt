@@ -161,12 +161,14 @@ fun LibraryScreen() {
             ) {
                 SortMenu(state.filter.sort, vm::setSort)
             }
+            // Текст поиска свой: состояние экрана собирается в фоне (combine), и поле, которое ждёт его, теряло бы символы.
+            var query by remember { mutableStateOf(state.filter.query) }
             OutlinedTextField(
-                value = state.filter.query,
-                onValueChange = vm::setQuery,
+                value = query,
+                onValueChange = { query = it; vm.setQuery(it) },
                 modifier = Modifier.fillMaxWidth(),
                 leadingIcon = { Icon(Symbols.Search, contentDescription = null) },
-                trailingIcon = if (state.filter.query.isNotEmpty()) ({ TIconButton(Symbols.Close, stringResource(Res.string.action_clear), { vm.setQuery("") }) }) else null,
+                trailingIcon = if (query.isNotEmpty()) ({ TIconButton(Symbols.Close, stringResource(Res.string.action_clear), { query = ""; vm.setQuery("") }) }) else null,
                 placeholder = { Text(stringResource(Res.string.library_search)) },
                 singleLine = true,
                 shape = MaterialTheme.shapes.extraLarge,

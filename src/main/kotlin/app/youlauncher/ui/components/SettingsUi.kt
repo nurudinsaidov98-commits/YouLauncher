@@ -1,5 +1,12 @@
 package app.youlauncher.ui.components
 
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -102,9 +109,17 @@ fun TextFieldRow(
     error: String? = null,
     trailing: (@Composable () -> Unit)? = null,
 ) {
+    // Свой текст поля. Модель может обновиться не сразу (экземпляр пишется в файл) или хранить значение в другом
+    // виде (теги списком, переменные словарём): если брать текст из неё, теряются символы при быстром наборе,
+    // а недописанное («a,», «JAVA») стирается. Пока поле в фокусе, набранное не перезаписывается; после выхода
+    // из поля показывается то, что сохранено.
+    var text by remember { mutableStateOf(value) }
+    var focused by remember { mutableStateOf(false) }
+    val latest by rememberUpdatedState(value)
+    LaunchedEffect(value) { if (!focused) text = value }
     OutlinedTextField(
-        value = value,
-        onValueChange = onChange,
+        value = text,
+        onValueChange = { text = it; onChange(it) },
         label = { Text(label) },
         placeholder = placeholder?.let { { Text(it) } },
         supportingText = (error ?: supporting)?.let { { Text(it) } },
@@ -113,6 +128,9 @@ fun TextFieldRow(
         minLines = if (singleLine) 1 else 3,
         keyboardOptions = if (numeric) KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions.Default,
         trailingIcon = trailing,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().onFocusChanged { f ->
+            if (focused && !f.isFocused) text = latest
+            focused = f.isFocused
+        },
     )
 }

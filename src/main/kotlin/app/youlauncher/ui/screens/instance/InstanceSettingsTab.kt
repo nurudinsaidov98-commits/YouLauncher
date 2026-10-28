@@ -89,7 +89,8 @@ fun InstanceSettingsTab(inst: Instance, vm: InstanceViewModel) {
     ) {
         item {
 SettingsSection(stringResource(Res.string.settings_general), icon = Symbols.Tune) {
-            TextFieldRow(stringResource(Res.string.field_name), inst.name, { v -> vm.update { it.copy(name = v) } })
+            // Пустое имя не сохраняется: после выхода из поля вернётся прежнее.
+            TextFieldRow(stringResource(Res.string.field_name), inst.name, { v -> v.trim().takeIf { it.isNotEmpty() }?.let { n -> vm.update { it.copy(name = n.take(64)) } } })
             SettingLabel(stringResource(Res.string.wizard_icon))
             @OptIn(ExperimentalLayoutApi::class)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -146,7 +147,8 @@ SettingsSection(stringResource(Res.string.backup_section), icon = Symbols.Backup
             }
         }
 
-        item {
+        // Horizon — нативная игра: память JVM и её аргументы к нему не относятся (Java нужна только для подготовки ресурсов).
+        if (!inst.isHorizon) item {
 SettingsSection(stringResource(Res.string.settings_memory), icon = Symbols.Memory) {
             val useGlobal = inst.java.maxMemoryMb == null
             SwitchRow(stringResource(Res.string.settings_use_global), useGlobal, { on ->
@@ -183,7 +185,7 @@ SettingsSection(stringResource(Res.string.instance_java), icon = Symbols.Coffee)
                 { p -> vm.update { it.copy(java = it.java.copy(javaPath = p)) } },
                 stringResource(Res.string.instance_java_auto_for, JavaChecks.requiredMajor(inst.gameVersion)),
             )
-            TextFieldRow(
+            if (!inst.isHorizon) TextFieldRow(
                 stringResource(Res.string.settings_jvm_args),
                 inst.java.jvmArgs.orEmpty(),
                 { v -> vm.update { it.copy(java = it.java.copy(jvmArgs = v.ifBlank { null })) } },
@@ -202,8 +204,8 @@ SettingsSection(stringResource(Res.string.instance_java), icon = Symbols.Coffee)
         item {
 SettingsSection(stringResource(Res.string.settings_resolution), icon = Symbols.DesktopWindows) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                TextFieldRow(stringResource(Res.string.settings_width), (inst.width ?: global.width).toString(), { v -> v.toIntOrNull()?.let { w -> vm.update { it.copy(width = w) } } }, Modifier.weight(1f), numeric = true)
-                TextFieldRow(stringResource(Res.string.settings_height), (inst.height ?: global.height).toString(), { v -> v.toIntOrNull()?.let { h -> vm.update { it.copy(height = h) } } }, Modifier.weight(1f), numeric = true)
+                TextFieldRow(stringResource(Res.string.settings_width), (inst.width ?: global.width).toString(), { v -> v.trim().toIntOrNull()?.takeIf { it in WINDOW_SIZE }?.let { w -> vm.update { it.copy(width = w) } } }, Modifier.weight(1f), numeric = true)
+                TextFieldRow(stringResource(Res.string.settings_height), (inst.height ?: global.height).toString(), { v -> v.trim().toIntOrNull()?.takeIf { it in WINDOW_SIZE }?.let { h -> vm.update { it.copy(height = h) } } }, Modifier.weight(1f), numeric = true)
             }
             SwitchRow(stringResource(Res.string.settings_fullscreen), inst.fullscreen ?: global.fullscreen, { on -> vm.update { it.copy(fullscreen = on) } })
             TextFieldRow(
@@ -224,3 +226,6 @@ SettingsSection(stringResource(Res.string.settings_pre_launch), icon = Symbols.T
         }
     }
 }
+
+/** Размер окна игры: меньше 320 игра не умещает интерфейс, больше 16384 не бывает экранов. */
+private val WINDOW_SIZE = 320..16384

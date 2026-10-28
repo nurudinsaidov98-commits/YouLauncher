@@ -125,6 +125,11 @@ class AppGraph(
         },
         mojangDownloader = downloaderFactory,
     )
+    /** Реестр модов Horizon (GitHub Pages horizon-rust/horizon-mods): моды .hmod, ресурспаки и шейдеры для Horizon. */
+    val horizonMods = app.youlauncher.data.horizon.HorizonModStore(http, dirs.root.resolve("horizon").resolve("mods-index.json")) {
+        val n = settings.settings.value.network
+        Downloader(http, DownloaderConfig(parallelism = 1, retries = n.retries, speedLimit = n.speedLimitKbps * 1024L, allowedHosts = HORIZON_HOSTS))
+    }
     val loaderVersions: LoaderVersionRepository = if (demo) FakeLoaderVersionRepository() else RemoteLoaderVersions(http, horizonReleases)
     private val loaderInstaller = LoaderInstaller(http, mojang, dirs, downloaderFactory)
     // Секреты (токены Ely.by, ключ CurseForge) только в диспетчере учётных данных Windows.
@@ -141,7 +146,7 @@ class AppGraph(
     /** Статистика нагрузки модов по сессиям (JFR во время игры). */
     val modProfiler = app.youlauncher.data.profile.ModProfiler(dirs.root.resolve("profiles"))
     val launcher: LaunchService = if (demo) FakeLaunchService(scope, instances, log)
-        else GameLauncher(scope, dirs, instances, content, accounts, settings, gameInstaller, java, log, loaderInstaller, loaderVersions, injector, profiler = modProfiler, horizon = horizonInstaller, horizonReleases = horizonReleases)
+        else GameLauncher(scope, dirs, instances, content, accounts, settings, gameInstaller, java, log, loaderInstaller, loaderVersions, injector, profiler = modProfiler, horizon = horizonInstaller, horizonReleases = horizonReleases, horizonMods = horizonMods)
     private val modrinthCatalog = ModrinthCatalog(http)
     val modrinth: ModCatalog = if (demo) FakeModCatalog("Modrinth") else modrinthCatalog
     val curseForgeKey = CurseForgeKey(secrets)
@@ -270,4 +275,4 @@ val INJECTOR_HOSTS = setOf("github.com", "githubusercontent.com")
 val JAVA_HOSTS = setOf("adoptium.net", "github.com", "githubusercontent.com")
 
 /** Откуда качается Horizon: только релизы GitHub его репозитория (сам архив лежит на githubusercontent.com). */
-val HORIZON_HOSTS = setOf("github.com", "githubusercontent.com")
+val HORIZON_HOSTS = setOf("github.com", "githubusercontent.com", "github.io")

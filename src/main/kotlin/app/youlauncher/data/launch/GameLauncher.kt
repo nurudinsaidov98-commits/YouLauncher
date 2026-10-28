@@ -80,6 +80,7 @@ class GameLauncher(
     private val profiler: ModProfiler? = null,
     private val horizon: app.youlauncher.data.horizon.HorizonInstaller? = null,
     private val horizonReleases: app.youlauncher.data.horizon.HorizonReleases? = null,
+    private val horizonMods: app.youlauncher.data.horizon.HorizonModStore? = null,
 ) : LaunchService {
     private val state = MutableStateFlow<Map<String, LaunchState>>(emptyMap())
     override val states: StateFlow<Map<String, LaunchState>> = state.asStateFlow()
@@ -120,7 +121,11 @@ class GameLauncher(
                 val env = RuleEnv(osVersion = osVersion)
                 val progress: (LaunchStage, Float?, String) -> Unit = { stage, p, detail -> set(id, LaunchState.Preparing(stage, p, detail)) }
                 val installed = installer.install(instance.gameVersion, gameDir, env, forceVerify = true, onProgress = progress)
-                if (instance.loader != LoaderType.Vanilla) {
+                // Horizon: релиз скачивается заново и ресурсы готовятся при следующем запуске.
+                if (instance.isHorizon) {
+                    val tag = instance.loaderVersion
+                    if (tag != null) horizon?.let { hz -> hz.versionDir(tag).toFile().deleteRecursively(); info(id, "Horizon $tag будет скачан и подготовлен заново при запуске") }
+                } else                 if (instance.loader != LoaderType.Vanilla) {
                     val java = chooseJava(instance, installed.resolved.json.javaVersion ?: JavaVersionRef()) { p -> set(id, LaunchState.Preparing(LaunchStage.Java, p)) }
                     set(id, LaunchState.Preparing(LaunchStage.Loader, null, instance.loader.title))
                     val loaderVersion = instance.loaderVersion ?: pickLoaderVersion(instance)
@@ -329,6 +334,8 @@ class GameLauncher(
             if (!fullscreen) { add("--width"); add(width.toString()); add("--height"); add(height.toString()) }
             server?.takeIf { it.isNotBlank() }?.let { add("--server"); add(it) }
         }
+        // Снятые с реестра моды выключаются до старта игры.
+        horizonMods?.let { store -> runCatching { store.turnOffRevoked(gameDir) }.getOrDefault(emptyList()).forEach { info(id, it, LogLevel.Warn) } }
         if (account.userType == "mojang") info(id, "Horizon не поддерживает вход через Ely.by: игра идёт офлайн с ником ${account.username}", LogLevel.Warn)
         info(id, "Команда: " + command.joinToString(" "), LogLevel.Debug)
         play(instance, gameDir, command, mapOf("HORIZON_HOME" to gameDir.toString())) {}

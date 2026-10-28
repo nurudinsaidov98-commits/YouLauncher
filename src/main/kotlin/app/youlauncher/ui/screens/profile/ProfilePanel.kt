@@ -1,5 +1,8 @@
 package app.youlauncher.ui.screens.profile
 
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.type
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -272,7 +275,10 @@ private fun InlineText(value: String, onChange: (String) -> Unit, style: TextSty
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }),
-        modifier = modifier,
+        // Esc тоже завершает ввод (Enter — через onDone).
+        modifier = modifier.onPreviewKeyEvent { e ->
+            if (e.type == androidx.compose.ui.input.key.KeyEventType.KeyDown && e.key == androidx.compose.ui.input.key.Key.Escape) { focus.clearFocus(); true } else false
+        },
     )
 }
 

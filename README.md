@@ -99,7 +99,7 @@ The key feature of each Minecraft update is drawn as a composition of M3 shapes 
 - **Modpacks** — install any modpack from the catalog with one click as a new instance; import `.mrpack`, CurseForge and MultiMC/Prism; export to `.mrpack` and Prism.
 - **Accounts** — offline, **Ely.by** (skins, two-factor sign-in) and **Microsoft** (official servers and Realms; the password is entered only on the Microsoft website). Tokens are stored in Windows Credential Manager, the password is never saved.
 - **Discord activity** — your profile shows the modpack you play (name, loader, Minecraft version, time in game) or what you browse in the launcher; names can be hidden or the activity turned off.
-- **Horizon (Minecraft in Rust)** — create an instance of [Horizon](https://github.com/horizon-rust/horizon), Minecraft Java Edition 26.3 rewritten in Rust: the launcher downloads the release, prepares its resources from the Minecraft files and starts it. Java mods do not run in it.
+- **Horizon (Minecraft in Rust)** — create an instance of [Horizon](https://github.com/horizon-rust/horizon), Minecraft Java Edition 26.3 rewritten in Rust: the launcher downloads the release, prepares its resources from the Minecraft files and starts it. Java mods do not run in it; its own mods (minimap, zoom, FPS, keystrokes and more) install from Horizon's reviewed registry.
 - **Instances** — change the game version with a mod compatibility check, repair files, scheduled backups, servers from `servers.dat` with ping, screenshots and worlds.
 - **Java** — picked automatically for every version, downloaded from Mojang or Eclipse Temurin.
 - **Comfort** — command palette (`Ctrl+K`), hotkeys, compact and mini window modes, Windows notifications, auto-update with hash check, English and Russian.
@@ -272,7 +272,7 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 - **Сборки** — любая сборка из каталога ставится одной кнопкой в новый экземпляр; импорт `.mrpack`, CurseForge и MultiMC/Prism; экспорт в `.mrpack` и Prism.
 - **Аккаунты** — офлайн, **Ely.by** (скины, двухфакторная защита) и **Microsoft** (официальные серверы и Realms; пароль вводится только на сайте Microsoft). Токены хранятся в диспетчере учётных данных Windows, пароль не сохраняется.
 - **Активность в Discord** — в профиле видно сборку, в которую вы играете (название, загрузчик, версия Minecraft, время в игре), или что вы смотрите в лаунчере; названия можно скрыть, активность — выключить.
-- **Horizon (Minecraft на Rust)** — экземпляр [Horizon](https://github.com/horizon-rust/horizon), Minecraft Java Edition 26.3, переписанного на Rust: лаунчер скачивает релиз, готовит ресурсы из файлов Minecraft и запускает игру. Java-моды в нём не работают.
+- **Horizon (Minecraft на Rust)** — экземпляр [Horizon](https://github.com/horizon-rust/horizon), Minecraft Java Edition 26.3, переписанного на Rust: лаунчер скачивает релиз, готовит ресурсы из файлов Minecraft и запускает игру. Java-моды в нём не работают, зато его собственные моды (миникарта, зум, FPS, нажатия клавиш и другие) ставятся из проверяемого реестра Horizon.
 - **Экземпляры** — смена версии игры с проверкой модов, починка файлов, резервные копии по расписанию, серверы из `servers.dat` с пингом, скриншоты и миры.
 - **Java** — подбирается под каждую версию автоматически, скачивается с серверов Mojang или Eclipse Temurin.
 - **Удобство** — палитра команд (`Ctrl+K`), горячие клавиши, компактный и мини-режим окна, уведомления Windows, автообновление с проверкой хеша, русский и английский языки.

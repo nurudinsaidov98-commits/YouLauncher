@@ -229,7 +229,10 @@ private fun AccentPickerCard(initial: Color, initialShimmer: Color?, onApply: (C
             }
             SaturationValueField(current, onChange = ::set)
             HueBar(current.hue) { set(current.copy(hue = it)) }
-            var hexText by remember(current) { mutableStateOf(ColorPickerLogic.hex(current.toColor())) }
+            // Код в поле не перезаписывается, пока задаёт тот же цвет: иначе при вводе прыгал бы курсор, а пересчёт
+            // через HSV мог бы подменить введённый код соседним. Ползунки и «Цвет 1 / 2» меняют его как обычно.
+            var hexText by remember { mutableStateOf(ColorPickerLogic.hex(current.toColor())) }
+            androidx.compose.runtime.LaunchedEffect(current) { if (ColorPickerLogic.parseHex(hexText)?.let { Hsv.of(it) } != current) hexText = ColorPickerLogic.hex(current.toColor()) }
             OutlinedTextField(
                 value = hexText,
                 onValueChange = { v -> hexText = v.take(7); ColorPickerLogic.parseHex(v)?.let { set(Hsv.of(it)) } },

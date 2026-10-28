@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="horizon_mods_title">Horizon mods</string>
+    <string name="horizon_mods_subtitle">From Horizon's registry: every submission is reviewed, every file is checked by size and SHA-256. Java mods don't run in Horizon</string>
+    <string name="horizon_mods_search">Search Horizon's registry</string>
+    <string name="horizon_kind_all">All</string>
+    <string name="horizon_kind_mod">Mods</string>
+    <string name="horizon_kind_resourcepack">Resource packs</string>
+    <string name="horizon_kind_shader">Shaders</string>
+    <string name="horizon_install">Install</string>
+    <string name="horizon_update">Update to %1$s</string>
+    <string name="horizon_remove">Remove</string>
+    <string name="horizon_installed">installed %1$s</string>
+    <string name="horizon_official">Made by Horizon</string>
+    <string name="horizon_by">by %1$s</string>
+    <string name="horizon_no_version">No version for Minecraft %1$s</string>
+    <string name="horizon_restart_hint">Mods are loaded when the game starts: changes apply on the next launch.</string>
+    <string name="horizon_load_failed">Horizon's registry is unreachable: %1$s</string>
+    <string name="horizon_retry">Try again</string>
+    <string name="horizon_empty">Nothing found</string>
+    <string name="horizon_installed_msg">“%1$s” installed</string>
+    <string name="horizon_removed_msg">“%1$s” removed</string>
+    <string name="horizon_failed_msg">“%1$s”: %2$s</string>
+    <string name="horizon_revoked">Taken down from the registry and turned off: %1$s</string>
+    <string name="horizon_cap_game_read">Reads the game</string>
+    <string name="horizon_cap_hud">Draws on the HUD</string>
+    <string name="horizon_cap_chat">Writes to chat</string>
+    <string name="horizon_cap_render">Draws over the world</string>
+    <string name="horizon_cap_recipes">Reads recipes</string>
+    <string name="horizon_cap_ui">Own screens</string>
+    <string name="horizon_cap_storage">Keeps its data</string>
+    <string name="horizon_cap_input">Reads keys and mouse</string>
+</resources>

@@ -133,8 +133,8 @@ fun InstanceScreen(screen: Screen.Instance) {
     Column(Modifier.fillMaxSize()) {
         InstanceHeader(inst, launch, vm)
         PillTabs(
-            // Horizon: Java-моды и шейдеры к нему не подходят, эти вкладки не показываются.
-            items = if (inst.isHorizon) InstanceTab.entries - InstanceTab.Mods - InstanceTab.ShaderPacks else InstanceTab.entries,
+            // Horizon: шейдеры Iris и OptiFine к нему не подходят; его моды, ресурспаки и шейдеры — во вкладке «Моды» из его реестра.
+            items = if (inst.isHorizon) InstanceTab.entries - InstanceTab.ShaderPacks else InstanceTab.entries,
             selected = screen.tab,
             onSelect = { navigator.replace(screen.copy(tab = it)) },
             label = { stringResource(it.label()) },
@@ -151,7 +151,7 @@ fun InstanceScreen(screen: Screen.Instance) {
         ) { tab ->
             when (tab) {
                 InstanceTab.Overview -> OverviewTab(inst, vm)
-                InstanceTab.Mods -> ContentTab(inst, vm, if (inst.loader == LoaderType.Vanilla) null else ContentKind.Mods)
+                InstanceTab.Mods -> if (inst.isHorizon) HorizonModsTab(inst) else ContentTab(inst, vm, if (inst.loader == LoaderType.Vanilla) null else ContentKind.Mods)
                 InstanceTab.ResourcePacks -> ContentTab(inst, vm, ContentKind.ResourcePacks)
                 InstanceTab.ShaderPacks -> ContentTab(inst, vm, ContentKind.ShaderPacks)
                 InstanceTab.Worlds -> WorldsTab(vm)
