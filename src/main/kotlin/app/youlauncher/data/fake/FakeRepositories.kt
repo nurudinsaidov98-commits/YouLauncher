@@ -218,6 +218,7 @@ class FakeLoaderVersionRepository : LoaderVersionRepository {
             LoaderType.Quilt -> listOf(LoaderVersion("0.29.2", true, latest = true), LoaderVersion("0.29.1", true), LoaderVersion("0.30.0-beta.3", false))
             LoaderType.Forge -> listOf(LoaderVersion("59.0.14", true, latest = true), LoaderVersion("59.0.10", true, recommended = true), LoaderVersion("59.0.2", true))
             LoaderType.NeoForge -> listOf(LoaderVersion("21.10.38-beta", false, latest = true), LoaderVersion("21.10.20", true), LoaderVersion("21.10.11", true))
+            LoaderType.Horizon -> listOf(LoaderVersion("v0.2.93", true, latest = true), LoaderVersion("v0.2.92", true), LoaderVersion("v0.2.91", true))
         }
     }
 }

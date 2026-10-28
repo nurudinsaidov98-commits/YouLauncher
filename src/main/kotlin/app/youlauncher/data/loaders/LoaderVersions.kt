@@ -76,7 +76,10 @@ object NumericComparator : Comparator<String> {
 }
 
 /** Версии загрузчиков из официальных источников (meta.fabricmc.net, meta.quiltmc.org, Maven Forge и NeoForge). */
-class RemoteLoaderVersions(private val http: HttpClient) : LoaderVersionRepository {
+class RemoteLoaderVersions(
+    private val http: HttpClient,
+    private val horizon: app.youlauncher.data.horizon.HorizonReleases = app.youlauncher.data.horizon.HorizonReleases(http),
+) : LoaderVersionRepository {
     private val cache = mutableMapOf<String, List<LoaderVersion>>()
 
     private suspend fun text(url: String): String {
@@ -94,10 +97,19 @@ class RemoteLoaderVersions(private val http: HttpClient) : LoaderVersionReposito
             LoaderType.Quilt -> runCatching { LoaderParsing.fabricLike(text("$QUILT_META/v3/versions/loader/$gameVersion"), quilt = true) }.getOrDefault(emptyList())
             LoaderType.Forge -> LoaderParsing.forge(text(FORGE_METADATA), runCatching { text(FORGE_PROMOTIONS) }.getOrNull(), gameVersion)
             LoaderType.NeoForge -> LoaderParsing.neoForge(text(NEOFORGE_METADATA), gameVersion)
+            // Версии Horizon — его релизы; все они под ту версию Minecraft, что закреплена в последнем.
+            LoaderType.Horizon -> if (gameVersion in horizonGameVersions()) horizon.releases().mapIndexed { i, r -> LoaderVersion(r.tag, stable = true, latest = i == 0) } else emptyList()
         }
-        cache[key] = list
+        if (list.isNotEmpty() || loader != LoaderType.Horizon) cache[key] = list
         return list
     }
+
+    override suspend fun supportedGameVersions(loader: LoaderType): Set<String>? =
+        if (loader == LoaderType.Horizon) horizonGameVersions() else null
+
+    private suspend fun horizonGameVersions(): Set<String> = runCatching {
+        horizon.releases().firstOrNull()?.let { setOf(horizon.gameVersion(it.tag)) }
+    }.getOrNull().orEmpty()
 
     companion object {
         const val FABRIC_META = "https://meta.fabricmc.net"

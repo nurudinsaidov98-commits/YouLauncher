@@ -100,6 +100,8 @@ class LoaderInstaller(
         LoaderType.NeoForge -> installerBased(
             "${RemoteLoaderVersions.NEOFORGE_MAVEN}/$loaderVersion/neoforge-$loaderVersion-installer.jar", game, javaFor, log, force,
         )
+        // Horizon — отдельная игра на Rust, его ставит HorizonInstaller, а не профиль загрузчика.
+        LoaderType.Horizon -> error("Horizon запускается без загрузчика модов")
     }
 
     private suspend fun fabricLike(url: String): String = withContext(Dispatchers.IO) {

@@ -294,7 +294,7 @@ class PackExporter(
                     LoaderType.Quilt -> put("quilt-loader", lv)
                     LoaderType.Forge -> put("forge", lv)
                     LoaderType.NeoForge -> put("neoforge", lv)
-                    LoaderType.Vanilla -> Unit
+                    LoaderType.Vanilla, LoaderType.Horizon -> Unit
                 }
             }
         }
@@ -318,7 +318,7 @@ class PackExporter(
                 LoaderType.Quilt -> "org.quiltmc.quilt-loader"
                 LoaderType.Forge -> "net.minecraftforge"
                 LoaderType.NeoForge -> "net.neoforged"
-                LoaderType.Vanilla -> null
+                LoaderType.Vanilla, LoaderType.Horizon -> null
             }
             if (uid != null && inst.loaderVersion != null) add(buildJsonObject { put("uid", uid); put("version", inst.loaderVersion) })
         }

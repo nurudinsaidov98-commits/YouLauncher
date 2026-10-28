@@ -9,6 +9,8 @@ enum class LoaderType(val title: String) {
     Quilt("Quilt"),
     Forge("Forge"),
     NeoForge("NeoForge"),
+    /** Не загрузчик модов, а отдельная игра: Minecraft, переписанный на Rust (Horizon). Версия «загрузчика» — тег релиза. */
+    Horizon("Horizon"),
 }
 
 /** Иконки экземпляров из набора Material Symbols (имя символа). */
@@ -71,7 +73,9 @@ data class Instance(
     /** Собирать во время игры, какие моды нагружают процессор и память (JFR, только на этом компьютере). */
     val profileMods: Boolean = true,
 ) {
-    val isModded: Boolean get() = loader != LoaderType.Vanilla
+    val isModded: Boolean get() = loader != LoaderType.Vanilla && loader != LoaderType.Horizon
+    /** Horizon (Rust): Java-моды, шейдеры и JVM-настройки к нему не относятся. */
+    val isHorizon: Boolean get() = loader == LoaderType.Horizon
 }
 
 enum class InstanceSort { LastPlayed, Name, PlayTime, Created, Version }

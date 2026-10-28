@@ -133,7 +133,8 @@ fun InstanceScreen(screen: Screen.Instance) {
     Column(Modifier.fillMaxSize()) {
         InstanceHeader(inst, launch, vm)
         PillTabs(
-            items = InstanceTab.entries,
+            // Horizon: Java-моды и шейдеры к нему не подходят, эти вкладки не показываются.
+            items = if (inst.isHorizon) InstanceTab.entries - InstanceTab.Mods - InstanceTab.ShaderPacks else InstanceTab.entries,
             selected = screen.tab,
             onSelect = { navigator.replace(screen.copy(tab = it)) },
             label = { stringResource(it.label()) },

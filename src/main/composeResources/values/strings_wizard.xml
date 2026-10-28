@@ -48,4 +48,8 @@
     <string name="msg_import_failed">Could not import: %1$s</string>
     <string name="msg_shortcut_created">Shortcut created on the desktop</string>
     <string name="msg_shortcut_failed">Could not create the shortcut</string>
+    <string name="wizard_horizon_title">Horizon: Minecraft rewritten in Rust</string>
+    <string name="wizard_horizon_body">A native game in Rust (MIT). Java mods and shaders don't run, resource and data packs do. The first launch prepares its resources in a couple of minutes.</string>
+    <string name="wizard_horizon_version">Horizon is built for Minecraft %1$s.</string>
+    <string name="wizard_horizon_pick">Use Minecraft %1$s</string>
 </resources>

@@ -32,6 +32,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -48,6 +49,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -88,6 +90,10 @@ import app.youlauncher.resources.wizard_loader_beta
 import app.youlauncher.resources.wizard_loader_hint
 import app.youlauncher.resources.wizard_loader_latest
 import app.youlauncher.resources.wizard_loader_none
+import app.youlauncher.resources.wizard_horizon_title
+import app.youlauncher.resources.wizard_horizon_body
+import app.youlauncher.resources.wizard_horizon_version
+import app.youlauncher.resources.wizard_horizon_pick
 import app.youlauncher.resources.wizard_loader_recommended
 import app.youlauncher.resources.wizard_loader_title
 import app.youlauncher.resources.wizard_loader_unstable
@@ -449,12 +455,16 @@ private fun LoaderStep(model: WizardModel, loaderVersions: List<LoaderVersion>?,
                 }
             }
         }
+        if (model.loader == LoaderType.Horizon) HorizonNote(model, onChange)
         if (model.loader != LoaderType.Vanilla) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(Res.string.wizard_loader_version), style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
-                Text(stringResource(Res.string.wizard_loader_unstable), style = MaterialTheme.typography.bodyMedium)
-                Spacer(Modifier.width(8.dp))
-                Switch(checked = model.showUnstable, onCheckedChange = { onChange(model.copy(showUnstable = it)) })
+                // У Horizon только стабильные релизы: переключатель ему не нужен.
+                if (model.loader != LoaderType.Horizon) {
+                    Text(stringResource(Res.string.wizard_loader_unstable), style = MaterialTheme.typography.bodyMedium)
+                    Spacer(Modifier.width(8.dp))
+                    Switch(checked = model.showUnstable, onCheckedChange = { onChange(model.copy(showUnstable = it)) })
+                }
             }
             when {
                 loaderVersions == null -> LoadingIndicator()
@@ -594,3 +604,26 @@ private fun SummaryRow(label: String, value: String) {
     }
 }
 
+
+/** Что такое Horizon и под какую версию Minecraft он собран; если выбрана другая — одна кнопка, чтобы её сменить. */
+@Composable
+private fun HorizonNote(model: WizardModel, onChange: (WizardModel) -> Unit) {
+    val graph = LocalAppGraph.current
+    val supported by produceState<Set<String>?>(null) { value = runCatching { graph.loaderVersions.supportedGameVersions(LoaderType.Horizon) }.getOrNull() }
+    Surface(shape = MaterialTheme.shapes.large, color = MaterialTheme.colorScheme.secondaryContainer, modifier = Modifier.fillMaxWidth()) {
+        Row(Modifier.padding(horizontal = 14.dp, vertical = 10.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Icon(Symbols.Bolt, null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(stringResource(Res.string.wizard_horizon_title), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSecondaryContainer)
+                Text(stringResource(Res.string.wizard_horizon_body), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSecondaryContainer)
+                val mc = supported?.firstOrNull()
+                if (mc != null && model.version != mc) {
+                    Text(stringResource(Res.string.wizard_horizon_version, mc), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSecondaryContainer)
+                    FilledTonalButton(onClick = { onChange(model.withVersion(mc)) }, shapes = ButtonDefaults.shapes()) {
+                        Text(stringResource(Res.string.wizard_horizon_pick, mc))
+                    }
+                }
+            }
+        }
+    }
+}

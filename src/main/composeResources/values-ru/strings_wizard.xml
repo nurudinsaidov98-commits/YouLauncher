@@ -48,4 +48,8 @@
     <string name="msg_import_failed">Не удалось импортировать: %1$s</string>
     <string name="msg_shortcut_created">Ярлык создан на рабочем столе</string>
     <string name="msg_shortcut_failed">Не удалось создать ярлык</string>
+    <string name="wizard_horizon_title">Horizon: Minecraft, переписанный на Rust</string>
+    <string name="wizard_horizon_body">Нативная игра на Rust (MIT). Java-моды и шейдеры не работают, ресурспаки и датапаки — да. Первый запуск пару минут готовит ресурсы.</string>
+    <string name="wizard_horizon_version">Horizon собран под Minecraft %1$s.</string>
+    <string name="wizard_horizon_pick">Взять Minecraft %1$s</string>
 </resources>

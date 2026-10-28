@@ -65,7 +65,7 @@ object CurseForgeParsing {
         LoaderType.Fabric -> 4
         LoaderType.Quilt -> 5
         LoaderType.NeoForge -> 6
-        LoaderType.Vanilla -> null
+        LoaderType.Vanilla, LoaderType.Horizon -> null
     }
 
     fun sortField(s: ModSort): Int = when (s) {

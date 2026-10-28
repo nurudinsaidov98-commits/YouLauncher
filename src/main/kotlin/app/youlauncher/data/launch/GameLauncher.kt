@@ -78,6 +78,8 @@ class GameLauncher(
     private val injector: AuthlibInjector,
     private val launcherVersion: String = app.youlauncher.core.BuildInfo.version,
     private val profiler: ModProfiler? = null,
+    private val horizon: app.youlauncher.data.horizon.HorizonInstaller? = null,
+    private val horizonReleases: app.youlauncher.data.horizon.HorizonReleases? = null,
 ) : LaunchService {
     private val state = MutableStateFlow<Map<String, LaunchState>>(emptyMap())
     override val states: StateFlow<Map<String, LaunchState>> = state.asStateFlow()
@@ -93,7 +95,8 @@ class GameLauncher(
         val instance = instances.get(instanceId) ?: return
         jobs[instanceId] = scope.launch(Dispatchers.IO) {
             try {
-                run(instance, quickJoinServer ?: instance.quickJoinServer)
+                val server = quickJoinServer ?: instance.quickJoinServer
+                if (instance.isHorizon) runHorizon(instance, server) else run(instance, server)
             } catch (e: CancellationException) {
                 set(instanceId, LaunchState.Idle)
                 throw e
@@ -209,12 +212,23 @@ class GameLauncher(
         val command = LaunchCommandBuilder.build(spec)
         info(id, "Команда: " + LaunchCommandBuilder.masked(command, account.accessToken), LogLevel.Debug)
 
+        play(instance, gameDir, command, emptyMap()) { if (profilerArgs != null) collectProfile(instance, gameDir, javaInstall.major) }
+    }
+
+    /**
+     * Общая часть запуска: команда до запуска, процесс с выводом в консоль, время игры, команда после выхода
+     * и отчёт о сбое. [env] — переменные этой игры поверх общих и экземпляра.
+     */
+    private suspend fun play(instance: Instance, gameDir: Path, command: List<String>, env: Map<String, String>, afterExit: () -> Unit) {
+        val id = instance.id
+        val s = settings.settings.value
         runHook(instance.java.preLaunchCommand ?: s.game.preLaunchCommand, instance, gameDir, "до запуска")
 
         set(id, LaunchState.Preparing(LaunchStage.Starting, null))
         val pb = ProcessBuilder(command).directory(gameDir.toFile())
         pb.environment().putAll(s.game.env)
         pb.environment().putAll(instance.java.env)
+        pb.environment().putAll(env)
         val process = pb.start()
         processes[id] = process
         val started = System.currentTimeMillis()
@@ -240,7 +254,7 @@ class GameLauncher(
         }
         runHook(instance.java.postExitCommand ?: s.game.postExitCommand, instance, gameDir, "после выхода")
         runCatching { content.refresh(id) }
-        if (profilerArgs != null) collectProfile(instance, gameDir, javaInstall.major)
+        afterExit()
 
         val stoppedByUser = state.value[id] is LaunchState.Idle
         if (exit == 0 || stoppedByUser) {
@@ -252,6 +266,72 @@ class GameLauncher(
             info(id, "Игра завершилась с ошибкой, код $exit. Отчёт: $report", LogLevel.Error)
             set(id, LaunchState.Crashed(exit, report.toString(), summary))
         }
+    }
+
+    /**
+     * Horizon (Minecraft на Rust): релиз с GitHub, файлы той же версии Minecraft с серверов Mojang,
+     * подготовка ресурсов один раз на версию (horizon-prepare, нужна Java из research-lock), затем horizon-client.
+     * Игра хранит миры и настройки в папке экземпляра (HORIZON_HOME).
+     */
+    private suspend fun runHorizon(instance: Instance, server: String?) {
+        val id = instance.id
+        val hz = horizon ?: error("Horizon недоступен в этой сборке")
+        val releases = horizonReleases ?: error("Horizon недоступен в этой сборке")
+        val s = settings.settings.value
+        set(id, LaunchState.Preparing(LaunchStage.Preparing, null, "Horizon"))
+        val gameDir = instances.gameDir(id)
+        Files.createDirectories(gameDir)
+
+        // 1. Релиз: выбранный в экземпляре, иначе последний (и он закрепляется за экземпляром).
+        val tag = instance.loaderVersion ?: releases.releases().firstOrNull()?.tag?.also { t -> instances.update(id) { it.copy(loaderVersion = t) } }
+            ?: error("Не удалось получить список релизов Horizon с GitHub")
+        info(id, "Подготовка «${instance.name}» (Horizon $tag)")
+        if (!hz.isInstalled(tag)) {
+            set(id, LaunchState.Preparing(LaunchStage.Loader, null, "Horizon $tag"))
+            hz.install(releases.release(tag)) { info(id, it) }
+        }
+        val mc = hz.gameVersionOf(tag)
+        if (mc != instance.gameVersion) instances.update(id) { it.copy(gameVersion = mc) }
+
+        // 2. Файлы Minecraft этой версии с серверов Mojang (SHA-1): из них Horizon готовит ресурсы.
+        val env = RuleEnv(osVersion = osVersion)
+        val progress: (LaunchStage, Float?, String) -> Unit = { stage, p, detail -> set(id, LaunchState.Preparing(stage, p, detail)) }
+        val installed = installer.install(mc, gameDir, env, onProgress = progress)
+
+        // 3. Подготовка ресурсов: один раз на версию Horizon, около пары минут.
+        if (!hz.isPrepared(tag)) {
+            set(id, LaunchState.Preparing(LaunchStage.Java, null))
+            val javaInstall = chooseJava(instance, installed.resolved.json.javaVersion ?: JavaVersionRef()) { p -> set(id, LaunchState.Preparing(LaunchStage.Java, p)) }
+            val javaHome = javaInstall.executable.parent.parent
+            val server = installed.resolved.json.downloads?.server ?: error("В версии $mc нет server.jar")
+            set(id, LaunchState.Preparing(LaunchStage.Libraries, null, "server.jar $mc"))
+            val jar = hz.serverJar(mc, server.url, server.sha1, server.size)
+            info(id, "Horizon $tag: подготовка ресурсов из Minecraft $mc (Java ${javaInstall.version}), это один раз на версию")
+            set(id, LaunchState.Preparing(LaunchStage.Loader, null, "Horizon: подготовка ресурсов"))
+            hz.prepare(tag, dirs.root, jar, javaHome) { line ->
+                info(id, line)
+                set(id, LaunchState.Preparing(LaunchStage.Loader, null, line.take(80)))
+            }
+            // Остаются версии, которые нужны экземплярам: прежние подготовленные ресурсы весят сотни мегабайт.
+            runCatching { hz.cleanup(instances.instances.value.filter { it.isHorizon }.mapNotNull { it.loaderVersion }.toSet() + tag) }
+        }
+
+        // 4. Запуск. Microsoft: сессия файлом (Horizon не берёт токен из командной строки), иначе офлайн-ник.
+        val account = launchAccount()
+        val width = instance.width ?: s.game.width
+        val height = instance.height ?: s.game.height
+        val fullscreen = instance.fullscreen ?: s.game.fullscreen
+        val command = buildList {
+            add(hz.client(tag).toString())
+            add("--resources"); add(hz.resources(tag).toString())
+            if (account.userType == "msa") { add("--session-file"); add(HorizonSession.write(gameDir, account).toString()) }
+            else { add("--name"); add(account.username) }
+            if (!fullscreen) { add("--width"); add(width.toString()); add("--height"); add(height.toString()) }
+            server?.takeIf { it.isNotBlank() }?.let { add("--server"); add(it) }
+        }
+        if (account.userType == "mojang") info(id, "Horizon не поддерживает вход через Ely.by: игра идёт офлайн с ником ${account.username}", LogLevel.Warn)
+        info(id, "Команда: " + command.joinToString(" "), LogLevel.Debug)
+        play(instance, gameDir, command, mapOf("HORIZON_HOME" to gameDir.toString())) {}
     }
 
     /** Разбор записи в фоне: игра уже закрыта, лаунчер не ждёт, пока считается статистика. */
@@ -383,4 +463,30 @@ class GameLauncher(
     }
 
     override fun dismiss(instanceId: String) = set(instanceId, LaunchState.Idle)
+}
+
+/**
+ * Сессия Microsoft для Horizon: файл в папке игры, который игра читает при старте и сразу удаляет
+ * (токен не попадает в список процессов). Файл старше двух минут игра не принимает.
+ */
+internal object HorizonSession {
+    fun write(gameDir: Path, account: LaunchAccount): Path {
+        val dir = gameDir.resolve("sessions")
+        Files.createDirectories(dir)
+        // Остатки игр, которые так и не запустились.
+        runCatching {
+            dir.listDirectoryEntries("session-*.json").filter { System.currentTimeMillis() - it.getLastModifiedTime().toMillis() > 120_000 }
+                .forEach { Files.deleteIfExists(it) }
+        }
+        val name = ByteArray(12).also { java.security.SecureRandom().nextBytes(it) }.joinToString("") { "%02x".format(it) }
+        val file = dir.resolve("session-$name.json")
+        val body = kotlinx.serialization.json.buildJsonObject {
+            put("name", kotlinx.serialization.json.JsonPrimitive(account.username))
+            put("uuid", kotlinx.serialization.json.JsonPrimitive(account.uuid))
+            put("access_token", kotlinx.serialization.json.JsonPrimitive(account.accessToken))
+            put("user_type", kotlinx.serialization.json.JsonPrimitive("msa"))
+        }
+        Files.writeString(file, body.toString(), java.nio.file.StandardOpenOption.CREATE_NEW, java.nio.file.StandardOpenOption.WRITE)
+        return file
+    }
 }

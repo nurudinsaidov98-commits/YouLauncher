@@ -45,7 +45,8 @@ internal fun parseTime(s: String?): Long = s?.let { runCatching { Instant.parse(
 
 /** Имя загрузчика в API Modrinth и в фасетах. */
 val LoaderType.modrinthName: String get() = when (this) {
-    LoaderType.Vanilla -> "minecraft"
+    // Horizon: Java-моды не работают, а ресурспаки и датапаки — обычные, как у ванильной игры.
+    LoaderType.Vanilla, LoaderType.Horizon -> "minecraft"
     LoaderType.Fabric -> "fabric"
     LoaderType.Quilt -> "quilt"
     LoaderType.Forge -> "forge"

@@ -40,7 +40,7 @@
 
 **YouLauncher** is a Minecraft: Java Edition launcher for Windows with a **complete Material 3 Expressive integration**. Not a theme on top of an old interface: every button, card, menu, indicator and transition is a native M3 Expressive component that springs, morphs and reacts to you. Colors are generated dynamically from a single seed, from your wallpaper or from the version you are about to play, and you can recolor every single element.
 
-### 🆕 New in 1.2.2 – 1.2.3
+### 🆕 New in 1.2.2 – 1.3.0
 
 <p align="center">
   <img src="docs/screens/en/accent-picker-dark.png" width="100%" alt="Custom accent color picker with shimmer">
@@ -51,6 +51,7 @@
 - 💾 **Games stay on the drive you choose** — the installer keeps instances and Minecraft files next to the program.
 - 🔔 **Update right from the notice**, 🐞 **Report a bug** with versions filled in, 🎚️ scrollbars everywhere.
 - 🎮 **1.2.3: Discord activity** — your profile shows the modpack you play or what you browse in the launcher.
+- ⚡ **1.3.0: Horizon** — Minecraft rewritten in Rust as its own instance type, next to Fabric and NeoForge.
 
 ### ✨ Material 3 Expressive, all the way
 
@@ -98,6 +99,7 @@ The key feature of each Minecraft update is drawn as a composition of M3 shapes 
 - **Modpacks** — install any modpack from the catalog with one click as a new instance; import `.mrpack`, CurseForge and MultiMC/Prism; export to `.mrpack` and Prism.
 - **Accounts** — offline, **Ely.by** (skins, two-factor sign-in) and **Microsoft** (official servers and Realms; the password is entered only on the Microsoft website). Tokens are stored in Windows Credential Manager, the password is never saved.
 - **Discord activity** — your profile shows the modpack you play (name, loader, Minecraft version, time in game) or what you browse in the launcher; names can be hidden or the activity turned off.
+- **Horizon (Minecraft in Rust)** — create an instance of [Horizon](https://github.com/horizon-rust/horizon), Minecraft Java Edition 26.3 rewritten in Rust: the launcher downloads the release, prepares its resources from the Minecraft files and starts it. Java mods do not run in it.
 - **Instances** — change the game version with a mod compatibility check, repair files, scheduled backups, servers from `servers.dat` with ping, screenshots and worlds.
 - **Java** — picked automatically for every version, downloaded from Mojang or Eclipse Temurin.
 - **Comfort** — command palette (`Ctrl+K`), hotkeys, compact and mini window modes, Windows notifications, auto-update with hash check, English and Russian.
@@ -211,7 +213,7 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 
 **YouLauncher** — лаунчер Minecraft: Java Edition для Windows с **полной интеграцией Material 3 Expressive**. Это не тема поверх старого интерфейса: каждая кнопка, карточка, меню, индикатор и переход — родной компонент M3 Expressive, который пружинит, меняет форму и откликается на каждое действие. Цвета строятся динамически из одного цвета, из ваших обоев или из версии игры, а перекрасить можно любой элемент.
 
-### 🆕 Что нового в 1.2.2–1.2.3
+### 🆕 Что нового в 1.2.2–1.3.0
 
 <p align="center">
   <img src="docs/screens/accent-picker-dark.png" width="100%" alt="Свой цвет акцента с переливанием">
@@ -222,6 +224,7 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 - 💾 **Игры остаются на выбранном диске** — установщик хранит экземпляры и файлы Minecraft рядом с программой.
 - 🔔 **Обновление прямо из уведомления**, 🐞 **«Сообщить об ошибке»** с заполненными версиями, 🎚️ ползунки прокрутки везде.
 - 🎮 **1.2.3: активность в Discord** — в профиле видно сборку, в которую вы играете, или что вы смотрите в лаунчере.
+- ⚡ **1.3.0: Horizon** — Minecraft, переписанный на Rust, отдельным видом экземпляра рядом с Fabric и NeoForge.
 
 ### ✨ Material 3 Expressive от и до
 
@@ -269,6 +272,7 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 - **Сборки** — любая сборка из каталога ставится одной кнопкой в новый экземпляр; импорт `.mrpack`, CurseForge и MultiMC/Prism; экспорт в `.mrpack` и Prism.
 - **Аккаунты** — офлайн, **Ely.by** (скины, двухфакторная защита) и **Microsoft** (официальные серверы и Realms; пароль вводится только на сайте Microsoft). Токены хранятся в диспетчере учётных данных Windows, пароль не сохраняется.
 - **Активность в Discord** — в профиле видно сборку, в которую вы играете (название, загрузчик, версия Minecraft, время в игре), или что вы смотрите в лаунчере; названия можно скрыть, активность — выключить.
+- **Horizon (Minecraft на Rust)** — экземпляр [Horizon](https://github.com/horizon-rust/horizon), Minecraft Java Edition 26.3, переписанного на Rust: лаунчер скачивает релиз, готовит ресурсы из файлов Minecraft и запускает игру. Java-моды в нём не работают.
 - **Экземпляры** — смена версии игры с проверкой модов, починка файлов, резервные копии по расписанию, серверы из `servers.dat` с пингом, скриншоты и миры.
 - **Java** — подбирается под каждую версию автоматически, скачивается с серверов Mojang или Eclipse Temurin.
 - **Удобство** — палитра команд (`Ctrl+K`), горячие клавиши, компактный и мини-режим окна, уведомления Windows, автообновление с проверкой хеша, русский и английский языки.

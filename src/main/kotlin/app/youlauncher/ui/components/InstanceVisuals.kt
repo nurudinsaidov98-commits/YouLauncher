@@ -67,6 +67,7 @@ fun LoaderType.symbol(): ImageVector = when (this) {
     LoaderType.Quilt -> Symbols.Checklist
     LoaderType.Forge -> Symbols.Construction
     LoaderType.NeoForge -> Symbols.Handyman
+    LoaderType.Horizon -> Symbols.Bolt
 }
 
 /** Цветовая схема сцены версии (общий кэш по seed и режиму, см. [SceneSchemes]). */
