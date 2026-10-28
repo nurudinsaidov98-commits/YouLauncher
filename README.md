@@ -10,6 +10,7 @@
 [![Download](https://img.shields.io/github/v/release/nurudinsaidov98-commits/YouLauncher?style=for-the-badge&label=Download&color=3a6a43)](../../releases/latest)
 ![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-2f5f8f?style=for-the-badge&logo=windows11&logoColor=white)
 ![Material 3 Expressive](https://img.shields.io/badge/Material%203-Expressive-8a4fff?style=for-the-badge&logo=materialdesign&logoColor=white)
+[![Horizon](https://img.shields.io/badge/Horizon-Minecraft%20in%20Rust-f0795a?style=for-the-badge)](#-new-in-130-minecraft-in-rust)
 [![License: MIT](https://img.shields.io/badge/License-MIT-e0a33a?style=for-the-badge)](LICENSE)
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white)
@@ -40,18 +41,39 @@
 
 **YouLauncher** is a Minecraft: Java Edition launcher for Windows with a **complete Material 3 Expressive integration**. Not a theme on top of an old interface: every button, card, menu, indicator and transition is a native M3 Expressive component that springs, morphs and reacts to you. Colors are generated dynamically from a single seed, from your wallpaper or from the version you are about to play, and you can recolor every single element.
 
-### 🆕 New in 1.2.2 – 1.3.0
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="docs/cards/features-en-light.png">
+  <img alt="Material 3 Expressive, Horizon in Rust, mods and modpacks, mod load, Discord activity, honest and safe" src="docs/cards/features-en-dark.png" width="100%">
+</picture>
+
+### ⚡ New in 1.3.0: Minecraft in Rust
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="docs/cards/horizon-en-light.png">
+  <img alt="Minecraft in Rust: Horizon right inside YouLauncher" src="docs/cards/horizon-en-dark.png" width="100%">
+</picture>
+
+[Horizon](https://github.com/horizon-rust/horizon) is Minecraft: Java Edition 26.3 rewritten in Rust, and in YouLauncher it is simply another kind of instance.
+
+- **One click away** — pick **Horizon** next to Fabric and NeoForge in the new-instance wizard. The launcher downloads the release, the Minecraft files from Mojang and Java, prepares Horizon's resources once per version and starts the game.
+- **Its own mod store** — the Mods tab of a Horizon instance opens Horizon's reviewed registry: Zoom, FPS Counter, Minimap, Keystrokes, Coordinates HUD and more, with what each mod may do written out.
+- **Every file checked** — the release by SHA-256, mods by size, SHA-256 and their author's signature; mods taken down from the registry are turned off before launch.
+
+<p align="center">
+  <img src="docs/screens/en/horizon-mods-dark.png" width="100%" alt="Horizon's mod store in a Horizon instance">
+</p>
+
+<sub>Horizon is a young project by its own authors: Java mods don't run in it and FPS is still lower than in regular Minecraft. YouLauncher only installs and starts it.</sub>
+
+### 🆕 Also new in 1.2
 
 <p align="center">
   <img src="docs/screens/en/accent-picker-dark.png" width="100%" alt="Custom accent color picker with shimmer">
 </p>
 
 - 🎨 **Your own accent color** — the palette button at the end of the accent row opens a picker; turn on **Shimmer** and the whole theme slowly flows between two colors.
-- 📦 **Modpacks in one click** — *Install* in the Modpacks tab creates a ready instance with all mods.
-- 💾 **Games stay on the drive you choose** — the installer keeps instances and Minecraft files next to the program.
-- 🔔 **Update right from the notice**, 🐞 **Report a bug** with versions filled in, 🎚️ scrollbars everywhere.
-- 🎮 **1.2.3: Discord activity** — your profile shows the modpack you play or what you browse in the launcher.
-- ⚡ **1.3.0: Horizon** — Minecraft rewritten in Rust as its own instance type, next to Fabric and NeoForge.
+- 🎮 **Discord activity** — your profile shows the modpack you play or what you browse in the launcher.
+- 📦 **Modpacks in one click**, 💾 **games stay on the drive you choose**, 🔔 **update right from the notice**, 🐞 **Report a bug** with versions filled in.
 
 ### ✨ Material 3 Expressive, all the way
 
@@ -213,18 +235,39 @@ Launch arguments: `YouLauncher.exe --launch <instance-id>` starts an instance ri
 
 **YouLauncher** — лаунчер Minecraft: Java Edition для Windows с **полной интеграцией Material 3 Expressive**. Это не тема поверх старого интерфейса: каждая кнопка, карточка, меню, индикатор и переход — родной компонент M3 Expressive, который пружинит, меняет форму и откликается на каждое действие. Цвета строятся динамически из одного цвета, из ваших обоев или из версии игры, а перекрасить можно любой элемент.
 
-### 🆕 Что нового в 1.2.2–1.3.0
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="docs/cards/features-ru-light.png">
+  <img alt="Material 3 Expressive, Horizon на Rust, моды и сборки, нагрузка модов, активность в Discord, честно и безопасно" src="docs/cards/features-ru-dark.png" width="100%">
+</picture>
+
+### ⚡ Новое в 1.3.0: Minecraft на Rust
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="docs/cards/horizon-ru-light.png">
+  <img alt="Minecraft на Rust: Horizon прямо в YouLauncher" src="docs/cards/horizon-ru-dark.png" width="100%">
+</picture>
+
+[Horizon](https://github.com/horizon-rust/horizon) — это Minecraft: Java Edition 26.3, переписанный на Rust, и в YouLauncher он просто ещё один вид экземпляра.
+
+- **В одну кнопку** — выберите **Horizon** рядом с Fabric и NeoForge в мастере создания. Лаунчер скачает релиз, файлы Minecraft с серверов Mojang и Java, один раз на версию подготовит ресурсы Horizon и запустит игру.
+- **Свой магазин модов** — вкладка «Моды» у экземпляра Horizon открывает его проверяемый реестр: Zoom, FPS Counter, Minimap, Keystrokes, Coordinates HUD и другие, у каждого мода видно, что ему разрешено.
+- **Каждый файл проверен** — релиз по SHA-256, моды по размеру, SHA-256 и подписи автора; снятые с реестра моды выключаются перед запуском.
+
+<p align="center">
+  <img src="docs/screens/horizon-mods-dark.png" width="100%" alt="Магазин модов Horizon в экземпляре Horizon">
+</p>
+
+<sub>Horizon — молодой проект своих авторов: Java-моды в нём не работают, а FPS пока ниже, чем в обычном Minecraft. YouLauncher только устанавливает и запускает его.</sub>
+
+### 🆕 Ещё новое в 1.2
 
 <p align="center">
   <img src="docs/screens/accent-picker-dark.png" width="100%" alt="Свой цвет акцента с переливанием">
 </p>
 
 - 🎨 **Свой цвет акцента** — кнопка-мольберт в конце ряда цветов открывает палитру; включите **«Переливание»**, и вся тема будет плавно перетекать между двумя цветами.
-- 📦 **Сборки одной кнопкой** — «Установить» во вкладке «Сборки» создаёт готовый экземпляр со всеми модами.
-- 💾 **Игры остаются на выбранном диске** — установщик хранит экземпляры и файлы Minecraft рядом с программой.
-- 🔔 **Обновление прямо из уведомления**, 🐞 **«Сообщить об ошибке»** с заполненными версиями, 🎚️ ползунки прокрутки везде.
-- 🎮 **1.2.3: активность в Discord** — в профиле видно сборку, в которую вы играете, или что вы смотрите в лаунчере.
-- ⚡ **1.3.0: Horizon** — Minecraft, переписанный на Rust, отдельным видом экземпляра рядом с Fabric и NeoForge.
+- 🎮 **Активность в Discord** — в профиле видно сборку, в которую вы играете, или что вы смотрите в лаунчере.
+- 📦 **Сборки одной кнопкой**, 💾 **игры на выбранном диске**, 🔔 **обновление прямо из уведомления**, 🐞 **«Сообщить об ошибке»** с заполненными версиями.
 
 ### ✨ Material 3 Expressive от и до
 
